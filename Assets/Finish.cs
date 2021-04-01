@@ -1,22 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Finish : MonoBehaviour
 {
-    public string TurnText;
+    public TextMesh turnText;
     public int turn;
     // Start is called before the first frame update
     void Start()
     {
-        int turn = 1;
-        string TurnText = "TURN : " + turn ;
+        turn = 1;
+        turnText.text = "TURN : " + turn;
     }
 
     public void OnClick()
     {
         turn += 1;
-        TurnText = "TURN : " + turn;
+        turnText.text = "TURN : " + turn;
     }
 
     // Update is called once per frame
