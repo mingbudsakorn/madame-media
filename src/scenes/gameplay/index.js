@@ -1,3 +1,5 @@
+import { textStyle } from '../../utils/style.js'
+
 const loadGameplayScene = (app, setCurrentScene) => {
 
   app.loader
@@ -37,6 +39,25 @@ const loadGameplayScene = (app, setCurrentScene) => {
       smallPinkCircle.position.set(1582,44)
       app.stage.addChild(smallPinkCircle)
 
+      const channelText = new PIXI.Text('CHANNEL', textStyle.subHeaderBlack)
+      channelText.position.set(97,582)
+      app.stage.addChild(channelText)
+
+      const timeText = new PIXI.Text('TIME', textStyle.subHeaderBlack)
+      timeText.position.set(97,505)
+      app.stage.addChild(timeText)
+
+      const moneyText = new PIXI.Text('MONEY :', textStyle.subHeaderBlack)
+      moneyText.position.set(1217,505)
+      app.stage.addChild(moneyText)
+
+      const marbleText = new PIXI.Text('MARBLE', textStyle.subHeaderBlack)
+      marbleText.position.set(1691,505)
+      app.stage.addChild(marbleText)
+
+      const peopleText = new PIXI.Text('PEOPLE', textStyle.subHeaderBlack)
+      peopleText.position.set(900,21)
+      app.stage.addChild(peopleText)
     })
 
 }
