@@ -1,3 +1,5 @@
+// Components in this folder should be common components
+
 const loadBunny = (app) => {
   app.loader.add('bunny', 'src/assets/bunny.png').load((loader, resources) => {
     // This creates a texture from a 'bunny.png' image
@@ -14,11 +16,11 @@ const loadBunny = (app) => {
     // Add the bunny to the scene we are building
     app.stage.addChild(bunny)
 
-    // Listen for frame updates
-    app.ticker.add(() => {
-      // each frame we spin the bunny around a bit
-      bunny.rotation += 0.01
-    })
+    // // Listen for frame updates
+    // app.ticker.add(() => {
+    //   // each frame we spin the bunny around a bit
+    //   bunny.rotation += 0.01
+    // })
   })
 }
 

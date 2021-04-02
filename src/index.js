@@ -1,13 +1,13 @@
-import { add } from './utils/calculations.js'
-import loadBunny from './components/bunny.js'
+import sceneController from './scenes/index.js'
 
-const app = new PIXI.Application()
+const app = new PIXI.Application({
+  width: 1920,
+  height: 1080,
+})
 
-console.log(add(1, 2))
+// Load Game
+sceneController(app)
 
 // The application will create a canvas element for you that you
 // can then insert into the DOM
-document.body.appendChild(app.view)
-
-// Load Components
-loadBunny(app)
+document.getElementById('root').appendChild(app.view)
