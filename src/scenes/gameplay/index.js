@@ -10,14 +10,13 @@ const loadGameplayScene = (app, setCurrentScene) => {
     .add('coin', 'src/assets/art/coin.png')
     .add('smallBlueCircle', 'src/assets/art/small-blue-circle.png')
     .add('smallPinkCircle', 'src/assets/art/small-pink-circle.png')
+    .add('polygonButtonLeft', 'src/assets/art/button-polygon-left.png')
+    .add('polygonButtonRight', 'src/assets/art/button-polygon-right.png')
     .load((loader, resources) => {
       const bg = new PIXI.Sprite(resources.bg.texture)
       bg.position.set(0, 0, 0)
       app.stage.addChild(bg)
 
-      const channelDeckBg = new PIXI.Sprite(resources.channelDeckBg.texture)
-      channelDeckBg.position.set(97,637)
-      app.stage.addChild(channelDeckBg)
 
       const whiteRectangle = new PIXI.Sprite(resources.whiteRectangle.texture)
       whiteRectangle.position.set(1388,492)
@@ -39,9 +38,6 @@ const loadGameplayScene = (app, setCurrentScene) => {
       smallPinkCircle.position.set(1582,44)
       app.stage.addChild(smallPinkCircle)
 
-      const channelText = new PIXI.Text('CHANNEL', textStyle.subHeaderBlack)
-      channelText.position.set(97,582)
-      app.stage.addChild(channelText)
 
       const timeText = new PIXI.Text('TIME', textStyle.subHeaderBlack)
       timeText.position.set(97,505)
@@ -58,6 +54,23 @@ const loadGameplayScene = (app, setCurrentScene) => {
       const peopleText = new PIXI.Text('PEOPLE', textStyle.subHeaderBlack)
       peopleText.position.set(900,21)
       app.stage.addChild(peopleText)
+
+      // channelDeckComponent
+      const channelText = new PIXI.Text('CHANNEL', textStyle.subHeaderBlack)
+      channelText.position.set(97,582)
+      app.stage.addChild(channelText)
+
+      const channelDeckBg = new PIXI.Sprite(resources.channelDeckBg.texture)
+      channelDeckBg.position.set(97,637)
+      app.stage.addChild(channelDeckBg)
+
+      const polygonButtonLeft = new PIXI.Sprite(resources.polygonButtonLeft.texture)
+      polygonButtonLeft.position.set(53,744)
+      app.stage.addChild(polygonButtonLeft)
+
+      const polygonButtonRight = new PIXI.Sprite(resources.polygonButtonRight.texture)
+      polygonButtonRight.position.set(995,744)
+      app.stage.addChild(polygonButtonRight)
     })
 
 }
