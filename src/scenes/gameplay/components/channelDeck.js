@@ -12,11 +12,11 @@ export const loadChannelDeck = (app, resources) => {
   channelDeck.addChild(channelDeckBg)
 
   const polygonButtonLeft = new PIXI.Sprite(resources.polygonButtonLeft.texture)
-  polygonButtonLeft.position.set(53, 744)
+  polygonButtonLeft.position.set(53, 763)
   channelDeck.addChild(polygonButtonLeft)
 
   const polygonButtonRight = new PIXI.Sprite(resources.polygonButtonRight.texture)
-  polygonButtonRight.position.set(995, 744)
+  polygonButtonRight.position.set(995, 763)
   channelDeck.addChild(polygonButtonRight)
 
   app.stage.addChild(channelDeck)

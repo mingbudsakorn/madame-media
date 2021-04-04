@@ -16,7 +16,7 @@ const loadGameplayScene = (app, setCurrentScene) => {
     .add('timeBarBoarder', 'src/assets/art/time-bar-boarder.png')
     .add('coin', 'src/assets/art/coin.png')
     .add('moneyBackground', 'src/assets/art/white-rectangle.png')
-    .add('channelDeckBg', 'src/assets/art/channel-deck.png')
+    .add('channelDeckBg', 'src/assets/art/channel-deck-bg.png')
     .add('polygonButtonLeft', 'src/assets/art/button-polygon-left.png')
     .add('polygonButtonRight', 'src/assets/art/button-polygon-right.png')
     .add('finishButton', 'src/assets/art/finish-button.png')
