@@ -23,6 +23,7 @@ export const loadAsset = (app, setup) => {
   .add('women4', 'src/assets/art/women4.png')
   .add('shopBg', 'src/assets/art/shop-bg.png')
   .add('backButton','src/assets/art/back-button.png')
+  .add('duelBg', 'src/assets/art/duel-bg.png')
   .load(() => {
     setup(app)
   })

@@ -3,7 +3,6 @@ import { TIME_BAR_CONFIG } from '../../../utils/gameConfig.js'
 
 export const loadTimeBar = (resources) => {
   const timeBar = new PIXI.Container()
-  // timeBar.position.set(210, 506)
   timeBar.position.set(27,441)
 
   const sandClock = new PIXI.Sprite(resources.sandClock.texture)

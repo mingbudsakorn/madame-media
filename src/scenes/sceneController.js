@@ -1,5 +1,6 @@
 import loadGameplayScene from './gameplay/gamePlayScene.js'
 import loadShopScene from './shop/shopScene.js'
+import loadDuelScene from './duel/duelScene.js'
 import { scenes } from '../utils/scenes.js'
 
 // Scene Controller
@@ -19,13 +20,15 @@ const sceneController = (app) => {
         const shopScene = loadShopScene(app, setCurrentScene, gameState)
         shopScene.visible = true
         break
+      case scenes.duel:
+        const duelScene = loadDuelScene(app, setCurrentScene, gameState)
+        duelScene.visible = true
+        break
     }
   }
 
   if (currentScene === 0) {
     const gameplayScene = loadGameplayScene(app, setCurrentScene)
-    // test to set visible
-    // gameplayScene.visible = false;
   }
 
 }

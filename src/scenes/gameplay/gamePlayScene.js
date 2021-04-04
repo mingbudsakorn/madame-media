@@ -40,14 +40,18 @@ const loadGameplayScene = (app, setCurrentScene,
   // ----------------------button---------------------- //
   const finishButton = new PIXI.Sprite(resources.finishButton.texture)
   finishButton.position.set(1606, 738)
+  finishButton.interactive = true;
+  finishButton.on('mousedown', () => onClickFinishButton(setCurrentScene))
+              .on('touchstart', () => onClickFinishButton(setCurrentScene))
   gamePlayScene.addChild(finishButton)
+
 
   const buyChannelButton = new PIXI.Sprite(resources.buyChannelButton.texture)
   buyChannelButton.position.set(1517, 628)
-  gamePlayScene.addChild(buyChannelButton)
   buyChannelButton.interactive = true;
   buyChannelButton.on('mousedown', () => onClickBuyChannel(setCurrentScene))
-                  .on('touchstart', () => onClickBuyChannel(setCurrentScene) )
+                  .on('touchstart', () => onClickBuyChannel(setCurrentScene))
+  gamePlayScene.addChild(buyChannelButton)
   // -------------------------------------------------- //
 
   // ----------------------text---------------------- //
@@ -105,10 +109,13 @@ const loadGameplayScene = (app, setCurrentScene,
 }
 
 const onClickBuyChannel = (setCurrentScene) => {
-  console.log('click')
+  console.log('click-buy-button')
   setCurrentScene(scenes.shop, gamePlayScene, localGameState)
-  // const shop = loadShop(resources, gameState)
-  // app.stage.addChild(shop)
+}
+
+const onClickFinishButton = (setCurrentScene) => {
+  console.log('click-finish-button')
+  setCurrentScene(scenes.duel, gamePlayScene, localGameState)
 }
 
 export default loadGameplayScene
