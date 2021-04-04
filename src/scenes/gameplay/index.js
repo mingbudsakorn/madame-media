@@ -46,8 +46,12 @@ const loadGameplayScene = (app, setCurrentScene) => {
       peopleText.position.set(900, 21)
       app.stage.addChild(peopleText)
 
-      const turnText = new PIXI.Text('TURN : ', TEXT_STYLE.BODY_BLACK)
+      const turnText = new PIXI.Text('TURN : 1', TEXT_STYLE.BODY_BLACK)
       turnText.position.set(47, 412)
+      turnText.setTurnText = (turn) => {
+        turnText.text = 'TURN : ' + turn
+      }
+      // turnText.setTurnText(2)
       app.stage.addChild(turnText)
       // ------------------------------------------------ //
 
