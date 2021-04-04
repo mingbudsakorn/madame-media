@@ -37,10 +37,6 @@ const loadGameplayScene = (app, setCurrentScene) => {
       smallPinkCircle.position.set(1582, 44)
       app.stage.addChild(smallPinkCircle)
 
-      const sandClock = new PIXI.Sprite(resources.sandClock.texture)
-      sandClock.position.set(27, 491)
-      app.stage.addChild(sandClock)
-
       const finishButton = new PIXI.Sprite(resources.finishButton.texture)
       finishButton.position.set(1653, 827)
       app.stage.addChild(finishButton)
@@ -49,14 +45,6 @@ const loadGameplayScene = (app, setCurrentScene) => {
       const peopleText = new PIXI.Text('PEOPLE', TEXT_STYLE.SUBHEADER_BLACK)
       peopleText.position.set(900, 21)
       app.stage.addChild(peopleText)
-
-      const timeText = new PIXI.Text('TIME', TEXT_STYLE.SUBHEADER_BLACK)
-      timeText.position.set(97, 508)
-      app.stage.addChild(timeText)
-
-      const secText = new PIXI.Text('SEC', TEXT_STYLE.SUBHEADER_BLACK)
-      secText.position.set(980, 508)
-      app.stage.addChild(secText)
       // ------------------------------------------------ //
 
       const channelDeck = loadChannelDeck(app, resources)

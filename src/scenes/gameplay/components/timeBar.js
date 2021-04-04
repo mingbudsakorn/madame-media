@@ -3,35 +3,55 @@ import { TIME_BAR_CONFIG } from '../../../utils/gameConfig.js'
 
 export const loadTimeBar = (app, resources) => {
   const timeBar = new PIXI.Container()
-  timeBar.position.set(210, 506)
+  // timeBar.position.set(210, 506)
+  timeBar.position.set(27,491)
+
+  const sandClock = new PIXI.Sprite(resources.sandClock.texture)
+  timeBar.addChild(sandClock)
+
+  const timeText = new PIXI.Text('TIME', TEXT_STYLE.SUBHEADER_BLACK)
+  timeText.anchor.set(0,0.5)
+  timeText.position.set(71,35)
+  timeBar.addChild(timeText)
+
+  const secText = new PIXI.Text('SEC', TEXT_STYLE.SUBHEADER_BLACK)
+  secText.anchor.set(0,0.5)
+  secText.position.set(953,35)
+  timeBar.addChild(secText)
 
   const innerTimeBar = new PIXI.Sprite(resources.innerTimeBar.texture)
+  innerTimeBar.anchor.set(0,0.5)
+  innerTimeBar.position.set(183,35)
   timeBar.addChild(innerTimeBar)
 
   const outerTimeBar = new PIXI.Sprite(resources.outerTimeBar.texture)
-  outerTimeBar.position.set(5, 5)
+  outerTimeBar.anchor.set(0,0.5)
+  outerTimeBar.position.set(188,35)
   timeBar.addChild(outerTimeBar)
 
   const timeBarBoarder = new PIXI.Sprite(resources.timeBarBoarder.texture)
+  timeBarBoarder.anchor.set(0,0.5)
+  timeBarBoarder.position.set(183,35)
   timeBar.addChild(timeBarBoarder)
 
-  const timeText = new PIXI.Text(120, TEXT_STYLE.SUBHEADER_BLACK)
-  timeText.position.set(707, 2)
-  timeBar.addChild(timeText)
+  const timeLeft = new PIXI.Text(120, TEXT_STYLE.SUBHEADER_BLACK)
+  timeLeft.anchor.set(0,0.5)
+  timeLeft.position.set(884, 35)
+  timeBar.addChild(timeLeft)
 
   // set instance
   timeBar.barWidth = outerTimeBar.width
   timeBar.outerTimeBar = outerTimeBar
-  timeBar.leftTime = timeText
+  timeBar.timeLeft = timeLeft
 
   // set function
-  timeBar.setTime = (leftTime) => {
-    setTime(timeBar, leftTime)
+  timeBar.setTime = (timeLeft) => {
+    setTime(timeBar, timeLeft)
   }
 
   // init value
   timeBar.outerTimeBar.width = TIME_BAR_CONFIG.TIMR_PER_TURN * (timeBar.barWidth / TIME_BAR_CONFIG.TIMR_PER_TURN)
-  timeBar.leftTime.text = TIME_BAR_CONFIG.TIMR_PER_TURN
+  timeBar.timeLeft.text = TIME_BAR_CONFIG.TIMR_PER_TURN
 
   app.stage.addChild(timeBar)
 
@@ -40,7 +60,7 @@ export const loadTimeBar = (app, resources) => {
 
 const setTime = (timeBar, timeLeft) => {
   timeBar.outerTimeBar.width = timeLeft * (timeBar.barWidth / TIME_BAR_CONFIG.TIMR_PER_TURN)
-  timeBar.leftTime.text = timeLeft
+  timeBar.timeLeft.text = timeLeft
 }
 
 export default loadTimeBar
