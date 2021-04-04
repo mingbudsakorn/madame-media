@@ -1,9 +1,9 @@
-import { textStyle } from '../../../utils/style.js'
+import { TEXT_STYLE } from '../../../utils/style.js'
 
-const loadChannelDeck = (app, resources) => {
+export const loadChannelDeck = (app, resources) => {
   const channelDeck = new PIXI.Container()
 
-  const channelText = new PIXI.Text('CHANNEL', textStyle.subHeaderBlack)
+  const channelText = new PIXI.Text('CHANNEL', TEXT_STYLE.SUBHEADER_BLACK)
   channelText.position.set(97, 582)
   channelDeck.addChild(channelText)
 

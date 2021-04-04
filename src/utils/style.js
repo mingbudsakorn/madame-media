@@ -1,8 +1,13 @@
-export const textStyle = {
-  subHeaderBlack: new PIXI.TextStyle({
+export const TEXT_STYLE = {
+  SUBHEADER_BLACK: new PIXI.TextStyle({
     fontFamily: 'Cheque-Black',
     fontSize: 36,
   }),
+  BODY_BLACK: new PIXI.TextStyle({
+    fontFamily: 'Cheque-Black',
+    fontSize: 25,
+  }),
+  
 }
 
 export const COLOR = {

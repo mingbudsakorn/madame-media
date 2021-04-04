@@ -1,8 +1,8 @@
 import loadChannelDeck from './components/channelDeck.js'
-import { loadTimeBar, setTime } from './components/timeBar.js'
+import loadTimeBar from './components/timeBar.js'
 import loadPeopleBar from './components/peopleBar.js'
 
-import { textStyle, COLOR } from '../../utils/style.js'
+import {TEXT_STYLE, COLOR } from '../../utils/style.js'
 
 const loadGameplayScene = (app, setCurrentScene) => {
   app.loader
@@ -28,10 +28,6 @@ const loadGameplayScene = (app, setCurrentScene) => {
       bg.position.set(0, 0, 0)
       app.stage.addChild(bg)
 
-      const peopleText = new PIXI.Text('PEOPLE', textStyle.subHeaderBlack)
-      peopleText.position.set(900, 21)
-      app.stage.addChild(peopleText)
-
       const smallBlueCircle = new PIXI.Sprite(resources.smallBlueCircle.texture)
       smallBlueCircle.position.set(112, 44)
       app.stage.addChild(smallBlueCircle)
@@ -56,30 +52,45 @@ const loadGameplayScene = (app, setCurrentScene) => {
       finishButton.position.set(1653, 827)
       app.stage.addChild(finishButton)
 
-      const timeText = new PIXI.Text('TIME', textStyle.subHeaderBlack)
+      // ----------------------text---------------------- //
+      const peopleText = new PIXI.Text('PEOPLE', TEXT_STYLE.SUBHEADER_BLACK)
+      peopleText.position.set(900, 21)
+      app.stage.addChild(peopleText)
+
+      const timeText = new PIXI.Text('TIME', TEXT_STYLE.SUBHEADER_BLACK)
       timeText.position.set(97, 508)
       app.stage.addChild(timeText)
 
-      const secText = new PIXI.Text('SEC', textStyle.subHeaderBlack)
+      const secText = new PIXI.Text('SEC', TEXT_STYLE.SUBHEADER_BLACK)
       secText.position.set(980, 508)
       app.stage.addChild(secText)
 
-      const moneyText = new PIXI.Text('MONEY :', textStyle.subHeaderBlack)
+      const moneyText = new PIXI.Text('MONEY :', TEXT_STYLE.SUBHEADER_BLACK)
       moneyText.position.set(1217, 508)
       app.stage.addChild(moneyText)
 
-      const marbleText = new PIXI.Text('MARBLE', textStyle.subHeaderBlack)
+      const marbleText = new PIXI.Text('MARBLE', TEXT_STYLE.SUBHEADER_BLACK)
       marbleText.position.set(1691, 508)
       app.stage.addChild(marbleText)
+      // ------------------------------------------------ //
 
       const channelDeck = loadChannelDeck(app, resources)
 
       const timeBar = loadTimeBar(app, resources)
 
       //example to set timeLeft
-      timeBar.setTime(100)
+      // timeBar.setTime(100)
 
       const peopleBar = loadPeopleBar(app, resources)
+
+      // example to set people
+      // peopleBar.setPeople(300,60)
+
+      // example to get people
+      // let people = peopleBar.getPeople()
+      // console.log(people.myPeople)
+      // console.log(people.neutralPeople)
+      // console.log(people.opponentPeople)
     })
 }
 

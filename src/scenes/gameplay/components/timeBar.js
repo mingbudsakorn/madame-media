@@ -1,4 +1,4 @@
-import { textStyle } from '../../../utils/style.js'
+import { TEXT_STYLE } from '../../../utils/style.js'
 import { TIME_BAR_CONFIG } from '../../../utils/gameConfig.js'
 
 export const loadTimeBar = (app, resources) => {
@@ -15,24 +15,23 @@ export const loadTimeBar = (app, resources) => {
   const timeBarBoarder = new PIXI.Sprite(resources.timeBarBoarder.texture)
   timeBar.addChild(timeBarBoarder)
 
-  const timeText = new PIXI.Text(120, textStyle.subHeaderBlack)
+  const timeText = new PIXI.Text(120, TEXT_STYLE.SUBHEADER_BLACK)
   timeText.position.set(707, 2)
   timeBar.addChild(timeText)
 
-  // init time
-  let timeLeft = 120
-
   // set instance
-  timeBar.timeBarWidth = innerTimeBar.width
+  timeBar.barWidth = outerTimeBar.width
   timeBar.outerTimeBar = outerTimeBar
   timeBar.leftTime = timeText
+
+  // set function
   timeBar.setTime = (leftTime) => {
     setTime(timeBar, leftTime)
   }
 
-  // ajust value
-  timeBar.outerTimeBar.width = timeLeft * (timeBar.timeBarWidth / TIME_BAR_CONFIG.TIMR_PER_TURN)
-  timeBar.leftTime.text = timeLeft
+  // init value
+  timeBar.outerTimeBar.width = TIME_BAR_CONFIG.TIMR_PER_TURN * (timeBar.barWidth / TIME_BAR_CONFIG.TIMR_PER_TURN)
+  timeBar.leftTime.text = TIME_BAR_CONFIG.TIMR_PER_TURN
 
   app.stage.addChild(timeBar)
 
@@ -40,9 +39,8 @@ export const loadTimeBar = (app, resources) => {
 }
 
 export const setTime = (timeBar, timeLeft) => {
-  timeBar.outerTimeBar.width = timeLeft * (timeBar.timeBarWidth / TIME_BAR_CONFIG.TIMR_PER_TURN)
+  timeBar.outerTimeBar.width = timeLeft * (timeBar.barWidth / TIME_BAR_CONFIG.TIMR_PER_TURN)
   timeBar.leftTime.text = timeLeft
-  return timeBar
 }
 
 export default loadTimeBar
