@@ -10,8 +10,11 @@ const sceneController = (app) => {
   }
 
   if (currentScene === 0) {
-    loadGameplayScene(app, setCurrentScene)
+    const gameplayScene = loadGameplayScene(app, setCurrentScene)
+    // test to set visible
+    // gameplayScene.visible = false;
   }
+
 }
 
 export default sceneController

@@ -8,11 +8,11 @@ import { TEXT_STYLE, COLOR } from '../../utils/style.js'
 
 const loadGameplayScene = (app, setCurrentScene, gameState) => {
   //gameState -> #turn, #people, money, availableChannels, ownCards, player1Name, player2Name, player1avatarImg, player2avatarImg
-  const gamePlayScene = new PIXI.Container()
-  gamePlayScene.position.set(0,0)
-
   const resources = app.loader.resources
-  
+
+  const gamePlayScene = new PIXI.Container()
+  gamePlayScene.position.set(0, 0)
+
   const bg = new PIXI.Sprite(resources.bg.texture)
   bg.position.set(0, 0, 0)
   gamePlayScene.addChild(bg)
@@ -86,6 +86,6 @@ const loadGameplayScene = (app, setCurrentScene, gameState) => {
   app.stage.addChild(gamePlayScene)
 
   return gamePlayScene
-  }
+}
 
 export default loadGameplayScene
