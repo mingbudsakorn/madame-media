@@ -24,6 +24,7 @@ const loadGameplayScene = (app, setCurrentScene) => {
     .add('player1PeopleBar', 'src/assets/art/player1-people-bar.png')
     .add('player2PeopleBar', 'src/assets/art/player2-people-bar.png')
     .add('peopleBarBoarder', 'src/assets/art/people-bar-boarder.png')
+    .add('buyChannelButton', 'src/assets/art/buy-channel-button.png')
     .load((loader, resources) => {
       const bg = new PIXI.Sprite(resources.bg.texture)
       bg.position.set(0, 0, 0)
@@ -37,9 +38,16 @@ const loadGameplayScene = (app, setCurrentScene) => {
       smallPinkCircle.position.set(1582, 44)
       app.stage.addChild(smallPinkCircle)
 
+      // ----------------------button---------------------- //
       const finishButton = new PIXI.Sprite(resources.finishButton.texture)
       finishButton.position.set(1632, 788)
       app.stage.addChild(finishButton)
+
+      const buyChannelButton = new PIXI.Sprite(resources.buyChannelButton.texture)
+      buyChannelButton.position.set(1582, 678)
+      app.stage.addChild(buyChannelButton)
+      // -------------------------------------------------- //
+
 
       // ----------------------text---------------------- //
       const peopleText = new PIXI.Text('PEOPLE', TEXT_STYLE.SUBHEADER_BLACK)
