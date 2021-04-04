@@ -38,7 +38,7 @@ const loadGameplayScene = (app, setCurrentScene) => {
       app.stage.addChild(smallPinkCircle)
 
       const finishButton = new PIXI.Sprite(resources.finishButton.texture)
-      finishButton.position.set(1653, 827)
+      finishButton.position.set(1632, 788)
       app.stage.addChild(finishButton)
 
       // ----------------------text---------------------- //
