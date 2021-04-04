@@ -3,9 +3,8 @@ import loadTimeBar from './components/timeBar.js'
 import loadPeopleBar from './components/peopleBar.js'
 import loadMoneyBar from '../../components/moneyBar.js'
 import loadAvatar from './components/avatar.js'
-// import loadShop from '../shop/shop.js'
-import sceneController from '../sceneController.js'
-import{ MONEY_CONFIG } from '../../utils/gameConfig.js'
+
+import { MONEY_CONFIG } from '../../utils/gameConfig.js'
 import { scenes } from '../../utils/scenes.js' 
 
 import { TEXT_STYLE, COLOR } from '../../utils/style.js'
