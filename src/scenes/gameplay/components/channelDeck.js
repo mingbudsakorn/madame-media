@@ -3,7 +3,7 @@ import { TEXT_STYLE } from '../../../utils/style.js'
 export const loadChannelDeck = (app, resources) => {
   const channelDeck = new PIXI.Container()
 
-  const channelText = new PIXI.Text('CHANNEL', TEXT_STYLE.SUBHEADER_BLACK)
+  const channelText = new PIXI.Text('ช่องทางสื่อ', TEXT_STYLE.SUBHEADER_THAI)
   channelText.position.set(97, 532)
   channelDeck.addChild(channelText)
 

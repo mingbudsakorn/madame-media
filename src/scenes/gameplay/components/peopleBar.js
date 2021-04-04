@@ -21,16 +21,16 @@ export const loadPeopleBar = (app, resources) => {
   peopleBar.addChild(peopleBarBoarder)
 
   // ----------------------text---------------------- //
-  const player1PeopleText = new PIXI.Text(0, TEXT_STYLE.BODY_BLACK)
+  const player1PeopleText = new PIXI.Text(0, TEXT_STYLE.BODY_THAI)
   player1PeopleText.position.set(24, 66)
   peopleBar.addChild(player1PeopleText)
 
-  const player2PeopleText = new PIXI.Text(0, TEXT_STYLE.BODY_BLACK)
+  const player2PeopleText = new PIXI.Text(0, TEXT_STYLE.BODY_THAI)
   player2PeopleText.anchor.set(1, 0)
   player2PeopleText.position.set(1022, 66)
   peopleBar.addChild(player2PeopleText)
 
-  const neutralPeopleText = new PIXI.Text(0, TEXT_STYLE.BODY_BLACK)
+  const neutralPeopleText = new PIXI.Text(0, TEXT_STYLE.BODY_THAI)
   neutralPeopleText.anchor.set(0.5, 0)
   neutralPeopleText.position.set(525, 66)
   peopleBar.addChild(neutralPeopleText)

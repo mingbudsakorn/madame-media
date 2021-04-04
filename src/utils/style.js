@@ -7,6 +7,14 @@ export const TEXT_STYLE = {
     fontFamily: 'Cheque-Black',
     fontSize: 25,
   }),
+  SUBHEADER_THAI: new PIXI.TextStyle({
+    fontFamily: 'Chonburi',
+    fontSize: 36,
+  }),
+  BODY_THAI: new PIXI.TextStyle({
+    fontFamily: 'Chonburi',
+    fontSize: 25,
+  }),
   
 }
 

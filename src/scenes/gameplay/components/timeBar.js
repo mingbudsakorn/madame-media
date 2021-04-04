@@ -9,14 +9,14 @@ export const loadTimeBar = (app, resources) => {
   const sandClock = new PIXI.Sprite(resources.sandClock.texture)
   timeBar.addChild(sandClock)
 
-  const timeText = new PIXI.Text('TIME', TEXT_STYLE.SUBHEADER_BLACK)
+  const timeText = new PIXI.Text('เวลา', TEXT_STYLE.SUBHEADER_THAI)
   timeText.anchor.set(0,0.5)
-  timeText.position.set(71,35)
+  timeText.position.set(75,35)
   timeBar.addChild(timeText)
 
-  const secText = new PIXI.Text('SEC', TEXT_STYLE.SUBHEADER_BLACK)
+  const secText = new PIXI.Text('วินาที', TEXT_STYLE.SUBHEADER_THAI)
   secText.anchor.set(0,0.5)
-  secText.position.set(953,35)
+  secText.position.set(967,35)
   timeBar.addChild(secText)
 
   const innerTimeBar = new PIXI.Sprite(resources.innerTimeBar.texture)
@@ -34,9 +34,9 @@ export const loadTimeBar = (app, resources) => {
   timeBarBoarder.position.set(183,35)
   timeBar.addChild(timeBarBoarder)
 
-  const timeLeft = new PIXI.Text(120, TEXT_STYLE.SUBHEADER_BLACK)
-  timeLeft.anchor.set(0,0.5)
-  timeLeft.position.set(884, 35)
+  const timeLeft = new PIXI.Text(120, TEXT_STYLE.SUBHEADER_THAI)
+  timeLeft.anchor.set(0.5,0.5)
+  timeLeft.position.set(920, 35)
   timeBar.addChild(timeLeft)
 
   // set instance

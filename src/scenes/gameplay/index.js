@@ -15,7 +15,7 @@ const loadGameplayScene = (app, setCurrentScene) => {
     .add('outerTimeBar', 'src/assets/art/outer-time-bar.png')
     .add('timeBarBoarder', 'src/assets/art/time-bar-boarder.png')
     .add('coin', 'src/assets/art/coin.png')
-    .add('moneyBackground', 'src/assets/art/white-rectangle.png')
+    .add('moneyBackground', 'src/assets/art/money-bg.png')
     .add('channelDeckBg', 'src/assets/art/channel-deck-bg.png')
     .add('polygonButtonLeft', 'src/assets/art/button-polygon-left.png')
     .add('polygonButtonRight', 'src/assets/art/button-polygon-right.png')
@@ -40,24 +40,25 @@ const loadGameplayScene = (app, setCurrentScene) => {
 
       // ----------------------button---------------------- //
       const finishButton = new PIXI.Sprite(resources.finishButton.texture)
-      finishButton.position.set(1632, 738)
+      finishButton.position.set(1606, 738)
       app.stage.addChild(finishButton)
 
       const buyChannelButton = new PIXI.Sprite(resources.buyChannelButton.texture)
-      buyChannelButton.position.set(1582, 628)
+      buyChannelButton.position.set(1517, 628)
       app.stage.addChild(buyChannelButton)
       // -------------------------------------------------- //
 
 
       // ----------------------text---------------------- //
-      const peopleText = new PIXI.Text('PEOPLE', TEXT_STYLE.SUBHEADER_BLACK)
-      peopleText.position.set(900, 21)
+      const peopleText = new PIXI.Text('ประชาชน', TEXT_STYLE.SUBHEADER_THAI)
+      peopleText.anchor.set(0.5,0)
+      peopleText.position.set(960, 30)
       app.stage.addChild(peopleText)
 
-      const turnText = new PIXI.Text('TURN : 1', TEXT_STYLE.BODY_BLACK)
+      const turnText = new PIXI.Text('รอบที่ : 1', TEXT_STYLE.BODY_THAI)
       turnText.position.set(47, 362)
       turnText.setTurnText = (turn) => {
-        turnText.text = 'TURN : ' + turn
+        turnText.text = 'รอบที่ : ' + turn
       }
       // turnText.setTurnText(2)
       app.stage.addChild(turnText)
@@ -68,7 +69,7 @@ const loadGameplayScene = (app, setCurrentScene) => {
       const timeBar = loadTimeBar(app, resources)
       
       //example to set timeLeft
-      // timeBar.setTime(100)
+      // timeBar.setTime(90)
       
       const peopleBar = loadPeopleBar(app, resources)
       peopleBar.position.set(435, 74)

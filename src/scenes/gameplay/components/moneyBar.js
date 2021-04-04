@@ -3,29 +3,29 @@ import { MONEY_CONFIG } from '../../../utils/gameConfig.js'
 
 export const loadMoneyBar = (app, resources) => {
   const moneyBar = new PIXI.Container()
-  moneyBar.position.set(1130,440)
+  moneyBar.position.set(1170,440)
 
   const coin = new PIXI.Sprite(resources.coin.texture)
   moneyBar.addChild(coin)
 
   const moneyBackground = new PIXI.Sprite(resources.moneyBackground.texture)
   moneyBackground.anchor.set(0,0.5)
-  moneyBackground.position.set(250, 35)
+  moneyBackground.position.set(196, 35)
   moneyBar.addChild(moneyBackground)
 
-  const moneyText = new PIXI.Text('MONEY :', TEXT_STYLE.SUBHEADER_BLACK)
+  const moneyText = new PIXI.Text('เงิน :', TEXT_STYLE.SUBHEADER_THAI)
   moneyText.anchor.set(0,0.5)
   moneyText.position.set(87, 35)
   moneyBar.addChild(moneyText)
 
-  const marbleText = new PIXI.Text('MARBLE', TEXT_STYLE.SUBHEADER_BLACK)
+  const marbleText = new PIXI.Text('เหรียญ', TEXT_STYLE.SUBHEADER_THAI)
   marbleText.anchor.set(0,0.5)
-  marbleText.position.set(561, 35)
+  marbleText.position.set(532, 35)
   moneyBar.addChild(marbleText)
 
-  const money = new PIXI.Text(MONEY_CONFIG.INIT, TEXT_STYLE.SUBHEADER_BLACK)
+  const money = new PIXI.Text(MONEY_CONFIG.INIT, TEXT_STYLE.SUBHEADER_THAI)
   money.anchor.set(0.5,0.5)
-  money.position.set(393, 35)
+  money.position.set(356, 35)
   moneyBar.addChild(money)
 
   // set instance
