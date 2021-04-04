@@ -1,6 +1,7 @@
 import loadChannelDeck from './components/channelDeck.js'
 import loadTimeBar from './components/timeBar.js'
 import loadPeopleBar from './components/peopleBar.js'
+import loadMoneyBar from './components/moneyBar.js'
 
 import {TEXT_STYLE, COLOR } from '../../utils/style.js'
 
@@ -14,7 +15,7 @@ const loadGameplayScene = (app, setCurrentScene) => {
     .add('outerTimeBar', 'src/assets/art/outer-time-bar.png')
     .add('timeBarBoarder', 'src/assets/art/time-bar-boarder.png')
     .add('coin', 'src/assets/art/coin.png')
-    .add('whiteRectangle', 'src/assets/art/white-rectangle.png')
+    .add('moneyBackground', 'src/assets/art/white-rectangle.png')
     .add('channelDeckBg', 'src/assets/art/channel-deck.png')
     .add('polygonButtonLeft', 'src/assets/art/button-polygon-left.png')
     .add('polygonButtonRight', 'src/assets/art/button-polygon-right.png')
@@ -40,14 +41,6 @@ const loadGameplayScene = (app, setCurrentScene) => {
       sandClock.position.set(27, 491)
       app.stage.addChild(sandClock)
 
-      const coin = new PIXI.Sprite(resources.coin.texture)
-      coin.position.set(1130, 490)
-      app.stage.addChild(coin)
-
-      const whiteRectangle = new PIXI.Sprite(resources.whiteRectangle.texture)
-      whiteRectangle.position.set(1388, 492)
-      app.stage.addChild(whiteRectangle)
-
       const finishButton = new PIXI.Sprite(resources.finishButton.texture)
       finishButton.position.set(1653, 827)
       app.stage.addChild(finishButton)
@@ -64,25 +57,17 @@ const loadGameplayScene = (app, setCurrentScene) => {
       const secText = new PIXI.Text('SEC', TEXT_STYLE.SUBHEADER_BLACK)
       secText.position.set(980, 508)
       app.stage.addChild(secText)
-
-      const moneyText = new PIXI.Text('MONEY :', TEXT_STYLE.SUBHEADER_BLACK)
-      moneyText.position.set(1217, 508)
-      app.stage.addChild(moneyText)
-
-      const marbleText = new PIXI.Text('MARBLE', TEXT_STYLE.SUBHEADER_BLACK)
-      marbleText.position.set(1691, 508)
-      app.stage.addChild(marbleText)
       // ------------------------------------------------ //
 
       const channelDeck = loadChannelDeck(app, resources)
-
+      
       const timeBar = loadTimeBar(app, resources)
-
+      
       //example to set timeLeft
       // timeBar.setTime(100)
-
+      
       const peopleBar = loadPeopleBar(app, resources)
-
+      peopleBar.position.set(435, 74)
       // example to set people
       // peopleBar.setPeople(300,60)
 
@@ -91,6 +76,9 @@ const loadGameplayScene = (app, setCurrentScene) => {
       // console.log(people.myPeople)
       // console.log(people.neutralPeople)
       // console.log(people.opponentPeople)
+
+      const moneyBar = loadMoneyBar(app, resources)
+      moneyBar.setMoney(8888)
     })
 }
 

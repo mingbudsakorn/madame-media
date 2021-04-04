@@ -7,3 +7,7 @@ export const PEOPLE_BAR_CONFIG = {
   INIT_MY_PEOPLE: 200,
   INIT_OPPONENT_PEOPLE: 200
 }
+
+export const MONEY_CONFIG = {
+  INIT: 500
+}

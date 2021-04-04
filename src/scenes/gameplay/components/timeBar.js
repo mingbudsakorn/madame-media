@@ -38,7 +38,7 @@ export const loadTimeBar = (app, resources) => {
   return timeBar
 }
 
-export const setTime = (timeBar, timeLeft) => {
+const setTime = (timeBar, timeLeft) => {
   timeBar.outerTimeBar.width = timeLeft * (timeBar.barWidth / TIME_BAR_CONFIG.TIMR_PER_TURN)
   timeBar.leftTime.text = timeLeft
 }

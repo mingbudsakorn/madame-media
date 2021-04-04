@@ -3,7 +3,7 @@ import { PEOPLE_BAR_CONFIG } from '../../../utils/gameConfig.js'
 
 export const loadPeopleBar = (app, resources) => {
   const peopleBar = new PIXI.Container()
-  peopleBar.position.set(435, 74)
+  // peopleBar.position.set(435, 74)
 
   const innerPeopleBar = new PIXI.Sprite(resources.innerPeopleBar.texture)
   peopleBar.addChild(innerPeopleBar)
@@ -70,7 +70,7 @@ export const loadPeopleBar = (app, resources) => {
   return peopleBar
 }
 
-export const setPeople = (peopleBar, myPeople, opponentPeople) => {
+const setPeople = (peopleBar, myPeople, opponentPeople) => {
   peopleBar.player1Bar.width = myPeople * (peopleBar.barWidth / PEOPLE_BAR_CONFIG.TOTAL_PEOPLE)
   peopleBar.player2Bar.width =
     opponentPeople * (peopleBar.barWidth / PEOPLE_BAR_CONFIG.TOTAL_PEOPLE)
@@ -79,7 +79,7 @@ export const setPeople = (peopleBar, myPeople, opponentPeople) => {
   peopleBar.neutralPeople.text = PEOPLE_BAR_CONFIG.TOTAL_PEOPLE - myPeople - opponentPeople
 }
 
-export const getPeople = (peopleBar) => {
+const getPeople = (peopleBar) => {
   return {
     myPeople: peopleBar.player1People.text,
     opponentPeople: peopleBar.player2People.text,
