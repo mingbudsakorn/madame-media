@@ -36,8 +36,6 @@ export const loadMoneyBar = (app, resources) => {
     moneyBar.money.text = money
   }
 
-  app.stage.addChild(moneyBar)
-
   return moneyBar
 }
 

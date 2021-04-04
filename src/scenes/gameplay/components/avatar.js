@@ -14,8 +14,6 @@ export const loadAvatar = (app, img, name) => {
   avatarName.position.set(0,187)
   avatar.addChild(avatarName)
 
-  app.stage.addChild(avatar)
-
   return avatar
 }
 

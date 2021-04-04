@@ -19,8 +19,6 @@ export const loadChannelDeck = (app, resources) => {
   // polygonButtonRight.position.set(1486, 714)
   // channelDeck.addChild(polygonButtonRight)
 
-  app.stage.addChild(channelDeck)
-
   return channelDeck
 }
 

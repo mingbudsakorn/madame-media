@@ -65,8 +65,6 @@ export const loadPeopleBar = (app, resources) => {
     PEOPLE_BAR_CONFIG.INIT_MY_PEOPLE -
     PEOPLE_BAR_CONFIG.INIT_OPPONENT_PEOPLE
 
-  app.stage.addChild(peopleBar)
-
   return peopleBar
 }
 

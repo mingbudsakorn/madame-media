@@ -1,3 +1,3 @@
-const loadCard = () => {
+const loadCard = (resources) => {
   const card = new PIXI.Container()
 }
