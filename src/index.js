@@ -1,4 +1,4 @@
-import sceneController from './scenes/index.js'
+import sceneController from './scenes/sceneController.js'
 import { loadAsset } from './loader.js'
 
 const app = new PIXI.Application({

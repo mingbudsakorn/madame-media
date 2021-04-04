@@ -1,9 +1,8 @@
-import { TEXT_STYLE } from '../../../utils/style.js'
-import { MONEY_CONFIG } from '../../../utils/gameConfig.js'
+import { TEXT_STYLE } from '../utils/style.js'
+import { MONEY_CONFIG } from '../utils/gameConfig.js'
 
-export const loadMoneyBar = (app, resources) => {
+export const loadMoneyBar = (resources) => {
   const moneyBar = new PIXI.Container()
-  moneyBar.position.set(1170,440)
 
   const coin = new PIXI.Sprite(resources.coin.texture)
   moneyBar.addChild(coin)

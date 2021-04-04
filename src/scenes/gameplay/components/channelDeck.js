@@ -1,6 +1,6 @@
 import { TEXT_STYLE } from '../../../utils/style.js'
 
-export const loadChannelDeck = (app, resources) => {
+export const loadChannelDeck = (resources) => {
   const channelDeck = new PIXI.Container()
 
   const channelText = new PIXI.Text('ช่องทางสื่อ', TEXT_STYLE.SUBHEADER_THAI)

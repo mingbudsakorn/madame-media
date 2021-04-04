@@ -1,7 +1,7 @@
 import { TEXT_STYLE } from '../../../utils/style.js'
 import { PEOPLE_BAR_CONFIG } from '../../../utils/gameConfig.js'
 
-export const loadPeopleBar = (app, resources) => {
+export const loadPeopleBar = (resources) => {
   const peopleBar = new PIXI.Container()
   // peopleBar.position.set(435, 74)
 

@@ -1,17 +1,29 @@
 import loadChannelDeck from './components/channelDeck.js'
 import loadTimeBar from './components/timeBar.js'
 import loadPeopleBar from './components/peopleBar.js'
-import loadMoneyBar from './components/moneyBar.js'
+import loadMoneyBar from '../../components/moneyBar.js'
 import loadAvatar from './components/avatar.js'
+// import loadShop from '../shop/shop.js'
+import sceneController from '../sceneController.js'
+import{ MONEY_CONFIG } from '../../utils/gameConfig.js'
+import { scenes } from '../../utils/scenes.js' 
 
 import { TEXT_STYLE, COLOR } from '../../utils/style.js'
 
-const loadGameplayScene = (app, setCurrentScene, gameState) => {
+const gamePlayScene = new PIXI.Container()
+gamePlayScene.position.set(0, 0)
+
+let localGameState;
+
+const loadGameplayScene = (app, setCurrentScene, 
+  gameState = {
+    turn: 1, 
+    money: MONEY_CONFIG.INIT
+  }
+) => {
+  localGameState = gameState
   //gameState -> #turn, #people, money, availableChannels, ownCards, player1Name, player2Name, player1avatarImg, player2avatarImg
   const resources = app.loader.resources
-
-  const gamePlayScene = new PIXI.Container()
-  gamePlayScene.position.set(0, 0)
 
   const bg = new PIXI.Sprite(resources.bg.texture)
   bg.position.set(0, 0, 0)
@@ -33,6 +45,9 @@ const loadGameplayScene = (app, setCurrentScene, gameState) => {
   const buyChannelButton = new PIXI.Sprite(resources.buyChannelButton.texture)
   buyChannelButton.position.set(1517, 628)
   gamePlayScene.addChild(buyChannelButton)
+  buyChannelButton.interactive = true;
+  buyChannelButton.on('mousedown', () => onClickBuyChannel(setCurrentScene))
+                  .on('touchstart', () => onClickBuyChannel(setCurrentScene) )
   // -------------------------------------------------- //
 
   // ----------------------text---------------------- //
@@ -50,16 +65,16 @@ const loadGameplayScene = (app, setCurrentScene, gameState) => {
   gamePlayScene.addChild(turnText)
   // ------------------------------------------------ //
 
-  const channelDeck = loadChannelDeck(app, resources)
+  const channelDeck = loadChannelDeck(resources)
   gamePlayScene.addChild(channelDeck)
 
-  const timeBar = loadTimeBar(app, resources)
+  const timeBar = loadTimeBar(resources)
   gamePlayScene.addChild(timeBar)
 
   //example to set timeLeft
   // timeBar.setTime(90)
 
-  const peopleBar = loadPeopleBar(app, resources)
+  const peopleBar = loadPeopleBar(resources)
   peopleBar.position.set(435, 74)
   gamePlayScene.addChild(peopleBar)
   // example to set people
@@ -71,21 +86,29 @@ const loadGameplayScene = (app, setCurrentScene, gameState) => {
   // console.log(people.neutralPeople)
   // console.log(people.opponentPeople)
 
-  const moneyBar = loadMoneyBar(app, resources)
+  const moneyBar = loadMoneyBar(resources)
+  moneyBar.position.set(1170,440)
   moneyBar.setMoney(8888)
   gamePlayScene.addChild(moneyBar)
 
-  const player1 = loadAvatar(app, resources.man1.texture, 'โจนาทาน')
+  const player1 = loadAvatar(resources.man1.texture, 'โจนาทาน')
   player1.position.set(224.5, 82)
   gamePlayScene.addChild(player1)
 
-  const player2 = loadAvatar(app, resources.women4.texture, 'มิเชล')
+  const player2 = loadAvatar(resources.women4.texture, 'มิเชล')
   player2.position.set(1694.5, 82)
   gamePlayScene.addChild(player2)
 
   app.stage.addChild(gamePlayScene)
 
   return gamePlayScene
+}
+
+const onClickBuyChannel = (setCurrentScene) => {
+  console.log('click')
+  setCurrentScene(scenes.shop, gamePlayScene, localGameState)
+  // const shop = loadShop(resources, gameState)
+  // app.stage.addChild(shop)
 }
 
 export default loadGameplayScene

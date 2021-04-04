@@ -4,4 +4,5 @@ export const scenes = {
   intro: 2,
   chooseCharacter: 3,
   beforeStart: 4,
+  shop: 5
 }

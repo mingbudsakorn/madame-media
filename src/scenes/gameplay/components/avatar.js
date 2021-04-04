@@ -1,6 +1,6 @@
 import { TEXT_STYLE } from '../../../utils/style.js'
 
-export const loadAvatar = (app, img, name) => {
+export const loadAvatar = (img, name) => {
   // have to set position outside
   const avatar = new PIXI.Container()
   avatar.position.set(0,0)

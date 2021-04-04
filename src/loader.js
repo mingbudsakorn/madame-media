@@ -21,6 +21,8 @@ export const loadAsset = (app, setup) => {
   .add('buyChannelButton', 'src/assets/art/buy-channel-button.png')
   .add('man1', 'src/assets/art/man1.png')
   .add('women4', 'src/assets/art/women4.png')
+  .add('shopBg', 'src/assets/art/shop-bg.png')
+  .add('backButton','src/assets/art/back-button.png')
   .load(() => {
     setup(app)
   })
