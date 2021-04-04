@@ -7,7 +7,7 @@ import {TEXT_STYLE, COLOR } from '../../utils/style.js'
 
 const loadGameplayScene = (app, setCurrentScene) => {
   app.loader
-    .add('bg', 'src/assets/background/gameplay-1.png')
+    .add('bg', 'src/assets/background/gameplay-bg.png')
     .add('smallBlueCircle', 'src/assets/art/small-blue-circle.png')
     .add('smallPinkCircle', 'src/assets/art/small-pink-circle.png')
     .add('sandClock', 'src/assets/art/sand-clock.png')
@@ -40,11 +40,11 @@ const loadGameplayScene = (app, setCurrentScene) => {
 
       // ----------------------button---------------------- //
       const finishButton = new PIXI.Sprite(resources.finishButton.texture)
-      finishButton.position.set(1632, 788)
+      finishButton.position.set(1632, 738)
       app.stage.addChild(finishButton)
 
       const buyChannelButton = new PIXI.Sprite(resources.buyChannelButton.texture)
-      buyChannelButton.position.set(1582, 678)
+      buyChannelButton.position.set(1582, 628)
       app.stage.addChild(buyChannelButton)
       // -------------------------------------------------- //
 
@@ -55,7 +55,7 @@ const loadGameplayScene = (app, setCurrentScene) => {
       app.stage.addChild(peopleText)
 
       const turnText = new PIXI.Text('TURN : 1', TEXT_STYLE.BODY_BLACK)
-      turnText.position.set(47, 412)
+      turnText.position.set(47, 362)
       turnText.setTurnText = (turn) => {
         turnText.text = 'TURN : ' + turn
       }

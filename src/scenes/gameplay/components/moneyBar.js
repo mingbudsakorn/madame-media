@@ -3,7 +3,7 @@ import { MONEY_CONFIG } from '../../../utils/gameConfig.js'
 
 export const loadMoneyBar = (app, resources) => {
   const moneyBar = new PIXI.Container()
-  moneyBar.position.set(1130,490)
+  moneyBar.position.set(1130,440)
 
   const coin = new PIXI.Sprite(resources.coin.texture)
   moneyBar.addChild(coin)
