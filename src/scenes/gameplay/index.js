@@ -1,5 +1,6 @@
 import loadChannelDeck from './components/channelDeck.js'
 import loadTimeBar from './components/timeBar.js'
+import loadPeopleBar from './components/peopleBar.js'
 
 import { textStyle, COLOR } from '../../utils/style.js'
 
@@ -18,6 +19,10 @@ const loadGameplayScene = (app, setCurrentScene) => {
     .add('polygonButtonLeft', 'src/assets/art/button-polygon-left.png')
     .add('polygonButtonRight', 'src/assets/art/button-polygon-right.png')
     .add('finishButton', 'src/assets/art/finish-button.png')
+    .add('innerPeopleBar', 'src/assets/art/inner-people-bar.png')
+    .add('player1PeopleBar', 'src/assets/art/player1-people-bar.png')
+    .add('player2PeopleBar', 'src/assets/art/player2-people-bar.png')
+    .add('peopleBarBoarder', 'src/assets/art/people-bar-boarder.png')
     .load((loader, resources) => {
       const bg = new PIXI.Sprite(resources.bg.texture)
       bg.position.set(0, 0, 0)
@@ -55,6 +60,10 @@ const loadGameplayScene = (app, setCurrentScene) => {
       timeText.position.set(97, 508)
       app.stage.addChild(timeText)
 
+      const secText = new PIXI.Text('SEC', textStyle.subHeaderBlack)
+      secText.position.set(980, 508)
+      app.stage.addChild(secText)
+
       const moneyText = new PIXI.Text('MONEY :', textStyle.subHeaderBlack)
       moneyText.position.set(1217, 508)
       app.stage.addChild(moneyText)
@@ -66,6 +75,8 @@ const loadGameplayScene = (app, setCurrentScene) => {
       const channelDeck = loadChannelDeck(app, resources)
 
       const timeBar = loadTimeBar(app, resources)
+
+      const peopleBar = loadPeopleBar(app, resources)
     })
 }
 

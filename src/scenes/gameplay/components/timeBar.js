@@ -13,14 +13,18 @@ const loadTimeBar = (app, resources) => {
 
   const timeBarBoarder = new PIXI.Sprite(resources.timeBarBoarder.texture)
   timeBar.addChild(timeBarBoarder)
-
-  timeBar.outer = outerTimeBar
-  //depend on left time
-  timeBar.outer.width = 420
-
-  const timeText = new PIXI.Text('120 SEC', textStyle.subHeaderBlack)
-  timeText.position.set(701, 2)
+  
+  const timeText = new PIXI.Text('120', textStyle.subHeaderBlack)
+  timeText.position.set(707, 2)
   timeBar.addChild(timeText)
+
+  // set instance
+  timeBar.outerTimeBar = outerTimeBar
+  timeBar.timeText =  timeText
+
+  // ajust value
+  timeBar.outerTimeBar.width = 420
+  timeBar.timeText.text = '45'
 
   app.stage.addChild(timeBar)
 
