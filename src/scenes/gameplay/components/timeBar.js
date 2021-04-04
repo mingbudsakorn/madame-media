@@ -18,6 +18,10 @@ const loadTimeBar = (app, resources) => {
   //depend on left time
   timeBar.outer.width = 420
 
+  const timeText = new PIXI.Text('120 SEC', textStyle.subHeaderBlack)
+  timeText.position.set(701, 2)
+  timeBar.addChild(timeText)
+
   app.stage.addChild(timeBar)
 
   return timeBar
