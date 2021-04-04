@@ -45,6 +45,10 @@ const loadGameplayScene = (app, setCurrentScene) => {
       const peopleText = new PIXI.Text('PEOPLE', TEXT_STYLE.SUBHEADER_BLACK)
       peopleText.position.set(900, 21)
       app.stage.addChild(peopleText)
+
+      const turnText = new PIXI.Text('TURN : ', TEXT_STYLE.BODY_BLACK)
+      turnText.position.set(47, 412)
+      app.stage.addChild(turnText)
       // ------------------------------------------------ //
 
       const channelDeck = loadChannelDeck(app, resources)
