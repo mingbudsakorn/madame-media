@@ -2,10 +2,12 @@ import loadChannelDeck from './components/channelDeck.js'
 import loadTimeBar from './components/timeBar.js'
 import loadPeopleBar from './components/peopleBar.js'
 import loadMoneyBar from './components/moneyBar.js'
+import loadAvatar from './components/avatar.js'
 
 import {TEXT_STYLE, COLOR } from '../../utils/style.js'
 
-const loadGameplayScene = (app, setCurrentScene) => {
+const loadGameplayScene = (app, setCurrentScene, gameState) => {
+  //gameState -> #turn, #people, money, availableChannels, ownCards, player1Name, player2Name, player1avatarImg, player2avatarImg
   app.loader
     .add('bg', 'src/assets/background/gameplay-bg.png')
     .add('smallBlueCircle', 'src/assets/art/small-blue-circle.png')
@@ -25,6 +27,8 @@ const loadGameplayScene = (app, setCurrentScene) => {
     .add('player2PeopleBar', 'src/assets/art/player2-people-bar.png')
     .add('peopleBarBoarder', 'src/assets/art/people-bar-boarder.png')
     .add('buyChannelButton', 'src/assets/art/buy-channel-button.png')
+    .add('man1', 'src/assets/art/man1.png')
+    .add('women4', 'src/assets/art/women4.png')
     .load((loader, resources) => {
       const bg = new PIXI.Sprite(resources.bg.texture)
       bg.position.set(0, 0, 0)
@@ -84,6 +88,12 @@ const loadGameplayScene = (app, setCurrentScene) => {
 
       const moneyBar = loadMoneyBar(app, resources)
       moneyBar.setMoney(8888)
+
+      const player1 = loadAvatar(app, resources.man1.texture, 'โจนาทาน')
+      player1.position.set(224.5,82)
+
+      const player2 = loadAvatar(app, resources.women4.texture, 'มิเชล')
+      player2.position.set(1694.5,82)
     })
 }
 
