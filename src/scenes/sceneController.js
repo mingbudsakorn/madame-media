@@ -28,7 +28,9 @@ const sceneController = (app) => {
   }
 
   if (currentScene === 0) {
-    const gameplayScene = loadGameplayScene(app, setCurrentScene)
+    loadGameplayScene(app, setCurrentScene)
+    // test card
+    // loadShopScene(app, setCurrentScene)
   }
 
 }

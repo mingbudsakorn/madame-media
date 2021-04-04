@@ -24,6 +24,17 @@ export const loadAsset = (app, setup) => {
   .add('shopBg', 'src/assets/art/shop-bg.png')
   .add('backButton','src/assets/art/back-button.png')
   .add('duelBg', 'src/assets/art/duel-bg.png')
+  .add('realCardBg', 'src/assets/cards/real-card-bg.png')
+  .add('fakeCardBg', 'src/assets/cards/fake-card-bg.png')
+  .add('availVisual', 'src/assets/cards/avail-img-big.png')
+  .add('availText', 'src/assets/cards/avail-text-big.png')
+  .add('availAudio', 'src/assets/cards/avail-volume-big.png')
+  .add('notAvailVisual', 'src/assets/cards/not-avail-img-big.png')
+  .add('notAvailText', 'src/assets/cards/not-avail-text-big.png')
+  .add('notAvailAudio', 'src/assets/cards/not-avail-volume-big.png')
+  .add('cardLine', 'src/assets/cards/card-line.png')
+  .add('cardImageBg', 'src/assets/cards/card-img-bg.png')
+
   .load(() => {
     setup(app)
   })

@@ -1,5 +1,9 @@
 import { scenes } from '../../utils/scenes.js' 
 
+// test card
+// import loadCard from '../../components/Card.js'
+// import { CARD } from '../../utils/card.js'
+
 const shopScene = new PIXI.Container()
 shopScene.position.set(0,0)
 
@@ -20,6 +24,10 @@ const loadShopScene = (app, setCurrentScene, gameState) => {
   
   backButton.position.set(58,58)
   shopScene.addChild(backButton)
+
+  // test card
+  // const card1 = loadCard(resources, CARD[1].fake, false)
+  // shopScene.addChild(card1)
 
   app.stage.addChild(shopScene)
 

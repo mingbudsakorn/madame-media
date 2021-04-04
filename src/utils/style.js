@@ -1,11 +1,11 @@
 export const TEXT_STYLE = {
-  SUBHEADER_BLACK: new PIXI.TextStyle({
-    fontFamily: 'Cheque-Black',
-    fontSize: 36,
+  SUPER_HEADER_THAI: new PIXI.TextStyle({
+    fontFamily: 'Chonburi',
+    fontSize: 96,
   }),
-  BODY_BLACK: new PIXI.TextStyle({
-    fontFamily: 'Cheque-Black',
-    fontSize: 25,
+  HEADER_THAI: new PIXI.TextStyle({
+    fontFamily: 'Chonburi',
+    fontSize: 48,
   }),
   SUBHEADER_THAI: new PIXI.TextStyle({
     fontFamily: 'Chonburi',
@@ -15,7 +15,10 @@ export const TEXT_STYLE = {
     fontFamily: 'Chonburi',
     fontSize: 25,
   }),
-  
+  OVERLINE_THAI: new PIXI.TextStyle({
+    fontFamily: 'Chonburi',
+    fontSize: 18,
+  }),
 }
 
 export const COLOR = {
