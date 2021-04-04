@@ -1,5 +1,5 @@
 import loadChannelDeck from './components/channelDeck.js'
-import loadTimeBar from './components/timeBar.js'
+import { loadTimeBar, setTime } from './components/timeBar.js'
 import loadPeopleBar from './components/peopleBar.js'
 
 import { textStyle, COLOR } from '../../utils/style.js'
@@ -75,6 +75,9 @@ const loadGameplayScene = (app, setCurrentScene) => {
       const channelDeck = loadChannelDeck(app, resources)
 
       const timeBar = loadTimeBar(app, resources)
+
+      //example to set timeLeft
+      timeBar.setTime(100)
 
       const peopleBar = loadPeopleBar(app, resources)
     })
