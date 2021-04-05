@@ -10,7 +10,7 @@ export const TYPE = {
 }
 
 export const CARD = {
-  1: {
+  0: {
     real: {
       name: 'แนะนำตัวต่อสาธารณะชน',
       type: TYPE.PR.TEXT,
@@ -18,7 +18,8 @@ export const CARD = {
       visual: 1,
       text: 1,
       price: 50,
-      effect: TYPE.PR.EFFECT
+      effect: TYPE.PR.EFFECT,
+      description: ''
     },
     fake: {
       name: 'แนะนำตัวต่อสาธารณะชน',
@@ -27,7 +28,30 @@ export const CARD = {
       visual: 1,
       text: 1,
       price: 25,
-      effect: TYPE.PR.EFFECT
+      effect: TYPE.PR.EFFECT,
+      description: ''
+    }
+  },
+  1: {
+    real: {
+      name: 'โอ้ย ฉันทำงานหนักแหละ',
+      type: TYPE.PR.TEXT,
+      audio: 0,
+      visual: 0,
+      text: 5,
+      price: 110,
+      effect: TYPE.PR.EFFECT,
+      description: ''
+    },
+    fake: {
+      name: 'โอ้ย ฉันทำงานหนักแหละ',
+      type: TYPE.PR.TEXT,
+      audio: 0,
+      visual: 0,
+      text: 5,
+      price: 55,
+      effect: TYPE.PR.EFFECT,
+      description: ''
     }
   }
 }

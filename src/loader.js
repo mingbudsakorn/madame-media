@@ -36,6 +36,13 @@ export const loadAsset = (app, setup) => {
   .add('cardImageBg', 'src/assets/cards/card-img-bg.png')
   .add('availChannelBg', 'src/assets/channel/avail-channel-bg.png')
   .add('unavailChannelBg', 'src/assets/channel/unavail-channel-bg.png')
+  .add('overlay','src/assets/art/overlay.png')
+  .add('cardModalBg','src/assets/art/card-modal-bg.png')
+  .add('closeButton','src/assets/art/close-button.png')
+  .add('toggleButton','src/assets/art/toggle-button.png')
+  .add('useCardButton','src/assets/art/use-card-button.png')
+  .add('cardDescriptionBg','src/assets/art/card-modal-des-bg.png')
+  .add('cardContainerBg','src/assets/art/card-container-bg.png')
 
   .load(() => {
     setup(app)

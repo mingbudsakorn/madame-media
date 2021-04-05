@@ -102,21 +102,4 @@ const loadCard = (resources, cardConfig, isReal) => {
   return card
 }
 
-const loadRealCard = (resources) => {
-  let realCardBg = new PIXI.Sprite(resources.realCardBg.texture)
-
-  let cardLine = new PIXI.Sprite(resources.cardLine.texture)
-
-  // channelDeckBg.position.set(97, 587)
-  // channelDeck.addChild(channelDeckBg)
-
-  // const channelText = new PIXI.Text('ช่องทางสื่อ', TEXT_STYLE.SUBHEADER_THAI)
-  // channelText.position.set(97, 532)
-  // channelDeck.addChild(channelText)
-
-  // const channelDeckBg = new PIXI.Sprite(resources.channelDeckBg.texture)
-  // channelDeckBg.position.set(97, 587)
-  // channelDeck.addChild(channelDeckBg)
-}
-
 export default loadCard

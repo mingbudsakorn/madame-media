@@ -3,10 +3,13 @@ import loadTimeBar from './components/timeBar.js'
 import loadPeopleBar from './components/peopleBar.js'
 import loadMoneyBar from '../../components/moneyBar.js'
 import loadAvatar from './components/avatar.js'
+import loadCardModal from './components/cardModal.js'
+import loadCardContainer from './components/cardContainer.js'
 
 import { MONEY_CONFIG } from '../../utils/gameConfig.js'
 import { scenes } from '../../utils/scenes.js' 
 import { CHANNEL } from '../../utils/channel.js'
+import { CARD } from '../../utils/card.js'
 
 import { TEXT_STYLE, COLOR } from '../../utils/style.js'
 
@@ -112,6 +115,13 @@ const loadGameplayScene = (app, setCurrentScene,
   // const channel2 = loadChannel(resources, CHANNEL[5], 1)
   // channel2.position.set(channel.width + 50,channel.y)
   // gamePlayScene.addChild(channel2)
+
+  const cardModalWithOverlay = loadCardModal(resources, CARD[0])
+  
+  const cardContainer = loadCardContainer(resources, [CARD[0],CARD[1]], cardModalWithOverlay.toggle)
+  
+  gamePlayScene.addChild(cardContainer)
+  gamePlayScene.addChild(cardModalWithOverlay)
 
   app.stage.addChild(gamePlayScene)
 
