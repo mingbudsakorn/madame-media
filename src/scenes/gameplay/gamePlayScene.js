@@ -70,7 +70,7 @@ const loadGameplayScene = (app, setCurrentScene,
   // ------------------------------------------------ //
 
   const channelDeck = loadChannelDeck(resources)
-  channelDeck.position.set(97, 532)
+
   gamePlayScene.addChild(channelDeck)
 
   const timeBar = loadTimeBar(resources)

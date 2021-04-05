@@ -2,11 +2,10 @@ import { COLOR, TEXT_STYLE } from '../utils/style.js'
 
 const loadChannel = (resources, channelConfig, isAvailable) => {
   let channel = new PIXI.Container()
-  
-  let channelName = new PIXI.Text(channelConfig.name, TEXT_STYLE.BODY_THAI)
+
+  let channelName = new PIXI.Text(channelConfig.name, isAvailable? TEXT_STYLE.BODY_THAI : TEXT_STYLE.BODY_THAI_CHARCOAL)
   let channelBg = isAvailable? new PIXI.Sprite(resources.availChannelBg.texture) : new PIXI.Sprite(resources.unavailChannelBg.texture)
-  
-  channelName.style.fill = isAvailable? COLOR.BLACK : COLOR.CHARCOAL
+
   channelName.anchor.set(0.5,0)
   channelName.position.set(channelBg.width/2,5)
   channel.addChild(channelName)
@@ -32,7 +31,7 @@ const loadChannel = (resources, channelConfig, isAvailable) => {
   textIcon.position.set(visualIcon.x+visualIcon.width+23, audioIcon.y)
   channel.addChild(textIcon)
   
-  let percentageText = new PIXI.Text(channelConfig.percentage+'%', TEXT_STYLE.BODY_THAI)
+  let percentageText = new PIXI.Text(channelConfig.percentage+'%', isAvailable? TEXT_STYLE.BODY_THAI : TEXT_STYLE.BODY_THAI_CHARCOAL)
   percentageText.style.fill = isAvailable? COLOR.BLACK : COLOR.CHARCOAL
   percentageText.anchor.set(0.5,0)
   percentageText.position.set(channelBg.width/2, channelBg.y+20)
