@@ -40,49 +40,41 @@ const loadCard = (resources, cardConfig, isReal) => {
   textIconSmall.position.set(146,31)
   card.addChild(textIconSmall)
   
-  let cardName = new PIXI.Text(cardConfig.name, TEXT_STYLE.BODY_THAI)
-  cardName.style.fill = COLOR.CHARCOAL
+  let cardName = new PIXI.Text(cardConfig.name, TEXT_STYLE.BODY_THAI_CHARCOAL)
   cardName.position.set(34, 86)
   card.addChild(cardName)
 
-  let cardType = new PIXI.Text(cardConfig.type, TEXT_STYLE.HEADER_THAI)
-  cardType.style.fill = COLOR.CHARCOAL
+  let cardType = new PIXI.Text(cardConfig.type, TEXT_STYLE.HEADER_THAI_CHACOAL)
   cardType.anchor.set(0.5)
   cardType.position.set(cardBg.width/2, 571.5)
   card.addChild(cardType)
 
-  let cardPrice = new PIXI.Text(cardConfig.price, TEXT_STYLE.HEADER_THAI)
-  cardPrice.style.fill = COLOR.CHARCOAL
+  let cardPrice = new PIXI.Text(cardConfig.price, TEXT_STYLE.HEADER_THAI_CHACOAL)
   cardPrice.anchor.set(1,1)
   cardPrice.position.set(396, 83)
   card.addChild(cardPrice)
 
-  let unitText = new PIXI.Text('เหรียญ', TEXT_STYLE.OVERLINE_THAI)
-  unitText.style.fill = COLOR.CHARCOAL
+  let unitText = new PIXI.Text('เหรียญ', TEXT_STYLE.OVERLINE_THAI_CHACOAL)
   unitText.anchor.set(0,1)
   unitText.position.set(405, 76)
   card.addChild(unitText)
 
-  let audioText = new PIXI.Text(cardConfig.audio + '%', TEXT_STYLE.BODY_THAI)
-  audioText.style.fill = COLOR.CHARCOAL
+  let audioText = new PIXI.Text(cardConfig.audio + '%', TEXT_STYLE.BODY_THAI_CHARCOAL)
   audioText.anchor.set(0.5)
   audioText.position.set(142, 683.5)
   card.addChild(audioText)
 
-  let visualText = new PIXI.Text(cardConfig.visual + '%', TEXT_STYLE.BODY_THAI)
-  visualText.style.fill = COLOR.CHARCOAL
+  let visualText = new PIXI.Text(cardConfig.visual + '%', TEXT_STYLE.BODY_THAI_CHARCOAL)
   visualText.anchor.set(0.5)
   visualText.position.set(282, 683.5)
   card.addChild(visualText)
 
-  let textText = new PIXI.Text(cardConfig.text + '%', TEXT_STYLE.BODY_THAI)
-  textText.style.fill = COLOR.CHARCOAL
+  let textText = new PIXI.Text(cardConfig.text + '%', TEXT_STYLE.BODY_THAI_CHARCOAL)
   textText.anchor.set(0.5)
   textText.position.set(422, 683.5)
   card.addChild(textText)
   
-  let effectText = new PIXI.Text(cardConfig.effect, TEXT_STYLE.BODY_THAI)
-  effectText.style.fill = COLOR.CHARCOAL
+  let effectText = new PIXI.Text(cardConfig.effect, TEXT_STYLE.BODY_THAI_CHARCOAL)
   effectText.anchor.set(0.5)
   effectText.position.set(cardBg.width/2, 619)
   card.addChild(effectText)
@@ -92,8 +84,7 @@ const loadCard = (resources, cardConfig, isReal) => {
   card.addChild(cardImageBg)
 
   if (!isReal) {
-    let fakeText = new PIXI.Text('ปลอม', TEXT_STYLE.SUPER_HEADER_THAI)
-    fakeText.style.fill = COLOR.CHARCOAL
+    let fakeText = new PIXI.Text('ปลอม', TEXT_STYLE.SUPER_HEADER_THAI_CHACOAL)
     fakeText.anchor.set(0.5)
     fakeText.position.set(cardBg.width/2, 339.5)
     card.addChild(fakeText)

@@ -17,13 +17,28 @@ export const TEXT_STYLE = {
     fontFamily: 'Chonburi',
     fontSize: 96,
   }),
+  SUPER_HEADER_THAI_CHACOAL: new PIXI.TextStyle({
+    fontFamily: 'Chonburi',
+    fontSize: 96,
+    fill: COLOR.CHARCOAL
+  }),
   HEADER_THAI: new PIXI.TextStyle({
     fontFamily: 'Chonburi',
     fontSize: 48,
   }),
+  HEADER_THAI_CHACOAL: new PIXI.TextStyle({
+    fontFamily: 'Chonburi',
+    fontSize: 48,
+    fill: COLOR.CHARCOAL
+  }),
   SUBHEADER_THAI: new PIXI.TextStyle({
     fontFamily: 'Chonburi',
     fontSize: 36,
+  }),
+  SUBHEADER_THAI_CHARCOAL: new PIXI.TextStyle({
+    fontFamily: 'Chonburi',
+    fontSize: 36,
+    fill: COLOR.CHARCOAL
   }),
   BODY_THAI: new PIXI.TextStyle({
     fontFamily: 'Chonburi',
@@ -37,6 +52,11 @@ export const TEXT_STYLE = {
   OVERLINE_THAI: new PIXI.TextStyle({
     fontFamily: 'Chonburi',
     fontSize: 18,
+  }),
+  OVERLINE_THAI_CHACOAL: new PIXI.TextStyle({
+    fontFamily: 'Chonburi',
+    fontSize: 18,
+    fill: COLOR.CHARCOAL
   }),
 }
 
