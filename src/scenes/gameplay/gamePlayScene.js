@@ -6,6 +6,7 @@ import loadAvatar from './components/avatar.js'
 
 import { MONEY_CONFIG } from '../../utils/gameConfig.js'
 import { scenes } from '../../utils/scenes.js' 
+import { CHANNEL } from '../../utils/channel.js'
 
 import { TEXT_STYLE, COLOR } from '../../utils/style.js'
 
@@ -69,6 +70,7 @@ const loadGameplayScene = (app, setCurrentScene,
   // ------------------------------------------------ //
 
   const channelDeck = loadChannelDeck(resources)
+  channelDeck.position.set(97, 532)
   gamePlayScene.addChild(channelDeck)
 
   const timeBar = loadTimeBar(resources)
@@ -101,6 +103,15 @@ const loadGameplayScene = (app, setCurrentScene,
   const player2 = loadAvatar(resources.women4.texture, 'มิเชล')
   player2.position.set(1694.5, 82)
   gamePlayScene.addChild(player2)
+
+  // // test channel
+  // const channel = loadChannel(resources, CHANNEL[4], 1)
+  // channel.position.set(25,200)
+  // gamePlayScene.addChild(channel)
+  
+  // const channel2 = loadChannel(resources, CHANNEL[5], 1)
+  // channel2.position.set(channel.width + 50,channel.y)
+  // gamePlayScene.addChild(channel2)
 
   app.stage.addChild(gamePlayScene)
 

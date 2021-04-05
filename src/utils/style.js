@@ -31,4 +31,6 @@ export const COLOR = {
   CHARCOAL: '0x4A4A4A',
   BLACK: '0x000000',
   WHITE: '0xFFFFFF',
+  SILVER: '0xBFC0C0',
+  BASE: '0xEFF0ED'
 }

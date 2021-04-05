@@ -34,6 +34,8 @@ export const loadAsset = (app, setup) => {
   .add('notAvailAudio', 'src/assets/cards/not-avail-volume-big.png')
   .add('cardLine', 'src/assets/cards/card-line.png')
   .add('cardImageBg', 'src/assets/cards/card-img-bg.png')
+  .add('availChannelBg', 'src/assets/channel/avail-channel-bg.png')
+  .add('unavailChannelBg', 'src/assets/channel/unavail-channel-bg.png')
 
   .load(() => {
     setup(app)

@@ -30,7 +30,7 @@ const sceneController = (app) => {
   if (currentScene === 0) {
     loadGameplayScene(app, setCurrentScene)
     // test card
-    // loadShopScene(app, setCurrentScene)
+    // loadDuelScene(app, setCurrentScene)
   }
 
 }
