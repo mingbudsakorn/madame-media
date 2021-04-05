@@ -2,7 +2,7 @@
   "name": "madame-media",
   "version": "1.0.0",
   "scripts": {
-    "start": "yarn clean && parcel src/index.html",
+    "dev": "yarn clean && parcel src/index.html",
     "build": "yarn clean && parcel build src/index.html --public-url ./",
     "build_serve": "yarn build && http-server ./dist",
     "clean": "rimraf ./dist ./.cache"
