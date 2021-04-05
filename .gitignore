@@ -17,6 +17,9 @@
 .settings/
 *.sublime-workspace
 
+.vscode
+.cache
+
 # Parcel
 .cache/*
 /lib
