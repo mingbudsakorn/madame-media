@@ -1,3 +1,5 @@
+import * as PIXI from 'pixi.js'
+
 export interface People {
   myPeople: number
   opponentPeople: number
@@ -32,4 +34,8 @@ export interface Channel {
 export interface DuelChannel {
   card: number
   channel: number
+}
+
+export interface Scene extends PIXI.Container {
+  onAppear: () => void
 }

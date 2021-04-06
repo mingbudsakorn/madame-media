@@ -1,5 +1,7 @@
 import * as PIXI from 'pixi.js'
 import loadDuelScene from './loadScene'
+import { Scene } from '../../types'
+import { scenes } from '../../constants/scenes'
 
 const mockCardList = [
   {
@@ -26,24 +28,28 @@ const DuelScene = (
   resources: PIXI.IResourceDictionary,
   setCurrentScene: (scene: number) => void,
 ) => {
-  const { scene, children } = loadDuelScene(resources)
+  const duelScene = loadDuelScene(resources)
 
-  const { duelCompareBg, opponentChannelContainer, myChannelContainer } = children
+  const { duelCompareBg, opponentChannelContainer, myChannelContainer } = duelScene.children
+  const scene = duelScene.scene as Scene
 
   // Init channels
   myChannelContainer.setChannels(mockCardList)
   opponentChannelContainer.setChannels(mockCardList2)
 
-  const channelPadding = 25
-  let channelCount = 0
-  setInterval(() => {
-    if (channelCount >= 6) {
-      clearInterval()
-      return
-    }
-    channelCount += 1
-    duelCompareBg.x = duelCompareBg.x + duelCompareBg.width + channelPadding
-  }, 1000)
+  scene.onAppear = () => {
+    const channelPadding = 25
+    let channelCount = 0
+    setInterval(() => {
+      if (channelCount >= 6) {
+        clearInterval()
+        setCurrentScene(scenes.gameplay)
+        return
+      }
+      channelCount += 1
+      duelCompareBg.x = duelCompareBg.x + duelCompareBg.width + channelPadding
+    }, 1000)
+  }
 
   return scene
 }
