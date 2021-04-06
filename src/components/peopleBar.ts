@@ -1,14 +1,18 @@
 import * as PIXI from 'pixi.js'
-import { TEXT_STYLE } from '../../../constants/style'
-import { PEOPLE_BAR_CONFIG } from '../../../constants/gameConfig'
-import { People } from '../../../types'
+import { TEXT_STYLE } from '../constants/style'
+import { PEOPLE_BAR_CONFIG } from '../constants/gameConfig'
+import { People } from '../types'
 
 interface PeopleBarType extends PIXI.Container {
   setPeople: (myPeople: number, opponentPeople: number) => void
   getPeople: () => People
 }
 
-export const loadPeopleBar = (resources: PIXI.IResourceDictionary) => {
+export const loadPeopleBar = (
+  resources: PIXI.IResourceDictionary,
+  myPeople: number,
+  opponentPeople: number,
+) => {
   const peopleBar = new PIXI.Container() as PeopleBarType
   // peopleBar.position.set(435, 74)
 
@@ -70,17 +74,11 @@ export const loadPeopleBar = (resources: PIXI.IResourceDictionary) => {
   }
 
   // init value
-  player1PeopleBar.width =
-    PEOPLE_BAR_CONFIG.INIT_MY_PEOPLE * (innerPeopleBar.width / PEOPLE_BAR_CONFIG.TOTAL_PEOPLE)
-  player2PeopleBar.width =
-    PEOPLE_BAR_CONFIG.INIT_OPPONENT_PEOPLE * (innerPeopleBar.width / PEOPLE_BAR_CONFIG.TOTAL_PEOPLE)
-  player1PeopleText.text = PEOPLE_BAR_CONFIG.INIT_MY_PEOPLE.toString()
-  player2PeopleText.text = PEOPLE_BAR_CONFIG.INIT_OPPONENT_PEOPLE.toString()
-  neutralPeopleText.text = (
-    PEOPLE_BAR_CONFIG.TOTAL_PEOPLE -
-    PEOPLE_BAR_CONFIG.INIT_MY_PEOPLE -
-    PEOPLE_BAR_CONFIG.INIT_OPPONENT_PEOPLE
-  ).toString()
+  player1PeopleBar.width = myPeople * (innerPeopleBar.width / PEOPLE_BAR_CONFIG.TOTAL_PEOPLE)
+  player2PeopleBar.width = opponentPeople * (innerPeopleBar.width / PEOPLE_BAR_CONFIG.TOTAL_PEOPLE)
+  player1PeopleText.text = myPeople.toString()
+  player2PeopleText.text = opponentPeople.toString()
+  neutralPeopleText.text = (PEOPLE_BAR_CONFIG.TOTAL_PEOPLE - myPeople - opponentPeople).toString()
 
   return peopleBar
 }

@@ -10,8 +10,8 @@ export const loadTimeBar = (resources: PIXI.IResourceDictionary) => {
   const timeBar = new PIXI.Container() as TimeBarType
   timeBar.position.set(27, 441)
 
-  const sandClock = new PIXI.Sprite(resources['art/sand-clock'].texture)
-  timeBar.addChild(sandClock)
+  const hourglass = new PIXI.Sprite(resources['art/hourglass'].texture)
+  timeBar.addChild(hourglass)
 
   const timeText = new PIXI.Text('เวลา', TEXT_STYLE.SUBHEADER_THAI)
   timeText.anchor.set(0, 0.5)
@@ -43,9 +43,11 @@ export const loadTimeBar = (resources: PIXI.IResourceDictionary) => {
   timeLeftText.position.set(920, 35)
   timeBar.addChild(timeLeftText)
 
+  const initialBarWidth = outerTimeBar.width
+
   // set function
   timeBar.setTime = (timeLeft: number) => {
-    outerTimeBar.width = timeLeft * (outerTimeBar.width / TIME_BAR_CONFIG.TIME_PER_TURN)
+    outerTimeBar.width = timeLeft * (initialBarWidth / TIME_BAR_CONFIG.TIME_PER_TURN)
     timeLeftText.text = timeLeft.toString()
   }
 

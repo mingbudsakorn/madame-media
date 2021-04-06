@@ -1,5 +1,8 @@
 export const scenes = {
   gameplay: 0,
-  shop: 1,
-  duel: 2,
+  duel: 1,
+  intro: 2,
+  chooseCharacter: 3,
+  beforeStart: 4,
+  shop: 5,
 }
