@@ -4,7 +4,7 @@ import { MONEY_CONFIG } from '../constants/gameConfig'
 
 interface MoneyBarType extends PIXI.Container {
   money: PIXI.Text
-  setMoney: (number) => void
+  setMoney: (money: number) => void
 }
 
 export const loadMoneyBar = (resources: PIXI.IResourceDictionary) => {
