@@ -9,4 +9,6 @@ Object.entries(assets).forEach(([name, path]: [string, string]) => {
   app.loader.add(name, path)
 })
 
-gameController(app)
+app.loader.load(() => {
+  gameController(app)
+})
