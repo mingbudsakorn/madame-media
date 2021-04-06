@@ -3,9 +3,6 @@ import { TEXT_STYLE } from '../../../constants/style'
 import { TIME_BAR_CONFIG } from '../../../constants/gameConfig'
 
 interface TimeBarType extends PIXI.Container {
-  barWidth: number
-  outerTimeBar: PIXI.Sprite
-  timeLeft: PIXI.Text
   setTime: (timeLeft: number) => void
 }
 
@@ -41,32 +38,23 @@ export const loadTimeBar = (resources: PIXI.IResourceDictionary) => {
   timeBarBoarder.position.set(183, 35)
   timeBar.addChild(timeBarBoarder)
 
-  const timeLeft = new PIXI.Text('120', TEXT_STYLE.SUBHEADER_THAI)
-  timeLeft.anchor.set(0.5, 0.5)
-  timeLeft.position.set(920, 35)
-  timeBar.addChild(timeLeft)
-
-  // set instance
-  timeBar.barWidth = outerTimeBar.width
-  timeBar.outerTimeBar = outerTimeBar
-  timeBar.timeLeft = timeLeft
+  const timeLeftText = new PIXI.Text('120', TEXT_STYLE.SUBHEADER_THAI)
+  timeLeftText.anchor.set(0.5, 0.5)
+  timeLeftText.position.set(920, 35)
+  timeBar.addChild(timeLeftText)
 
   // set function
   timeBar.setTime = (timeLeft: number) => {
-    setTime(timeBar, timeLeft)
+    outerTimeBar.width = timeLeft * (outerTimeBar.width / TIME_BAR_CONFIG.TIME_PER_TURN)
+    timeLeftText.text = timeLeft.toString()
   }
 
   // init value
-  timeBar.outerTimeBar.width =
-    TIME_BAR_CONFIG.TIME_PER_TURN * (timeBar.barWidth / TIME_BAR_CONFIG.TIME_PER_TURN)
-  timeBar.timeLeft.text = TIME_BAR_CONFIG.TIME_PER_TURN.toString()
+  outerTimeBar.width =
+    TIME_BAR_CONFIG.TIME_PER_TURN * (outerTimeBar.width / TIME_BAR_CONFIG.TIME_PER_TURN)
+  timeLeftText.text = TIME_BAR_CONFIG.TIME_PER_TURN.toString()
 
   return timeBar
-}
-
-const setTime = (timeBar: TimeBarType, timeLeft: number) => {
-  timeBar.outerTimeBar.width = timeLeft * (timeBar.barWidth / TIME_BAR_CONFIG.TIME_PER_TURN)
-  timeBar.timeLeft.text = timeLeft.toString()
 }
 
 export default loadTimeBar

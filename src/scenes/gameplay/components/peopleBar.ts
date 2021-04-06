@@ -4,12 +4,6 @@ import { PEOPLE_BAR_CONFIG } from '../../../constants/gameConfig'
 import { People } from '../../../types'
 
 interface PeopleBarType extends PIXI.Container {
-  barWidth: number
-  player1Bar: PIXI.Sprite
-  player2Bar: PIXI.Sprite
-  player1People: PIXI.Text
-  player2People: PIXI.Text
-  neutralPeople: PIXI.Text
   setPeople: (myPeople: number, opponentPeople: number) => void
   getPeople: () => People
 }
@@ -49,54 +43,46 @@ export const loadPeopleBar = (resources: PIXI.IResourceDictionary) => {
   peopleBar.addChild(neutralPeopleText)
   // ------------------------------------------------ //
 
-  // set instance
-  peopleBar.barWidth = innerPeopleBar.width
-  peopleBar.player1Bar = player1PeopleBar
-  peopleBar.player2Bar = player2PeopleBar
-  peopleBar.player1People = player1PeopleText
-  peopleBar.player2People = player2PeopleText
-  peopleBar.neutralPeople = neutralPeopleText
+  const calculatePeople = (myPeople: number, opponentPeople: number) => {
+    player1PeopleBar.width = myPeople * (innerPeopleBar.width / PEOPLE_BAR_CONFIG.TOTAL_PEOPLE)
+    player2PeopleBar.width =
+      opponentPeople * (innerPeopleBar.width / PEOPLE_BAR_CONFIG.TOTAL_PEOPLE)
+    player1PeopleText.text = myPeople.toString()
+    player2PeopleText.text = opponentPeople.toString()
+    neutralPeopleText.text = (PEOPLE_BAR_CONFIG.TOTAL_PEOPLE - myPeople - opponentPeople).toString()
+  }
 
-  // set function
+  const getPeople = () => {
+    return {
+      myPeople: parseInt(player1PeopleText.text),
+      opponentPeople: parseInt(player2PeopleText.text),
+      neutralPeople: parseInt(neutralPeopleText.text),
+    } as People
+  }
+
+  // getters/setters
   peopleBar.setPeople = (myPeople: number, opponentPeople: number) => {
-    setPeople(peopleBar, myPeople, opponentPeople)
+    calculatePeople(myPeople, opponentPeople)
   }
 
   peopleBar.getPeople = () => {
-    return getPeople(peopleBar)
+    return getPeople()
   }
 
   // init value
-  peopleBar.player1Bar.width =
-    PEOPLE_BAR_CONFIG.INIT_MY_PEOPLE * (peopleBar.barWidth / PEOPLE_BAR_CONFIG.TOTAL_PEOPLE)
-  peopleBar.player2Bar.width =
-    PEOPLE_BAR_CONFIG.INIT_OPPONENT_PEOPLE * (peopleBar.barWidth / PEOPLE_BAR_CONFIG.TOTAL_PEOPLE)
-  peopleBar.player1People.text = PEOPLE_BAR_CONFIG.INIT_MY_PEOPLE.toString()
-  peopleBar.player2People.text = PEOPLE_BAR_CONFIG.INIT_OPPONENT_PEOPLE.toString()
-  peopleBar.neutralPeople.text = (
+  player1PeopleBar.width =
+    PEOPLE_BAR_CONFIG.INIT_MY_PEOPLE * (innerPeopleBar.width / PEOPLE_BAR_CONFIG.TOTAL_PEOPLE)
+  player2PeopleBar.width =
+    PEOPLE_BAR_CONFIG.INIT_OPPONENT_PEOPLE * (innerPeopleBar.width / PEOPLE_BAR_CONFIG.TOTAL_PEOPLE)
+  player1PeopleText.text = PEOPLE_BAR_CONFIG.INIT_MY_PEOPLE.toString()
+  player2PeopleText.text = PEOPLE_BAR_CONFIG.INIT_OPPONENT_PEOPLE.toString()
+  neutralPeopleText.text = (
     PEOPLE_BAR_CONFIG.TOTAL_PEOPLE -
     PEOPLE_BAR_CONFIG.INIT_MY_PEOPLE -
     PEOPLE_BAR_CONFIG.INIT_OPPONENT_PEOPLE
   ).toString()
 
   return peopleBar
-}
-
-const setPeople = (peopleBar, myPeople, opponentPeople) => {
-  peopleBar.player1Bar.width = myPeople * (peopleBar.barWidth / PEOPLE_BAR_CONFIG.TOTAL_PEOPLE)
-  peopleBar.player2Bar.width =
-    opponentPeople * (peopleBar.barWidth / PEOPLE_BAR_CONFIG.TOTAL_PEOPLE)
-  peopleBar.player1People.text = myPeople
-  peopleBar.player2People.text = opponentPeople
-  peopleBar.neutralPeople.text = PEOPLE_BAR_CONFIG.TOTAL_PEOPLE - myPeople - opponentPeople
-}
-
-const getPeople = (peopleBar) => {
-  return {
-    myPeople: peopleBar.player1People.text,
-    opponentPeople: peopleBar.player2People.text,
-    neutralPeople: peopleBar.neutralPeople.text,
-  } as People
 }
 
 export default loadPeopleBar

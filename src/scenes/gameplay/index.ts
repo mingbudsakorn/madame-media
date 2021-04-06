@@ -69,20 +69,9 @@ const loadGameplayScene = (
   const timeBar = loadTimeBar(resources)
   gamePlayScene.addChild(timeBar)
 
-  //example to set timeLeft
-  // timeBar.setTime(90)
-
   const peopleBar = loadPeopleBar(resources)
   peopleBar.position.set(435, 74)
   gamePlayScene.addChild(peopleBar)
-  // example to set people
-  // peopleBar.setPeople(300,60)
-
-  // example to get people
-  // let people = peopleBar.getPeople()
-  // console.log(people.myPeople)
-  // console.log(people.neutralPeople)
-  // console.log(people.opponentPeople)
 
   const moneyBar = loadMoneyBar(resources)
   moneyBar.position.set(1170, 440)
