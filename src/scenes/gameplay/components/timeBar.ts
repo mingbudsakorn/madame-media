@@ -58,14 +58,14 @@ export const loadTimeBar = (resources: PIXI.IResourceDictionary) => {
 
   // init value
   timeBar.outerTimeBar.width =
-    TIME_BAR_CONFIG.TIMR_PER_TURN * (timeBar.barWidth / TIME_BAR_CONFIG.TIMR_PER_TURN)
-  timeBar.timeLeft.text = TIME_BAR_CONFIG.TIMR_PER_TURN.toString()
+    TIME_BAR_CONFIG.TIME_PER_TURN * (timeBar.barWidth / TIME_BAR_CONFIG.TIME_PER_TURN)
+  timeBar.timeLeft.text = TIME_BAR_CONFIG.TIME_PER_TURN.toString()
 
   return timeBar
 }
 
 const setTime = (timeBar: TimeBarType, timeLeft: number) => {
-  timeBar.outerTimeBar.width = timeLeft * (timeBar.barWidth / TIME_BAR_CONFIG.TIMR_PER_TURN)
+  timeBar.outerTimeBar.width = timeLeft * (timeBar.barWidth / TIME_BAR_CONFIG.TIME_PER_TURN)
   timeBar.timeLeft.text = timeLeft.toString()
 }
 
