@@ -1,7 +1,7 @@
 import { TEXT_STYLE } from '../utils/style.js'
 import { MONEY_CONFIG } from '../utils/gameConfig.js'
 
-export const loadMoneyBar = (resources) => {
+export const loadMoneyBar = (resources, money=MONEY_CONFIG.INIT) => {
   const moneyBar = new PIXI.Container()
 
   const coin = new PIXI.Sprite(resources.coin.texture)
@@ -22,13 +22,13 @@ export const loadMoneyBar = (resources) => {
   marbleText.position.set(532, 35)
   moneyBar.addChild(marbleText)
 
-  const money = new PIXI.Text(MONEY_CONFIG.INIT, TEXT_STYLE.SUBHEADER_THAI)
-  money.anchor.set(0.5,0.5)
-  money.position.set(356, 35)
-  moneyBar.addChild(money)
+  const moneyDisplay = new PIXI.Text(money, TEXT_STYLE.SUBHEADER_THAI)
+  moneyDisplay.anchor.set(0.5,0.5)
+  moneyDisplay.position.set(356, 35)
+  moneyBar.addChild(moneyDisplay)
 
   // set instance
-  moneyBar.money = money
+  moneyBar.money = moneyDisplay
 
   // // set function
   moneyBar.setMoney = (money) => {

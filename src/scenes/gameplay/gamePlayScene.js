@@ -10,6 +10,7 @@ import { MONEY_CONFIG, PEOPLE_BAR_CONFIG, TIME_BAR_CONFIG } from '../../utils/ga
 import { scenes } from '../../utils/scenes.js' 
 import { CHANNEL } from '../../utils/channel.js'
 import { CARD } from '../../utils/card.js'
+import { AVATER } from '../../utils/avatar.js'
 
 import { TEXT_STYLE, COLOR } from '../../utils/style.js'
 import { sleep } from '../../utils/function.js'
@@ -25,11 +26,16 @@ const loadGameplayScene = (app, setCurrentScene,
     money: MONEY_CONFIG.INIT,
     myPeople: PEOPLE_BAR_CONFIG.INIT_MY_PEOPLE,
     opponentPeople: PEOPLE_BAR_CONFIG.INIT_OPPONENT_PEOPLE,
-    ownCard: [0,1]
+    ownCardList: [0,1],
+    myName: 'โจนาทาน',
+    opponentName: 'มิเชล',
+    myAvatar: AVATER.man1,
+    opponentAvatar: AVATER.women4,
+    availableChannelList: [2,3,6],
   }
 ) => {
   localGameState = gameState
-  //gameState -> #turn, #people, money, availableChannels, ownCards, player1Name, player2Name, player1avatarImg, player2avatarImg
+
   const resources = app.loader.resources
 
   const bg = new PIXI.Sprite(resources.bg.texture)
@@ -67,12 +73,8 @@ const loadGameplayScene = (app, setCurrentScene,
   peopleText.position.set(960, 30)
   gamePlayScene.addChild(peopleText)
 
-  const turnText = new PIXI.Text('รอบที่ : 1', TEXT_STYLE.BODY_THAI)
+  const turnText = new PIXI.Text('รอบที่ : ' + gameState.turn, TEXT_STYLE.BODY_THAI)
   turnText.position.set(47, 362)
-  turnText.setTurnText = (turn) => {
-    turnText.text = 'รอบที่ : ' + turn
-  }
-  // turnText.setTurnText(2)
   gamePlayScene.addChild(turnText)
   // ------------------------------------------------ //
 
@@ -83,7 +85,6 @@ const loadGameplayScene = (app, setCurrentScene,
   const timeBar = loadTimeBar(resources)
   gamePlayScene.addChild(timeBar)
 
-  //example to set timeLeft
   const timing = async () => {
     let timeLeft = TIME_BAR_CONFIG.TIME_PER_TURN
     for (let i=0; i<TIME_BAR_CONFIG.TIME_PER_TURN; i++) {
@@ -92,13 +93,10 @@ const loadGameplayScene = (app, setCurrentScene,
       timeBar.setTime(timeLeft)
     }
   }
-  // timeBar.setTime(90)
 
   const peopleBar = loadPeopleBar(resources, gameState.myPeople, gameState.opponentPeople)
   peopleBar.position.set(435, 74)
   gamePlayScene.addChild(peopleBar)
-  // example to set people
-  // peopleBar.setPeople(300,60)
 
   // example to get people
   // let people = peopleBar.getPeople()
@@ -108,25 +106,16 @@ const loadGameplayScene = (app, setCurrentScene,
 
   const moneyBar = loadMoneyBar(resources)
   moneyBar.position.set(1170,440)
-  // moneyBar.setMoney(8888)
+  moneyBar.setMoney(gameState.money)
   gamePlayScene.addChild(moneyBar)
 
-  const player1 = loadAvatar(resources.man1.texture, 'โจนาทาน')
+  const player1 = loadAvatar(resources[gameState.myAvatar].texture, gameState.myName)
   player1.position.set(224.5, 82)
   gamePlayScene.addChild(player1)
 
-  const player2 = loadAvatar(resources.women4.texture, 'มิเชล')
+  const player2 = loadAvatar(resources[gameState.opponentAvatar].texture, gameState.opponentName)
   player2.position.set(1694.5, 82)
   gamePlayScene.addChild(player2)
-
-  // // test channel
-  // const channel = loadChannel(resources, CHANNEL[4], 1)
-  // channel.position.set(25,200)
-  // gamePlayScene.addChild(channel)
-  
-  // const channel2 = loadChannel(resources, CHANNEL[5], 1)
-  // channel2.position.set(channel.width + 50,channel.y)
-  // gamePlayScene.addChild(channel2)
 
   const cardModalWithOverlay = loadCardModal(resources, CARD[0])
   
