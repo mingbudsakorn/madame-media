@@ -1,5 +1,6 @@
 import { scenes } from '../../utils/scenes.js' 
 import { PEOPLE_BAR_CONFIG } from '../../utils/gameConfig.js'
+import { sleep } from '../../utils/function.js'
 
 import loadChannelContainer from './components/channelContainer.js'
 import loadPeopleBar from '../../components/peopleBar.js'
@@ -68,10 +69,6 @@ const loadDuelScene = (app, setCurrentScene,
   const peopleBar = loadPeopleBar(resources, gameState.myPeople, gameState.opponentPeople)
   peopleBar.position.set(435,509)
   duelScene.addChild(peopleBar)
-
-  const sleep = (ms) => {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
 
   const slide = async () => {
     for (var i = 0; i < 6; i++){

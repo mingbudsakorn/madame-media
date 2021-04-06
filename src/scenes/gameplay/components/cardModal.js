@@ -58,6 +58,7 @@ export const loadCardModal = (resources, card) => {
   // avatar.addChild(avatarName)
 
   cardModalWithOverlay.visible = isShowing
+  fakeCard.visible = false
 
   const toggleCard = () => {
     isReal = !isReal

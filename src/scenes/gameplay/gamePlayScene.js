@@ -6,12 +6,13 @@ import loadAvatar from './components/avatar.js'
 import loadCardModal from './components/cardModal.js'
 import loadCardContainer from './components/cardContainer.js'
 
-import { MONEY_CONFIG, PEOPLE_BAR_CONFIG } from '../../utils/gameConfig.js'
+import { MONEY_CONFIG, PEOPLE_BAR_CONFIG, TIME_BAR_CONFIG } from '../../utils/gameConfig.js'
 import { scenes } from '../../utils/scenes.js' 
 import { CHANNEL } from '../../utils/channel.js'
 import { CARD } from '../../utils/card.js'
 
 import { TEXT_STYLE, COLOR } from '../../utils/style.js'
+import { sleep } from '../../utils/function.js'
 
 const gamePlayScene = new PIXI.Container()
 gamePlayScene.position.set(0, 0)
@@ -23,7 +24,8 @@ const loadGameplayScene = (app, setCurrentScene,
     turn: 1, 
     money: MONEY_CONFIG.INIT,
     myPeople: PEOPLE_BAR_CONFIG.INIT_MY_PEOPLE,
-    opponentPeople: PEOPLE_BAR_CONFIG.INIT_OPPONENT_PEOPLE
+    opponentPeople: PEOPLE_BAR_CONFIG.INIT_OPPONENT_PEOPLE,
+    ownCard: [0,1]
   }
 ) => {
   localGameState = gameState
@@ -82,6 +84,14 @@ const loadGameplayScene = (app, setCurrentScene,
   gamePlayScene.addChild(timeBar)
 
   //example to set timeLeft
+  const timing = async () => {
+    let timeLeft = TIME_BAR_CONFIG.TIME_PER_TURN
+    for (let i=0; i<TIME_BAR_CONFIG.TIME_PER_TURN; i++) {
+      timeLeft -= 1
+      await sleep(1000)
+      timeBar.setTime(timeLeft)
+    }
+  }
   // timeBar.setTime(90)
 
   const peopleBar = loadPeopleBar(resources, gameState.myPeople, gameState.opponentPeople)
@@ -98,7 +108,7 @@ const loadGameplayScene = (app, setCurrentScene,
 
   const moneyBar = loadMoneyBar(resources)
   moneyBar.position.set(1170,440)
-  moneyBar.setMoney(8888)
+  // moneyBar.setMoney(8888)
   gamePlayScene.addChild(moneyBar)
 
   const player1 = loadAvatar(resources.man1.texture, 'โจนาทาน')
@@ -126,6 +136,8 @@ const loadGameplayScene = (app, setCurrentScene,
   gamePlayScene.addChild(cardModalWithOverlay)
 
   app.stage.addChild(gamePlayScene)
+
+  timing()
 
   return gamePlayScene
 }
