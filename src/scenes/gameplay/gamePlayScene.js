@@ -78,7 +78,7 @@ const loadGameplayScene = (app, setCurrentScene,
   gamePlayScene.addChild(turnText)
   // ------------------------------------------------ //
 
-  const channelDeck = loadChannelDeck(resources)
+  const channelDeck = loadChannelDeck(resources, availableChannelList)
 
   gamePlayScene.addChild(channelDeck)
 
@@ -119,7 +119,7 @@ const loadGameplayScene = (app, setCurrentScene,
 
   const cardModalWithOverlay = loadCardModal(resources, CARD[0])
   
-  const cardContainer = loadCardContainer(resources, [CARD[0],CARD[1]], cardModalWithOverlay.toggle)
+  const cardContainer = loadCardContainer(resources, ownCardList, cardModalWithOverlay.toggle)
   
   gamePlayScene.addChild(cardContainer)
   gamePlayScene.addChild(cardModalWithOverlay)

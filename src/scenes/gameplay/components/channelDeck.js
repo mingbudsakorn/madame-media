@@ -3,7 +3,7 @@ import { CHANNEL } from '../../../utils/channel.js'
 import { TEXT_STYLE } from '../../../utils/style.js'
 
 
-export const loadChannelDeck = (resources, channelList) => {
+export const loadChannelDeck = (resources, availableChannelList) => {
   const channelDeck = new PIXI.Container()
   channelDeck.position.set(97,532)
 
