@@ -13,35 +13,15 @@ const duelScene = new PIXI.Container()
 duelScene.position.set(0,0)
 let localGameState
 
-let mockCardList = [
-  {
-    channel: 0,
-    card: 1,
-  },
-  {
-    channel: 1,
-    card: 0,
-  }
-]
-let mockCardList2 = [
-  {
-    channel: 1,
-    card: 0,
-  },
-  {
-    channel: 4,
-    card: 1,
-  }
-]
-
 const loadDuelScene = (app, setCurrentScene, 
   gameState = {
     turn: 1, 
     money: MONEY_CONFIG.INIT,
     myPeople: PEOPLE_BAR_CONFIG.INIT_MY_PEOPLE,
-    opponentPeople: PEOPLE_BAR_CONFIG.INIT_OPPONENT_PEOPLE
+    opponentPeople: PEOPLE_BAR_CONFIG.INIT_OPPONENT_PEOPLE,
+    myChannelCardList: mockCardList,
+    opponentChannelCardList: mockCardList2
   }) => {
-
   const resources = app.loader.resources
   localGameState = gameState
 
@@ -58,11 +38,11 @@ const loadDuelScene = (app, setCurrentScene,
     duelCompareBg.x = duelCompareBg.x + duelCompareBg.width + channelPadding
   }
 
-  const opponentChannelContainer = loadChannelContainer({resources:resources, cardList:mockCardList, isButtom:0})
+  const opponentChannelContainer = loadChannelContainer(resources, gameState.myChannelCardList, 0)
   opponentChannelContainer.position.set(66,50)
   duelScene.addChild(opponentChannelContainer)
 
-  const myChannelContainer = loadChannelContainer({resources:resources, cardList:mockCardList2, isButtom:1})
+  const myChannelContainer = loadChannelContainer(resources, gameState.opponentChannelCardList, 1)
   myChannelContainer.position.set(opponentChannelContainer.x,645)
   duelScene.addChild(myChannelContainer)
 

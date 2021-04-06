@@ -24,7 +24,7 @@ const loadDuelChannel = (resources, channel, isButtom) => {
   return duelChannel
 }
 
-export const loadChannelContainer = ({resources, cardList , isButtom}) => {
+export const loadChannelContainer = (resources, cardList , isButtom) => {
   // have to set position outside
   const channelPadding = 25
   const channelContainer = new PIXI.Container()
@@ -74,7 +74,7 @@ export const loadChannelContainer = ({resources, cardList , isButtom}) => {
     card.height = channel0.bg.height
     channelContainer.addChild(card)
   }
-
+  console.log(cardList)
   return channelContainer
 }
 

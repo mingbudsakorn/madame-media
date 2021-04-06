@@ -20,6 +20,28 @@ gamePlayScene.position.set(0, 0)
 
 let localGameState;
 
+// mock only -> init shound be []
+var mockCardList = [
+  {
+    channel: 0,
+    card: 1,
+  },
+  {
+    channel: 1,
+    card: 0,
+  }
+]
+var mockCardList2 = [
+  {
+    channel: 1,
+    card: 0,
+  },
+  {
+    channel: 4,
+    card: 1,
+  }
+]
+
 const loadGameplayScene = (app, setCurrentScene, 
   gameState = {
     turn: 1, 
@@ -32,6 +54,8 @@ const loadGameplayScene = (app, setCurrentScene,
     myAvatar: AVATER.man1,
     opponentAvatar: AVATER.women4,
     availableChannelList: [2,3,6],
+    myChannelCardList: mockCardList,
+    opponentChannelCardList: mockCardList2
   }
 ) => {
   localGameState = gameState
@@ -78,7 +102,7 @@ const loadGameplayScene = (app, setCurrentScene,
   gamePlayScene.addChild(turnText)
   // ------------------------------------------------ //
 
-  const channelDeck = loadChannelDeck(resources, availableChannelList)
+  const channelDeck = loadChannelDeck(resources, gameState.availableChannelList)
 
   gamePlayScene.addChild(channelDeck)
 
@@ -119,7 +143,7 @@ const loadGameplayScene = (app, setCurrentScene,
 
   const cardModalWithOverlay = loadCardModal(resources, CARD[0])
   
-  const cardContainer = loadCardContainer(resources, ownCardList, cardModalWithOverlay.toggle)
+  const cardContainer = loadCardContainer(resources, gameState.ownCardList, cardModalWithOverlay.toggle)
   
   gamePlayScene.addChild(cardContainer)
   gamePlayScene.addChild(cardModalWithOverlay)
