@@ -12,6 +12,7 @@ export const loadCardModal = (resources, card) => {
   cardModalWithOverlay.position.set(0,0)
 
   const overlay = new PIXI.Sprite(resources.overlay.texture)
+  overlay.interactive = true
   cardModalWithOverlay.addChild(overlay)
   
   const cardModal = new PIXI.Container()
@@ -21,11 +22,11 @@ export const loadCardModal = (resources, card) => {
   const cardModalBg = new PIXI.Sprite(resources.cardModalBg.texture)
   cardModal.addChild(cardModalBg)
 
-  const realCard = loadCard(resources, card.real, true)
+  let realCard = loadCard(resources, card.real, true)
   realCard.position.set(38,47)
   cardModal.addChild(realCard)
 
-  const fakeCard = loadCard(resources, card.fake, false)
+  let fakeCard = loadCard(resources, card.fake, false)
   fakeCard.position.set(realCard.x, realCard.y)
   cardModal.addChild(fakeCard)
 
