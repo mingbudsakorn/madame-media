@@ -1,3 +1,5 @@
+import * as PIXI from 'pixi.js'
+
 export const COLOR = {
   RED_PURPLE: '0xC86788',
   PURPLE: '0x7DA1DB',
@@ -9,7 +11,7 @@ export const COLOR = {
   BLACK: '0x000000',
   WHITE: '0xFFFFFF',
   SILVER: '0xBFC0C0',
-  BASE: '0xEFF0ED'
+  BASE: '0xEFF0ED',
 }
 
 export const TEXT_STYLE = {
@@ -20,7 +22,7 @@ export const TEXT_STYLE = {
   SUPER_HEADER_THAI_CHACOAL: new PIXI.TextStyle({
     fontFamily: 'Chonburi',
     fontSize: 96,
-    fill: COLOR.CHARCOAL
+    fill: COLOR.CHARCOAL,
   }),
   HEADER_THAI: new PIXI.TextStyle({
     fontFamily: 'Chonburi',
@@ -29,7 +31,7 @@ export const TEXT_STYLE = {
   HEADER_THAI_CHACOAL: new PIXI.TextStyle({
     fontFamily: 'Chonburi',
     fontSize: 48,
-    fill: COLOR.CHARCOAL
+    fill: COLOR.CHARCOAL,
   }),
   SUBHEADER_THAI: new PIXI.TextStyle({
     fontFamily: 'Chonburi',
@@ -38,7 +40,7 @@ export const TEXT_STYLE = {
   SUBHEADER_THAI_CHARCOAL: new PIXI.TextStyle({
     fontFamily: 'Chonburi',
     fontSize: 36,
-    fill: COLOR.CHARCOAL
+    fill: COLOR.CHARCOAL,
   }),
   BODY_THAI: new PIXI.TextStyle({
     fontFamily: 'Chonburi',
@@ -47,7 +49,7 @@ export const TEXT_STYLE = {
   BODY_THAI_CHARCOAL: new PIXI.TextStyle({
     fontFamily: 'Chonburi',
     fontSize: 25,
-    fill: COLOR.CHARCOAL
+    fill: COLOR.CHARCOAL,
   }),
   OVERLINE_THAI: new PIXI.TextStyle({
     fontFamily: 'Chonburi',
@@ -56,7 +58,6 @@ export const TEXT_STYLE = {
   OVERLINE_THAI_CHACOAL: new PIXI.TextStyle({
     fontFamily: 'Chonburi',
     fontSize: 18,
-    fill: COLOR.CHARCOAL
+    fill: COLOR.CHARCOAL,
   }),
 }
-
