@@ -1,7 +1,7 @@
-import { TEXT_STYLE } from '../../../utils/style.js'
-import { PEOPLE_BAR_CONFIG } from '../../../utils/gameConfig.js'
+import { TEXT_STYLE } from '../utils/style.js'
+import { PEOPLE_BAR_CONFIG } from '../utils/gameConfig.js'
 
-export const loadPeopleBar = (resources) => {
+export const loadPeopleBar = (resources, myPeople, opponentPeople) => {
   const peopleBar = new PIXI.Container()
   // peopleBar.position.set(435, 74)
 
@@ -54,16 +54,12 @@ export const loadPeopleBar = (resources) => {
   }
 
   // init value
-  peopleBar.player1Bar.width =
-    PEOPLE_BAR_CONFIG.INIT_MY_PEOPLE * (peopleBar.barWidth / PEOPLE_BAR_CONFIG.TOTAL_PEOPLE)
+  peopleBar.player1Bar.width = myPeople * (peopleBar.barWidth / PEOPLE_BAR_CONFIG.TOTAL_PEOPLE)
   peopleBar.player2Bar.width =
-    PEOPLE_BAR_CONFIG.INIT_OPPONENT_PEOPLE * (peopleBar.barWidth / PEOPLE_BAR_CONFIG.TOTAL_PEOPLE)
-  peopleBar.player1People.text = PEOPLE_BAR_CONFIG.INIT_MY_PEOPLE
-  peopleBar.player2People.text = PEOPLE_BAR_CONFIG.INIT_OPPONENT_PEOPLE
-  peopleBar.neutralPeople.text =
-    PEOPLE_BAR_CONFIG.TOTAL_PEOPLE -
-    PEOPLE_BAR_CONFIG.INIT_MY_PEOPLE -
-    PEOPLE_BAR_CONFIG.INIT_OPPONENT_PEOPLE
+    opponentPeople * (peopleBar.barWidth / PEOPLE_BAR_CONFIG.TOTAL_PEOPLE)
+  peopleBar.player1People.text = myPeople
+  peopleBar.player2People.text = opponentPeople
+  peopleBar.neutralPeople.text = PEOPLE_BAR_CONFIG.TOTAL_PEOPLE - myPeople - opponentPeople
 
   return peopleBar
 }

@@ -43,6 +43,8 @@ export const loadAsset = (app, setup) => {
   .add('useCardButton','src/assets/art/use-card-button.png')
   .add('cardDescriptionBg','src/assets/art/card-modal-des-bg.png')
   .add('cardContainerBg','src/assets/art/card-container-bg.png')
+  .add('duelChannelBg','src/assets/art/duel-channel-bg.png')
+  .add('duelCompareBg','src/assets/art/duel-compare-bg.png')
 
   .load(() => {
     setup(app)

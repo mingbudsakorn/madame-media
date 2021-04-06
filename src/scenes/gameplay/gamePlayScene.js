@@ -1,12 +1,12 @@
 import loadChannelDeck from './components/channelDeck.js'
 import loadTimeBar from './components/timeBar.js'
-import loadPeopleBar from './components/peopleBar.js'
+import loadPeopleBar from '../../components/peopleBar.js'
 import loadMoneyBar from '../../components/moneyBar.js'
 import loadAvatar from './components/avatar.js'
 import loadCardModal from './components/cardModal.js'
 import loadCardContainer from './components/cardContainer.js'
 
-import { MONEY_CONFIG } from '../../utils/gameConfig.js'
+import { MONEY_CONFIG, PEOPLE_BAR_CONFIG } from '../../utils/gameConfig.js'
 import { scenes } from '../../utils/scenes.js' 
 import { CHANNEL } from '../../utils/channel.js'
 import { CARD } from '../../utils/card.js'
@@ -21,7 +21,9 @@ let localGameState;
 const loadGameplayScene = (app, setCurrentScene, 
   gameState = {
     turn: 1, 
-    money: MONEY_CONFIG.INIT
+    money: MONEY_CONFIG.INIT,
+    myPeople: PEOPLE_BAR_CONFIG.INIT_MY_PEOPLE,
+    opponentPeople: PEOPLE_BAR_CONFIG.INIT_OPPONENT_PEOPLE
   }
 ) => {
   localGameState = gameState
@@ -82,7 +84,7 @@ const loadGameplayScene = (app, setCurrentScene,
   //example to set timeLeft
   // timeBar.setTime(90)
 
-  const peopleBar = loadPeopleBar(resources)
+  const peopleBar = loadPeopleBar(resources, gameState.myPeople, gameState.opponentPeople)
   peopleBar.position.set(435, 74)
   gamePlayScene.addChild(peopleBar)
   // example to set people
