@@ -28,3 +28,8 @@ export interface Channel {
   price: number
   percentage: number
 }
+
+export interface DuelChannel {
+  card: number
+  channel: number
+}

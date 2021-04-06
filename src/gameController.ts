@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js'
 import { scenes } from './constants/scenes'
 import loadGameplayScene from './scenes/gameplay'
+import loadDuelScene from './scenes/duel'
 
 const gameController = (app: PIXI.Application) => {
   let currentScene = scenes.gameplay
@@ -10,9 +11,10 @@ const gameController = (app: PIXI.Application) => {
 
   const resources = app.loader.resources
 
-  const gameplayScene = loadGameplayScene(resources, setCurrentScene)
+  // const gameplayScene = loadGameplayScene(resources, setCurrentScene)
+  const duelScene = loadDuelScene(resources, setCurrentScene)
 
-  app.stage.addChild(gameplayScene)
+  app.stage.addChild(duelScene)
 }
 
 export default gameController
