@@ -14,8 +14,8 @@ export const loadAvatar = (resources: PIXI.IResourceDictionary, imgName: string,
 
   const avatarImg = new PIXI.Sprite(resources[imgName].texture)
   avatarImg.anchor.set(0.5, 0)
-  avatarImg.width = avatarImg.width*130/avatarImg.height
-  avatarImg.height = 130
+  avatarImg.height = avatarImg.height*130/avatarImg.width
+  avatarImg.width = 130
   avatar.addChild(avatarImg)
 
   const avatarName = new PIXI.Text(name, TEXT_STYLE.SUBHEADER_THAI)
