@@ -10,6 +10,7 @@ import loadCardContainer from './components/cardContainer'
 import { TEXT_STYLE } from '../../constants/style'
 import { PEOPLE_BAR_CONFIG } from '../../constants/gameConfig'
 import { CARD } from '../../constants/card'
+import { AVATAR } from '../../constants/avatar'
 
 const gamePlayScene = new PIXI.Container()
 gamePlayScene.position.set(0, 0)
@@ -68,11 +69,11 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
   moneyBar.position.set(1170, 440)
   gamePlayScene.addChild(moneyBar)
 
-  const player1 = loadAvatar(resources['art/man1'].texture, 'โจนาทาน')
+  const player1 = loadAvatar(resources, AVATAR.man1, 'โจนาทาน')
   player1.position.set(224.5, 82)
   gamePlayScene.addChild(player1)
 
-  const player2 = loadAvatar(resources['art/women4'].texture, 'มิเชล')
+  const player2 = loadAvatar(resources, AVATAR.woman4, 'มิเชล')
   player2.position.set(1694.5, 82)
   gamePlayScene.addChild(player2)
 

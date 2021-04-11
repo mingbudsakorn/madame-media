@@ -2,9 +2,11 @@ import art from './art/*.png'
 import background from './background/*.png'
 import cards from './cards/*.png'
 import channels from './channels/*.png'
+import avatar from './avatar/*.png'
 
 export const assets = {
   ...Object.keys(art).reduce((acc, key) => ({ ...acc, [`art/${key}`]: art[key] }), {}),
+  ...Object.keys(avatar).reduce((acc, key) => ({ ...acc, [`avatar/${key}`]: avatar[key] }), {}),
   ...Object.keys(background).reduce(
     (acc, key) => ({ ...acc, [`background/${key}`]: background[key] }),
     {},
