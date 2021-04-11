@@ -2,7 +2,6 @@ import * as PIXI from 'pixi.js'
 import { TEXT_STYLE } from '../../../constants/style'
 
 interface AvatarType extends PIXI.Container {
-  avatarName: PIXI.Text
   setAvatarImg: (imgName: string) => void
   setAvatarName: (name: String) => void
 }
