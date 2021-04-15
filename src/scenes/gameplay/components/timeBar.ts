@@ -38,7 +38,7 @@ export const loadTimeBar = (resources: PIXI.IResourceDictionary) => {
   timeBarBoarder.position.set(183, 35)
   timeBar.addChild(timeBarBoarder)
 
-  const timeLeftText = new PIXI.Text('120', TEXT_STYLE.SUBHEADER_THAI)
+  const timeLeftText = new PIXI.Text(TIME_BAR_CONFIG.TIME_PER_TURN.toString(), TEXT_STYLE.SUBHEADER_THAI)
   timeLeftText.anchor.set(0.5, 0.5)
   timeLeftText.position.set(920, 35)
   timeBar.addChild(timeLeftText)

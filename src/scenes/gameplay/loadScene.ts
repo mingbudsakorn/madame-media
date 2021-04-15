@@ -10,9 +10,14 @@ import loadCardContainer from './components/cardContainer'
 import { TEXT_STYLE } from '../../constants/style'
 import { PEOPLE_BAR_CONFIG } from '../../constants/gameConfig'
 import { CARD } from '../../constants/card'
+import { AVATAR } from '../../constants/avatar'
 
 const gamePlayScene = new PIXI.Container()
 gamePlayScene.position.set(0, 0)
+
+interface TurnTextType extends PIXI.Text {
+  setTurnText: (turn: number) => void
+}
 
 const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
   const bg = new PIXI.Sprite(resources['background/gameplay-bg'].texture)
@@ -45,10 +50,14 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
   peopleText.position.set(960, 30)
   gamePlayScene.addChild(peopleText)
 
-  const turnText = new PIXI.Text('รอบที่ : 1', TEXT_STYLE.BODY_THAI)
+  const turnText = new PIXI.Text('รอบที่ : 1', TEXT_STYLE.BODY_THAI) as TurnTextType
   turnText.position.set(47, 362)
   gamePlayScene.addChild(turnText)
   // ------------------------------------------------ //
+
+  turnText.setTurnText = (turn: number) => {
+    turnText.text = 'รอบที่ : ' + turn
+  }
 
   const channelDeck = loadChannelDeck(resources, [])
   gamePlayScene.addChild(channelDeck)
@@ -68,11 +77,11 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
   moneyBar.position.set(1170, 440)
   gamePlayScene.addChild(moneyBar)
 
-  const player1 = loadAvatar(resources['art/man1'].texture, 'โจนาทาน')
+  const player1 = loadAvatar(resources, AVATAR.man1, 'โจนาทาน')
   player1.position.set(224.5, 82)
   gamePlayScene.addChild(player1)
 
-  const player2 = loadAvatar(resources['art/women4'].texture, 'มิเชล')
+  const player2 = loadAvatar(resources, AVATAR.woman4, 'มิเชล')
   player2.position.set(1694.5, 82)
   gamePlayScene.addChild(player2)
 
