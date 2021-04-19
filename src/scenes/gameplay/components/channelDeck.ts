@@ -5,7 +5,7 @@ import { CHANNEL } from '../../../constants/channels'
 import { TEXT_STYLE } from '../../../constants/style'
 
 interface ChannelDeckType extends PIXI.Container {
-  setChannel: (channelList, cardConfigList) => void
+  setChannel: (channelList) => void
 }
 
 export const loadChannelDeck = (resources: PIXI.IResourceDictionary) => {
@@ -27,19 +27,21 @@ export const loadChannelDeck = (resources: PIXI.IResourceDictionary) => {
   channels.position.set(firstChannelX,channelY)
   channelDeck.addChild(channels)
 
-  channelDeck.setChannel = (channelList,cardConfigList) => {
+  channelDeck.setChannel = (channelCardList) => {
     let prevX = 0
     channels.removeChildren()
-    for (let i in channelList) {
-      let channelConfig = channelList[i].channelConfig
-      let isAvailable = channelList[i].isAvailable
+    for (let i in channelCardList) {
+      let channelConfig = channelCardList[i].channelConfig
+      let isAvailable = channelCardList[i].isAvailable
+      let cardConfig = channelCardList[i].cardConfig
       let channel = loadChannel(resources, channelConfig, isAvailable)
       channel.x = i=='0'? prevX: prevX + channel.width + channelPadding
       prevX = channel.x
       channels.addChild(channel)
 
-      if (cardConfigList[i] != null) {
-        let card = loadCard(resources,cardConfigList[i])
+      
+      if (cardConfig != null) {
+        let card = loadCard(resources,cardConfig)
         card.height = channel.getHeight()
         card.width = channel.getWidth()
         card.x = channel.x
@@ -47,6 +49,16 @@ export const loadChannelDeck = (resources: PIXI.IResourceDictionary) => {
         card.y = channelBg.y
         channels.addChild(card)
       }
+
+      // if (cardConfigList[i] != null) {
+      //   let card = loadCard(resources,cardConfigList[i])
+      //   card.height = channel.getHeight()
+      //   card.width = channel.getWidth()
+      //   card.x = channel.x
+      //   let channelBg = channel.getBg()
+      //   card.y = channelBg.y
+      //   channels.addChild(card)
+      // }
     }
   }
 

@@ -5,7 +5,7 @@ import { scenes } from '../../constants/scenes'
 import { MONEY_CONFIG, PEOPLE_BAR_CONFIG, TIME_BAR_CONFIG } from '../../constants/gameConfig'
 import { Scene } from '../../types'
 import { AVATAR } from '../../constants/avatar'
-import { CHANNEL, INIT_CHANNEL_LIST } from '../../constants/channels'
+import { CHANNEL, INIT_CHANNEL_CARD_LIST } from '../../constants/channels'
 import { CARD } from '../../constants/card'
 
 const GameplayScene = (
@@ -46,7 +46,7 @@ const GameplayScene = (
   // player1.setAvatarImg(AVATAR.man2)
   
   //example to set channel and card
-  channelDeck.setChannel(INIT_CHANNEL_LIST,[CARD[0].real,CARD[2].fake,null,null,null,null,null])
+  channelDeck.setChannel(INIT_CHANNEL_CARD_LIST)
 
   scene.onAppear = () => {
     // Timing
