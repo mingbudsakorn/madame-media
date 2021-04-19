@@ -87,7 +87,7 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
 
   const cardModalWithOverlay = loadCardModal(resources, CARD[0])
 
-  const cardContainer = loadCardContainer(resources, [], cardModalWithOverlay.toggle)
+  const cardContainer = loadCardContainer(resources, [0,1], cardModalWithOverlay.toggle)
 
   gamePlayScene.addChild(cardContainer)
   gamePlayScene.addChild(cardModalWithOverlay)
