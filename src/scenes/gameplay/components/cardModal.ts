@@ -27,11 +27,11 @@ export const loadCardModal = (resources: PIXI.IResourceDictionary, card: CardSet
   const cardModalBg = new PIXI.Sprite(resources['art/card-modal-bg'].texture)
   cardModal.addChild(cardModalBg)
 
-  const realCard = loadCard(resources, card.real, true)
+  const realCard = loadCard(resources, card.real)
   realCard.position.set(38, 47)
   cardModal.addChild(realCard)
 
-  const fakeCard = loadCard(resources, card.fake, false)
+  const fakeCard = loadCard(resources, card.fake)
   fakeCard.position.set(realCard.x, realCard.y)
   cardModal.addChild(fakeCard)
 

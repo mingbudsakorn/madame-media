@@ -6,6 +6,7 @@ import { MONEY_CONFIG, PEOPLE_BAR_CONFIG, TIME_BAR_CONFIG } from '../../constant
 import { Scene } from '../../types'
 import { AVATAR } from '../../constants/avatar'
 import { CHANNEL, INIT_CHANNEL_LIST } from '../../constants/channels'
+import { CARD } from '../../constants/card'
 
 const GameplayScene = (
   resources: PIXI.IResourceDictionary,
@@ -44,7 +45,8 @@ const GameplayScene = (
   // player1.setAvatarName('พอล')
   // player1.setAvatarImg(AVATAR.man2)
   
-  channelDeck.setChannel(INIT_CHANNEL_LIST)
+  //example to set channel and card
+  channelDeck.setChannel(INIT_CHANNEL_LIST,[CARD[0].real,CARD[2].fake,null,null,null,null,null])
 
   scene.onAppear = () => {
     // Timing

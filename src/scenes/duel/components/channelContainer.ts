@@ -83,7 +83,7 @@ export const loadChannelContainer = (
   const loadCards = (cardList) => {
     for (let i in cardList) {
       let temp = cardList[i]
-      let card = loadCard(resources, CARD[temp.card].real, true)
+      let card = loadCard(resources, CARD[temp.card].real)
       card.position.set(channelList[temp.channel].x, channelList[temp.channel].bg.y)
       card.width = channel0.bg.width
       card.height = channel0.bg.height

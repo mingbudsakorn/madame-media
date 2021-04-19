@@ -21,7 +21,7 @@ export const loadCardContainer = (
   let prevX = 0
   for (let i in cardList) {
     let cardConfig = CARD[cardList[i]].real
-    let card = loadCard(resources,cardConfig,true)
+    let card = loadCard(resources,cardConfig)
     card.width = cardScale.width
     card.height = cardScale.heigth
     card.x = i=='0'? prevX : prevX + card.width/2

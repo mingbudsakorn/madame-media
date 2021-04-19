@@ -2,12 +2,18 @@ import * as PIXI from 'pixi.js'
 import { TEXT_STYLE } from '../constants/style'
 import { Channel } from '../types'
 
+interface ChannelType extends PIXI.Container {
+  getHeight: () => number,
+  getWidth: () => number,
+  getBg: () => PIXI.Sprite
+}
+
 const loadChannel = (
   resources: PIXI.IResourceDictionary,
   channelConfig: Channel,
   isAvailable: boolean,
 ) => {
-  let channel = new PIXI.Container()
+  let channel = new PIXI.Container() as ChannelType
 
   let channelName = new PIXI.Text(
     channelConfig.name,
@@ -55,6 +61,18 @@ const loadChannel = (
   percentageText.anchor.set(0.5, 0)
   percentageText.position.set(channelBg.width / 2, channelBg.y + 20)
   channel.addChild(percentageText)
+
+  channel.getHeight = () => {
+    return channelBg.height
+  }
+
+  channel.getWidth = () => {
+    return channelBg.width
+  }
+
+  channel.getBg = () => {
+    return channelBg
+  }
 
   return channel
 }

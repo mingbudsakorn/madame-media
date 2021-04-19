@@ -20,6 +20,7 @@ export interface Card {
   price: number
   effect: string
   description: string
+  isReal: boolean
 }
 
 export interface Channel {

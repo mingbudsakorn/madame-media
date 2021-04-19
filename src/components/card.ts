@@ -2,8 +2,9 @@ import * as PIXI from 'pixi.js'
 import { TEXT_STYLE } from '../constants/style'
 import { Card } from '../types'
 
-const loadCard = (resources: PIXI.IResourceDictionary, cardConfig: Card, isReal: boolean) => {
+const loadCard = (resources: PIXI.IResourceDictionary, cardConfig: Card) => {
   const card = new PIXI.Container()
+  const isReal = cardConfig.isReal
 
   let cardBg = isReal
     ? new PIXI.Sprite(resources['cards/real-card-bg'].texture)

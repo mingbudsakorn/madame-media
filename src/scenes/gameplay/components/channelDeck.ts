@@ -1,10 +1,11 @@
 import * as PIXI from 'pixi.js'
 import loadChannel from '../../../components/channel'
+import loadCard from '../../../components/card'
 import { CHANNEL } from '../../../constants/channels'
 import { TEXT_STYLE } from '../../../constants/style'
 
 interface ChannelDeckType extends PIXI.Container {
-  setChannel: (channelList) => void
+  setChannel: (channelList, cardConfigList) => void
 }
 
 export const loadChannelDeck = (resources: PIXI.IResourceDictionary) => {
@@ -26,7 +27,7 @@ export const loadChannelDeck = (resources: PIXI.IResourceDictionary) => {
   channels.position.set(firstChannelX,channelY)
   channelDeck.addChild(channels)
 
-  channelDeck.setChannel = (channelList) => {
+  channelDeck.setChannel = (channelList,cardConfigList) => {
     let prevX = 0
     channels.removeChildren()
     for (let i in channelList) {
@@ -36,6 +37,16 @@ export const loadChannelDeck = (resources: PIXI.IResourceDictionary) => {
       channel.x = i=='0'? prevX: prevX + channel.width + channelPadding
       prevX = channel.x
       channels.addChild(channel)
+
+      if (cardConfigList[i] != null) {
+        let card = loadCard(resources,cardConfigList[i])
+        card.height = channel.getHeight()
+        card.width = channel.getWidth()
+        card.x = channel.x
+        let channelBg = channel.getBg()
+        card.y = channelBg.y
+        channels.addChild(card)
+      }
     }
   }
 
