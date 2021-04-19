@@ -1,6 +1,6 @@
 import { Channel } from '../types'
 
-interface ChannelList {
+interface ChannelConfigList {
   [key: string]: Channel
 }
 
@@ -61,7 +61,7 @@ export const CHANNEL = {
     price: 250,
     percentage: 10,
   },
-} as ChannelList
+} as ChannelConfigList
 
 export const INIT_CHANNEL_LIST = [
   {
