@@ -62,3 +62,35 @@ export const CHANNEL = {
     percentage: 10,
   },
 } as ChannelList
+
+export const INIT_CHANNEL_LIST = [
+  {
+    channelConfig: CHANNEL.MOUTH,
+    isAvailable: true
+  },
+  {
+    channelConfig: CHANNEL.WEBPAGE,
+    isAvailable: true
+  },
+  {
+    channelConfig: CHANNEL.PUBLICATION,
+    isAvailable: true
+  },
+  {
+    channelConfig: CHANNEL.SOCIAL_MEDIA,
+    isAvailable: false
+  },
+  {
+    channelConfig: CHANNEL.TV,
+    isAvailable: false
+  },
+  {
+    channelConfig: CHANNEL.RADIO,
+    isAvailable: false
+  },
+  {
+    channelConfig: CHANNEL.OUT_OF_HOME,
+    isAvailable: false
+  },
+]
+

@@ -59,7 +59,7 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
     turnText.text = 'รอบที่ : ' + turn
   }
 
-  const channelDeck = loadChannelDeck(resources, [])
+  const channelDeck = loadChannelDeck(resources)
   gamePlayScene.addChild(channelDeck)
 
   const timeBar = loadTimeBar(resources)

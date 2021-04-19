@@ -5,13 +5,14 @@ import { scenes } from '../../constants/scenes'
 import { MONEY_CONFIG, PEOPLE_BAR_CONFIG, TIME_BAR_CONFIG } from '../../constants/gameConfig'
 import { Scene } from '../../types'
 import { AVATAR } from '../../constants/avatar'
+import { CHANNEL, INIT_CHANNEL_LIST } from '../../constants/channels'
 
 const GameplayScene = (
   resources: PIXI.IResourceDictionary,
   setCurrentScene: (scene: number) => void,
 ) => {
   const gameplayScene = loadGameplayScene(resources)
-  const { finishButton, buyChannelButton, moneyBar, peopleBar, timeBar, player1, player2, turnText } = gameplayScene.children
+  const { finishButton, buyChannelButton, moneyBar, peopleBar, timeBar, player1, player2, turnText, channelDeck } = gameplayScene.children
   const scene = gameplayScene.scene as Scene
 
   let timer
@@ -42,6 +43,8 @@ const GameplayScene = (
   //example to set avatar
   // player1.setAvatarName('พอล')
   // player1.setAvatarImg(AVATAR.man2)
+  
+  channelDeck.setChannel(INIT_CHANNEL_LIST)
 
   scene.onAppear = () => {
     // Timing
