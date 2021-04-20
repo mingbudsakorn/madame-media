@@ -7,7 +7,7 @@ import loadStartGameScene from './scenes/startGame'
 const gameController = (app: PIXI.Application) => {
   const resources = app.loader.resources
 
-  let currentScene = scenes.startGame
+  let currentScene = scenes.gameplay
   const setCurrentScene = (scene: number) => {
     currentScene = scene
     renderScene()

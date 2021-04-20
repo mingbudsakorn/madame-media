@@ -6,6 +6,7 @@ import loadAvatar from './components/avatar'
 import loadMoneyBar from '../../components/moneyBar'
 import loadCardModal from './components/cardModal'
 import loadCardContainer from './components/cardContainer'
+import loadSpecialEventModal from './components/specialEventModal'
 
 import { TEXT_STYLE } from '../../constants/style'
 import { PEOPLE_BAR_CONFIG } from '../../constants/gameConfig'
@@ -92,6 +93,9 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
   gamePlayScene.addChild(cardContainer)
   gamePlayScene.addChild(cardModalWithOverlay)
 
+  const specialEventModal = loadSpecialEventModal(resources)
+  gamePlayScene.addChild(specialEventModal)
+
   return {
     scene: gamePlayScene,
     children: {
@@ -108,6 +112,7 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
       moneyBar,
       player1,
       player2,
+      specialEventModal,
     },
   }
 }
