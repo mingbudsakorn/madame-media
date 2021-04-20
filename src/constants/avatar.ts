@@ -7,6 +7,7 @@ export const AVATAR = {
   woman2: 'avatar/woman2',
   woman3: 'avatar/woman3',
   woman4: 'avatar/woman4',
+  unknown: 'art/question-icon',
 }
 
 export const AVATAR_BG = {
