@@ -15,6 +15,10 @@ export const COLOR = {
 }
 
 export const TEXT_STYLE = {
+  TITLE_THAI: new PIXI.TextStyle({
+    fontFamily: 'Chonburi',
+    fontSize: 144,
+  }),
   SUPER_HEADER_THAI: new PIXI.TextStyle({
     fontFamily: 'Chonburi',
     fontSize: 96,

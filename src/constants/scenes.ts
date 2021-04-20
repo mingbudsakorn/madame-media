@@ -5,4 +5,8 @@ export const scenes = {
   chooseCharacter: 3,
   beforeStart: 4,
   shop: 5,
+  createRoom: 6,
+  joinRoom: 7,
+  gameLobby: 8,
+  startGame: 9,
 }
