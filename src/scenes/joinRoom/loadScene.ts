@@ -1,13 +1,10 @@
 import * as PIXI from 'pixi.js'
 import loadAvatar from '../../components/avatar'
 import loadTextInput from '../../components/textInput'
-import TextInput from 'pixi-text-input'
 
 import { TEXT_STYLE, COLOR } from '../../constants/style'
 import { AVATAR, AVATAR_BG } from '../../constants/avatar'
 import { Button } from '../../types/index'
-
-
 
 const joinRoomScene = new PIXI.Container()
 joinRoomScene.position.set(0, 0)

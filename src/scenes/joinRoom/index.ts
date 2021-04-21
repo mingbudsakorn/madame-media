@@ -25,9 +25,8 @@ const JoinRoomScene = (
   // get input
   // let name = avatarNameInput.text.trim()
   // let roomId = roomIdInput.text.trim()
-  console.log(avatarList)
+  
   let avatarIndex = 0
-
   // Button
   leftButton
   .on('mousedown', () => onClickLeftButton())

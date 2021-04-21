@@ -43,4 +43,5 @@ export interface Scene extends PIXI.Container {
 
 export interface Button extends PIXI.Sprite {
   setActive: (isActive: boolean) => void
+  setSelected: (isSelected: boolean) => void
 }
