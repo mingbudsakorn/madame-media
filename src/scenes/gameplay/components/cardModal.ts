@@ -38,17 +38,21 @@ export const loadCardModal = (resources: PIXI.IResourceDictionary, card: CardSet
   const toggleButton = new PIXI.Sprite(resources['art/toggle-button'].texture)
   toggleButton.position.set(576, 583)
   toggleButton.interactive = true
+  toggleButton.buttonMode = true
   toggleButton.on('mousedown', () => toggleCard()).on('touchstart', () => toggleCard())
 
   cardModal.addChild(toggleButton)
 
   const useCardButton = new PIXI.Sprite(resources['art/use-card-button'].texture)
   useCardButton.position.set(toggleButton.x, 697)
+  useCardButton.interactive = true
+  useCardButton.buttonMode = true
   cardModal.addChild(useCardButton)
 
   const closeButton = new PIXI.Sprite(resources['art/close-button'].texture)
   closeButton.position.set(882, 35)
   closeButton.interactive = true
+  closeButton.buttonMode = true
   closeButton
     .on('mousedown', () => cardModalWithOverlay.toggle())
     .on('touchstart', () => cardModalWithOverlay.toggle())

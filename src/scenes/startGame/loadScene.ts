@@ -9,7 +9,7 @@ const loadStartGameScene = (resources: PIXI.IResourceDictionary) => {
   bg.position.set(0, 0)
   startGameScene.addChild(bg)
 
-  const title = new PIXI.Text('มาดามมีเดีย', TEXT_STYLE.TITLE_THAI)
+  const title = new PIXI.Text('MADAME MEDIA', TEXT_STYLE.TITLE_THAI)
   title.anchor.set(0.5, 0)
   title.position.set(bg.width / 2, 200)
   startGameScene.addChild(title)
@@ -28,21 +28,25 @@ const loadStartGameScene = (resources: PIXI.IResourceDictionary) => {
   const createRoomButton = new PIXI.Sprite(resources['art/create-room-btn'].texture)
   createRoomButton.position.set(749, startGameBoarder.y + 53)
   createRoomButton.interactive = true
+  createRoomButton.buttonMode = true
   startGameScene.addChild(createRoomButton)
 
   const joinRoomButton = new PIXI.Sprite(resources['art/join-room-btn'].texture)
   joinRoomButton.position.set(createRoomButton.x, createRoomButton.y + createRoomButton.height + 20)
   joinRoomButton.interactive = true
+  joinRoomButton.buttonMode = true
   startGameScene.addChild(joinRoomButton)
 
   const howToPlayButton = new PIXI.Sprite(resources['art/how-to-play-btn'].texture)
   howToPlayButton.position.set(createRoomButton.x, joinRoomButton.y + joinRoomButton.height + 40)
   howToPlayButton.interactive = true
+  howToPlayButton.buttonMode = true
   startGameScene.addChild(howToPlayButton)
 
   const quitButton = new PIXI.Sprite(resources['art/quit-btn'].texture)
   quitButton.position.set(createRoomButton.x, howToPlayButton.y + howToPlayButton.height + 20)
   quitButton.interactive = true
+  quitButton.buttonMode = true
   startGameScene.addChild(quitButton)
   // -------------------------------------------------- //
 

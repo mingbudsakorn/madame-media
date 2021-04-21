@@ -24,6 +24,7 @@ const GameplayScene = (
     turnText,
     channelDeck,
     specialEventModal,
+    specialEvent,
   } = gameplayScene.children
   const scene = gameplayScene.scene as Scene
 
@@ -59,9 +60,11 @@ const GameplayScene = (
   //example to set channel and card
   channelDeck.setChannel(INIT_CHANNEL_CARD_LIST)
 
-  // example set special event
-  // specialEventModal.setSpecialEvent('พายุเข้า!!', 'สัญญาณหาย! \nส่งผลให้ตานี้ประสิทธิภาพช่องทางสื่อ โซเชี่ยลมีเดีย และ เว็บเพจ ลดลง 50% ในขณะที่ โทรทัศน์ และ วิทยุ ใช้การไม่ได้')
+  // example set special event modal
+  // specialEventModal.setSpecialEvent('พายุเข้า!! -> สัญญาณหาย \nส่งผลให้ตานี้ประสิทธิภาพช่องทางสื่อ โซเชี่ยลมีเดีย และ เว็บเพจ ลดลง 50% ในขณะที่ โทรทัศน์ และ วิทยุ ใช้การไม่ได้')
   // specialEventModal.toggle()
+  // specialEvent.setSpecialEvent('พายุเข้า!!')  
+  // specialEvent.visible = true
 
   scene.onAppear = () => {
     // Timing

@@ -3,7 +3,7 @@ import { TEXT_STYLE, COLOR } from '../../../constants/style'
 
 interface SpecialEventModalType extends PIXI.Container {
   toggle: () => void
-  setSpecialEvent: (title: string, description: string) => void
+  setSpecialEvent: (description: string) => void
 }
 
 export const loadSpecialEventModal = (resources: PIXI.IResourceDictionary) => {
@@ -40,7 +40,7 @@ export const loadSpecialEventModal = (resources: PIXI.IResourceDictionary) => {
   descriptionText.position.set(specialEventModalBg.x, specialEventModalBg.y + specialEventModalBg.height/2 - 5)
   specialEventModal.addChild(descriptionText)
 
-  const specialEventText = new PIXI.Text('กองเซนเซอร์ลง!!', TEXT_STYLE.HEADER_THAI_RED_PURPLE)
+  const specialEventText = new PIXI.Text('ข่าวด่วน!!', TEXT_STYLE.HEADER_THAI_RED_PURPLE)
   specialEventText.anchor.set(0.5,0)
   specialEventText.position.set(specialEventModalBg.x, specialEventModalBg.y + 25)
   specialEventModal.addChild(specialEventText)
@@ -54,6 +54,7 @@ export const loadSpecialEventModal = (resources: PIXI.IResourceDictionary) => {
   acceptButton.anchor.set(0.5, 0)
   acceptButton.position.set(specialEventModalBg.x , specialEventModalBg.y + specialEventModalBg.height - acceptButton.height - 30)
   acceptButton.interactive = true
+  acceptButton.buttonMode = true
   acceptButton.on('mousedown', () => specialEventModal.toggle()).on('touchstart', () => specialEventModal.toggle())
   specialEventModal.addChild(acceptButton)
 
@@ -69,8 +70,7 @@ export const loadSpecialEventModal = (resources: PIXI.IResourceDictionary) => {
     }
   }
 
-  specialEventModal.setSpecialEvent = (title: string, description: string) => {
-    specialEventText.text = title
+  specialEventModal.setSpecialEvent = (description: string) => {
     descriptionText.text = description
     if (descriptionText.height > 200) {
       specialEventModalBg.height = specialEventModalBg.height + descriptionText.height - 200

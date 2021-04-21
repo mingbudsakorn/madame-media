@@ -20,6 +20,10 @@ interface TurnTextType extends PIXI.Text {
   setTurnText: (turn: number) => void
 }
 
+interface SpecialEventType extends PIXI.Container {
+  setSpecialEvent: (title: string) => void
+}
+
 const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
   const bg = new PIXI.Sprite(resources['background/gameplay-bg'].texture)
   bg.position.set(0, 0)
@@ -37,11 +41,13 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
   const finishButton = new PIXI.Sprite(resources['art/finish-button'].texture)
   finishButton.position.set(1606, 738)
   finishButton.interactive = true
+  finishButton.buttonMode = true
   gamePlayScene.addChild(finishButton)
 
   const buyChannelButton = new PIXI.Sprite(resources['art/buy-channel-button'].texture)
   buyChannelButton.position.set(1517, 628)
   buyChannelButton.interactive = true
+  buyChannelButton.buttonMode = true
   gamePlayScene.addChild(buyChannelButton)
   // -------------------------------------------------- //
 
@@ -86,6 +92,9 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
   player2.position.set(1694.5, 82)
   gamePlayScene.addChild(player2)
 
+  const specialEvent = new PIXI.Container() as SpecialEventType
+  gamePlayScene.addChild(specialEvent)
+
   const cardModalWithOverlay = loadCardModal(resources, CARD[0])
 
   const cardContainer = loadCardContainer(resources, [0,1], cardModalWithOverlay.toggle)
@@ -93,8 +102,29 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
   gamePlayScene.addChild(cardContainer)
   gamePlayScene.addChild(cardModalWithOverlay)
 
+  const specialEventBg = new PIXI.Sprite(resources['art/special-event-bg'].texture)
+  specialEventBg.anchor.set(0.5, 0)
+  specialEventBg.position.set(bg.width/2, 321)
+  specialEvent.addChild(specialEventBg)
+
+  const specialEventText = new PIXI.Text('พายุเข้า', TEXT_STYLE.HEADER_THAI)
+  specialEventText.anchor.set(0.5)
+  specialEventText.position.set(specialEventBg.x, specialEventBg.y+specialEventBg.height/2)
+  specialEvent.addChild(specialEventText)
+
   const specialEventModal = loadSpecialEventModal(resources)
   gamePlayScene.addChild(specialEventModal)
+
+  specialEvent.interactive = true
+  specialEvent.buttonMode = true;
+  specialEvent
+    .on('mousedown', () => specialEventModal.toggle())
+    .on('touchstart', () => specialEventModal.toggle())
+  specialEvent.visible = false
+
+  specialEvent.setSpecialEvent = (title: string) => {
+    specialEventText.text = title
+  }
 
   return {
     scene: gamePlayScene,
@@ -113,6 +143,7 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
       player1,
       player2,
       specialEventModal,
+      specialEvent,
     },
   }
 }

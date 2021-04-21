@@ -25,7 +25,8 @@ export const loadCardContainer = (
     card.width = cardScale.width
     card.height = cardScale.heigth
     card.x = i=='0'? prevX : prevX + card.width/2
-    card.interactive = true;
+    card.interactive = true
+    card.buttonMode = true
     // todo parse cardConfig to moodal
     card.on('mousedown', () => toggle())
         .on('touchstart', () => toggle())

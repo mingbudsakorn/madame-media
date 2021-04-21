@@ -61,6 +61,7 @@ const loadGameLobbyScene = (resources: PIXI.IResourceDictionary) => {
   startGameButton.anchor.set(0.5, 0)
   startGameButton.position.set(bg.width / 2, 940)
   startGameButton.interactive = true
+  startGameButton.buttonMode = true
   gameLobbyScene.addChild(startGameButton)
 
   const lobbyTurnBg = new PIXI.Sprite(resources['art/lobby-turn-bg'].texture)
@@ -73,6 +74,7 @@ const loadGameLobbyScene = (resources: PIXI.IResourceDictionary) => {
   leftButton.anchor.set(0.5)
   leftButton.position.set(lobbyTurnBg.x - lobbyTurnBg.width / 2 - 50, lobbyTurnBg.y)
   leftButton.interactive = true
+  leftButton.buttonMode = true
   selectTurn.addChild(leftButton)
 
   const rightButton = new PIXI.Sprite(resources['art/button-polygon-right'].texture)
@@ -80,11 +82,13 @@ const loadGameLobbyScene = (resources: PIXI.IResourceDictionary) => {
   rightButton.anchor.set(0.5)
   rightButton.position.set(lobbyTurnBg.x + lobbyTurnBg.width / 2 + 50, leftButton.y)
   rightButton.interactive = true
+  rightButton.buttonMode = true
   selectTurn.addChild(rightButton)
 
   const backButton = new PIXI.Sprite(resources['art/back-button'].texture)
   backButton.interactive = true
   backButton.position.set(58, 58)
+  backButton.buttonMode = true
   gameLobbyScene.addChild(backButton)
 
   // -------------------------------------------------- //
