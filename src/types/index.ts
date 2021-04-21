@@ -40,3 +40,7 @@ export interface DuelChannel {
 export interface Scene extends PIXI.Container {
   onAppear: () => void
 }
+
+export interface Button extends PIXI.Sprite {
+  setActive: (isActive: boolean) => void
+}

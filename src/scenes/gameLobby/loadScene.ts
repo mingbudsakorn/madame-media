@@ -44,7 +44,7 @@ const loadGameLobbyScene = (resources: PIXI.IResourceDictionary) => {
   myAvatar.position.set(230, 275)
   gameLobbyScene.addChild(myAvatar)
 
-  const opponentAvatar = loadAvatar(resources, AVATAR_BG.opponentAvatarBg, AVATAR.unknown, '???')
+  const opponentAvatar = loadAvatar(resources, AVATAR_BG.opponentAvatarBg, 'art/question-icon', '???')
   opponentAvatar.position.set(1190, myAvatar.y)
   gameLobbyScene.addChild(opponentAvatar)
 
