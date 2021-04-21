@@ -48,6 +48,9 @@ const loadGameLobbyScene = (resources: PIXI.IResourceDictionary) => {
   opponentAvatar.position.set(1190, myAvatar.y)
   gameLobbyScene.addChild(opponentAvatar)
 
+  const selectTurn = new PIXI.Container()
+  gameLobbyScene.addChild(selectTurn)
+
   // ----------------------button---------------------- //
   const startGameButton = new PIXI.Sprite(resources['art/start-game-btn'].texture)
   startGameButton.anchor.set(0.5, 0)
@@ -58,29 +61,44 @@ const loadGameLobbyScene = (resources: PIXI.IResourceDictionary) => {
   const lobbyTurnBg = new PIXI.Sprite(resources['art/lobby-turn-bg'].texture)
   lobbyTurnBg.anchor.set(0.5)
   lobbyTurnBg.position.set(startGameButton.x, startGameButton.y - 80)
-  gameLobbyScene.addChild(lobbyTurnBg)
+  selectTurn.addChild(lobbyTurnBg)
 
   const leftButton = new PIXI.Sprite(resources['art/button-polygon-left'].texture)
   leftButton.scale.set(0.7)
   leftButton.anchor.set(0.5)
   leftButton.position.set(lobbyTurnBg.x - lobbyTurnBg.width / 2 - 50, lobbyTurnBg.y)
   leftButton.interactive = true
-  gameLobbyScene.addChild(leftButton)
+  selectTurn.addChild(leftButton)
 
   const rightButton = new PIXI.Sprite(resources['art/button-polygon-right'].texture)
   rightButton.scale.set(0.7)
   rightButton.anchor.set(0.5)
   rightButton.position.set(lobbyTurnBg.x + lobbyTurnBg.width / 2 + 50, leftButton.y)
   rightButton.interactive = true
-  gameLobbyScene.addChild(rightButton)
+  selectTurn.addChild(rightButton)
+
+  const backButton = new PIXI.Sprite(resources['art/back-button'].texture)
+  backButton.interactive = true
+  backButton.position.set(58, 58)
+  gameLobbyScene.addChild(backButton)
 
   // -------------------------------------------------- //
+
+  const waitingText = new PIXI.Text(
+    'ระบบกำลังนำคุณเข้าสู่หน้าเริ่มเกม...',
+    TEXT_STYLE.SUBHEADER_THAI_CHARCOAL,
+  )
+  waitingText.anchor.set(0.5)
+  waitingText.position.set(startGameButton.x, startGameButton.y + startGameButton.height / 2)
+  waitingText.visible = false
+  gameLobbyScene.addChild(waitingText)
 
   const turn = new PIXI.Text('จำนวนรอบ: 10', TEXT_STYLE.SUBHEADER_THAI_RED_PURPLE) as TurnTextType
   turn.anchor.set(0.5)
   turn.position.set(lobbyTurnBg.x, lobbyTurnBg.y)
-  gameLobbyScene.addChild(turn)
+  selectTurn.addChild(turn)
 
+  //methods
   turn.setTurn = (turnNumber: number) => {
     turn.text = 'จำนวนรอบ: ' + turnNumber
     turnText.text = turnNumber.toString()
@@ -89,6 +107,12 @@ const loadGameLobbyScene = (resources: PIXI.IResourceDictionary) => {
   roomId.setRoomId = (id: string) => {
     roomId.text = id
   }
+
+  // when click start game
+  // selectTurn.visible = false
+  // startGameButton.visible = false
+  // backButton.visible = false
+  // waitingText.visible = true
 
   return {
     scene: gameLobbyScene,
@@ -104,6 +128,8 @@ const loadGameLobbyScene = (resources: PIXI.IResourceDictionary) => {
       opponentAvatar,
       leftButton,
       rightButton,
+      waitingText,
+      selectTurn,
     },
   }
 }

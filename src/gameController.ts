@@ -8,7 +8,7 @@ import loadGameLobbyScene from './scenes/gameLobby'
 const gameController = (app: PIXI.Application) => {
   const resources = app.loader.resources
 
-  let currentScene = scenes.gameplay
+  let currentScene = scenes.gameLobby
   const setCurrentScene = (scene: number) => {
     currentScene = scene
     renderScene()
