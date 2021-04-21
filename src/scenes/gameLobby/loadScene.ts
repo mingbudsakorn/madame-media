@@ -48,6 +48,11 @@ const loadGameLobbyScene = (resources: PIXI.IResourceDictionary) => {
   opponentAvatar.position.set(1190, myAvatar.y)
   gameLobbyScene.addChild(opponentAvatar)
 
+  const vsText = new PIXI.Text('VS', TEXT_STYLE.SUPER_HEADER_THAI)
+  vsText.anchor.set(0.5)
+  vsText.position.set(bg.width / 2, bg.height / 2)
+  gameLobbyScene.addChild(vsText)
+
   const selectTurn = new PIXI.Container()
   gameLobbyScene.addChild(selectTurn)
 
@@ -130,6 +135,7 @@ const loadGameLobbyScene = (resources: PIXI.IResourceDictionary) => {
       rightButton,
       waitingText,
       selectTurn,
+      vsText,
     },
   }
 }
