@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js'
 import { COLOR, TEXT_STYLE } from '../../../constants/style'
-import loadMoneyBar from '../../../components/moneyBar'
+import { loadMoneyBar, MoneyBarType } from '../../../components/moneyBar'
 import { SPECIAL_ACTION } from '../../../constants/gameConfig'
 
 interface SpecialActionContainerType extends PIXI.Container {
@@ -9,7 +9,7 @@ interface SpecialActionContainerType extends PIXI.Container {
   exposeButton: PIXI.Sprite
   spyButton: PIXI.Sprite
   question: PIXI.Sprite
-  moneyBar: PIXI.Container
+  moneyBar: MoneyBarType
   timeLeft: PIXI.Text
   setTime: (time: number) => void
 }

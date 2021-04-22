@@ -46,6 +46,8 @@ const DuelScene = (
         clearInterval()
         duelCompareBg.visible = false
         myChannelContainer.visible = false
+        // example
+        // specialActionContainer.moneyBar.setMoney(1000)
         specialActionContainer.visible = true
         // setCurrentScene(scenes.gameplay)
         return

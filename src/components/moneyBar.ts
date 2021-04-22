@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js'
 import { TEXT_STYLE } from '../constants/style'
 import { MONEY_CONFIG } from '../constants/gameConfig'
 
-interface MoneyBarType extends PIXI.Container {
+export interface MoneyBarType extends PIXI.Container {
   money: PIXI.Text
   setMoney: (money: number) => void
 }
