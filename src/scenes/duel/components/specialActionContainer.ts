@@ -14,10 +14,6 @@ interface SpecialActionContainerType extends PIXI.Container {
   setTime: (time: number) => void
 }
 
-// interface ChannelContainerType extends PIXI.Container {
-//   setChannels: (channels: DuelChannel[]) => void
-// }
-
 const loadSpecialActionContainer = (resources: PIXI.IResourceDictionary) => {
   const specialActionContainer = new PIXI.Container() as SpecialActionContainerType
 
