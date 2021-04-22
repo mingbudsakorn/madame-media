@@ -10,7 +10,7 @@ import loadCreateRoomScene from './scenes/createRoom'
 const gameController = (app: PIXI.Application) => {
   const resources = app.loader.resources
 
-  let currentScene = scenes.createRoom
+  let currentScene = scenes.duel
   const setCurrentScene = (scene: number) => {
     currentScene = scene
     renderScene()
