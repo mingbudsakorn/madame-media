@@ -6,11 +6,12 @@ import loadStartGameScene from './scenes/startGame'
 import loadGameLobbyScene from './scenes/gameLobby'
 import loadJoinRoomScene from './scenes/joinRoom'
 import loadCreateRoomScene from './scenes/createRoom'
+import loadCardShopScene from './scenes/cardShop'
 
 const gameController = (app: PIXI.Application) => {
   const resources = app.loader.resources
 
-  let currentScene = scenes.duel
+  let currentScene = scenes.cardShop
   const setCurrentScene = (scene: number) => {
     currentScene = scene
     renderScene()
@@ -33,6 +34,9 @@ const gameController = (app: PIXI.Application) => {
 
   const createRoomScene = loadCreateRoomScene(resources, setCurrentScene)
   createRoomScene.visible = false
+
+  const cardShopScene = loadCardShopScene(resources, setCurrentScene)
+  cardShopScene.visible = false
 
   const renderScene = () => {
     switch (currentScene) {
@@ -57,6 +61,9 @@ const gameController = (app: PIXI.Application) => {
         break
       case scenes.createRoom:
         createRoomScene.visible = true
+        break
+      case scenes.cardShop:
+        cardShopScene.visible = true
     }
   }
 
@@ -68,6 +75,7 @@ const gameController = (app: PIXI.Application) => {
   app.stage.addChild(gameLobbyScene)
   app.stage.addChild(joinRoomScene)
   app.stage.addChild(createRoomScene)
+  app.stage.addChild(cardShopScene)
 }
 
 export default gameController
