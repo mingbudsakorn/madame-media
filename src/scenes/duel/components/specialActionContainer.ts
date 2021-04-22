@@ -22,11 +22,12 @@ const loadSpecialActionContainer = (resources: PIXI.IResourceDictionary) => {
   specialActionContainer.addChild(timeLeftText)
 
   const timeLeft = new PIXI.Text(SPECIAL_ACTION.INIT_TIME.toString(), TEXT_STYLE.SUBHEADER_THAI_RED_PURPLE)
-  timeLeft.position.set(timeLeftText.x + timeLeftText.width + 15, timeLeftText.y)
+  timeLeft.anchor.set(0.5,0)
+  timeLeft.position.set(timeLeftText.x + timeLeftText.width + 40, timeLeftText.y)
   specialActionContainer.addChild(timeLeft)
 
   const secondText = new PIXI.Text('วินาที', TEXT_STYLE.SUBHEADER_THAI)
-  secondText.position.set(timeLeft.x + timeLeft.width + 15, timeLeftText.y)
+  secondText.position.set(timeLeft.x + timeLeft.width - 10, timeLeftText.y)
   specialActionContainer.addChild(secondText)
 
   const specialActionBg = new PIXI.Sprite(resources['art/special-action-bg'].texture)
