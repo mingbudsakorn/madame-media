@@ -11,7 +11,16 @@ const GameplayScene = (
   setCurrentScene: (scene: number) => void,
 ) => {
   const gameplayScene = loadGameplayScene(resources)
-  const { finishButton, buyChannelButton, moneyBar, peopleBar, timeBar, player1, player2, turnText } = gameplayScene.children
+  const {
+    finishButton,
+    buyChannelButton,
+    moneyBar,
+    peopleBar,
+    timeBar,
+    player1,
+    player2,
+    turnText,
+  } = gameplayScene.children
   const scene = gameplayScene.scene as Scene
 
   let timer
@@ -38,22 +47,22 @@ const GameplayScene = (
   peopleBar.setPeople(PEOPLE_BAR_CONFIG.INIT_MY_PEOPLE, PEOPLE_BAR_CONFIG.INIT_OPPONENT_PEOPLE)
   // example to set turnText
   // turnText.setTurnText(2)
-  
+
   //example to set avatar
   // player1.setAvatarName('พอล')
   // player1.setAvatarImg(AVATAR.man2)
 
   scene.onAppear = () => {
     // Timing
-    let timeLeft = TIME_BAR_CONFIG.TIME_PER_TURN
-    timer = setInterval(() => {
-      if (timeLeft === 0) {
-        clearInterval(timer)
-        return
-      }
-      timeBar.setTime(timeLeft - 1)
-      timeLeft -= 1
-    }, 1000)
+    // let timeLeft = TIME_BAR_CONFIG.TIME_PER_TURN
+    // timer = setInterval(() => {
+    //   if (timeLeft === 0) {
+    //     clearInterval(timer)
+    //     return
+    //   }
+    //   timeBar.setTime(timeLeft - 1)
+    //   timeLeft -= 1
+    // }, 1000)
   }
 
   return scene

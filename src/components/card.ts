@@ -2,12 +2,18 @@ import * as PIXI from 'pixi.js'
 import { TEXT_STYLE } from '../constants/style'
 import { Card } from '../types'
 
-const loadCard = (resources: PIXI.IResourceDictionary, cardConfig: Card, isReal: boolean) => {
-  const card = new PIXI.Container()
+export interface CardType extends PIXI.Container {
+  getCardConfig: () => Card
+  setIsReal: (boolean) => void
+  getIsReal: () => boolean
+}
 
-  let cardBg = isReal
-    ? new PIXI.Sprite(resources['cards/real-card-bg'].texture)
-    : new PIXI.Sprite(resources['cards/fake-card-bg'].texture)
+const loadCard = (resources: PIXI.IResourceDictionary, cardConfig: Card) => {
+  const card = new PIXI.Container() as CardType
+
+  let isReal = true
+
+  let cardBg = new PIXI.Sprite(resources['cards/real-card-bg'].texture)
   card.addChild(cardBg)
 
   let cardLine = new PIXI.Sprite(resources['cards/card-line'].texture)
@@ -93,11 +99,31 @@ const loadCard = (resources: PIXI.IResourceDictionary, cardConfig: Card, isReal:
   cardImageBg.position.set(45, 147)
   card.addChild(cardImageBg)
 
-  if (!isReal) {
-    let fakeText = new PIXI.Text('ปลอม', TEXT_STYLE.SUPER_HEADER_THAI_CHACOAL)
-    fakeText.anchor.set(0.5)
-    fakeText.position.set(cardBg.width / 2, 339.5)
-    card.addChild(fakeText)
+  // Fake Text
+  let fakeText = new PIXI.Text('ปลอม', TEXT_STYLE.SUPER_HEADER_THAI_CHACOAL)
+  fakeText.anchor.set(0.5)
+  fakeText.position.set(cardBg.width / 2, 339.5)
+  fakeText.visible = false
+  card.addChild(fakeText)
+
+  card.setIsReal = (realValue: boolean) => {
+    if (!realValue) {
+      isReal = false
+      fakeText.visible = true
+      cardBg.texture = resources['cards/fake-card-bg'].texture
+    } else {
+      isReal = true
+      fakeText.visible = false
+      cardBg.texture = resources['cards/real-card-bg'].texture
+    }
+  }
+
+  card.getIsReal = () => {
+    return isReal
+  }
+
+  card.getCardConfig = () => {
+    return cardConfig
   }
 
   return card

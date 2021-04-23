@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js'
+import card from '../../components/card'
 import loadChannelDeck from './components/channelDeck'
 import loadTimeBar from './components/timeBar'
 import loadPeopleBar from '../../components/peopleBar'
@@ -8,15 +9,30 @@ import loadCardModal from './components/cardModal'
 import loadCardContainer from './components/cardContainer'
 
 import { TEXT_STYLE } from '../../constants/style'
-import { PEOPLE_BAR_CONFIG } from '../../constants/gameConfig'
-import { CARD } from '../../constants/card'
+import { PEOPLE_BAR_CONFIG, CARD_CONFIG } from '../../constants/gameConfig'
 import { AVATAR } from '../../constants/avatar'
+import loadCard from '../../components/card'
+import { CARD } from '../../constants/card'
+import loadCardExpanded from './components/cardExpanded'
 
 const gamePlayScene = new PIXI.Container()
 gamePlayScene.position.set(0, 0)
 
 interface TurnTextType extends PIXI.Text {
   setTurnText: (turn: number) => void
+}
+
+// SAMPLE RANDOM CARDS
+const randomCards = (resources: PIXI.IResourceDictionary) => {
+  const cards = []
+  for (let i = 0; i < CARD_CONFIG.CARDS_PER_TURN; i++) {
+    const cardNumber = Math.floor(Math.random() * 19) // 18 total types on cards
+    const card = loadCard(resources, CARD[cardNumber].real)
+    card.width = 170
+    card.height = 250
+    cards.push(card)
+  }
+  return cards
 }
 
 const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
@@ -85,11 +101,26 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
   player2.position.set(1694.5, 82)
   gamePlayScene.addChild(player2)
 
+  // ----- Cards ----- //
   const cardModalWithOverlay = loadCardModal(resources, CARD[0])
 
-  const cardContainer = loadCardContainer(resources, [], cardModalWithOverlay.toggle)
+  const cardContainer = loadCardContainer()
+  cardContainer.setCards(randomCards(resources))
+
+  const expandedContainer = loadCardExpanded(resources, () => {
+    expandedContainer.visible = false
+  })
+  expandedContainer.setCards(randomCards(resources))
+  expandedContainer.visible = false
+
+  cardContainer.hitArea = new PIXI.Rectangle(0, 0, cardContainer.width, cardContainer.height)
+  cardContainer.interactive = true
+  cardContainer.on('mousedown', () => {
+    expandedContainer.visible = true
+  })
 
   gamePlayScene.addChild(cardContainer)
+  gamePlayScene.addChild(expandedContainer)
   gamePlayScene.addChild(cardModalWithOverlay)
 
   return {

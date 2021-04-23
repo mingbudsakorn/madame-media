@@ -1,24 +1,34 @@
 import * as PIXI from 'pixi.js'
-import { TEXT_STYLE } from '../../../constants/style'
+import { CardType } from '../../../components/card'
+// import { TEXT_STYLE } from '../../../constants/style'
 
-export const loadCardContainer = (
-  resources: PIXI.IResourceDictionary,
-  cardList,
-  toggle: () => void,
-) => {
-  const cardContainer = new PIXI.Container()
-  cardContainer.position.set(134, 960)
-
-  const cardContainerBg = new PIXI.Sprite(resources['art/card-container-bg'].texture)
-  // test
-  cardContainerBg.interactive = true
-  cardContainerBg.on('mousedown', () => toggle()).on('touchstart', () => toggle())
-
-  cardContainer.addChild(cardContainerBg)
-
-  // TODO: Load cardList
-
-  return cardContainer
+interface CardContainerType extends PIXI.Container {
+  setCards: (cards: CardType[]) => void
 }
+
+export const loadCardContainer = () =>
+  // toggle: () => void,
+  {
+    const cardContainer = new PIXI.Container() as CardContainerType
+    cardContainer.position.set(134, 960)
+
+    const displayCards = (cards: CardType[]) => {
+      cards.forEach((card, i) => {
+        card.position.set(i * 125, 0)
+        cardContainer.addChild(card)
+      })
+    }
+
+    cardContainer.setCards = (cards: CardType[]) => {
+      // clear old cards
+      while (cardContainer.children[0]) {
+        cardContainer.removeChild(cardContainer.children[0])
+      }
+
+      displayCards(cards)
+    }
+
+    return cardContainer
+  }
 
 export default loadCardContainer

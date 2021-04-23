@@ -11,3 +11,7 @@ export const PEOPLE_BAR_CONFIG = {
 export const MONEY_CONFIG = {
   INIT: 500,
 }
+
+export const CARD_CONFIG = {
+  CARDS_PER_TURN: 6,
+}
