@@ -11,7 +11,7 @@ import loadCardShopScene from './scenes/cardShop'
 const gameController = (app: PIXI.Application) => {
   const resources = app.loader.resources
 
-  let currentScene = scenes.cardShop
+  let currentScene = scenes.gameplay
   const setCurrentScene = (scene: number) => {
     currentScene = scene
     renderScene()
