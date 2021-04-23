@@ -15,11 +15,18 @@ const loadCardShopScene = (resources: PIXI.IResourceDictionary) => {
   buyChannelText.position.set(bg.width / 2, 147)
   cardShopScene.addChild(buyChannelText)
 
+  //button
+  const confirmButton = new PIXI.Sprite(resources['art/confirm-btn'].texture)
+  confirmButton.position.set(751,  897)
+  confirmButton.interactive = true
+  confirmButton.buttonMode = true
+  cardShopScene.addChild(confirmButton)
+
   return{
     scene: cardShopScene,
     children: {
       bg,
-      buyChannelText,
+      confirmButton,
     },
   }
 

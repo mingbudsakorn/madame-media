@@ -11,6 +11,7 @@ const CardShopScene = (
 
   const {
     bg,
+    confirmButton,
   } = cardShopScene.children
 
   const scene = cardShopScene.scene as Scene
