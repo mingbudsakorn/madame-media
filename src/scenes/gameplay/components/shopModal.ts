@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js'
 import loadChannel from '../../../components/channel'
+import loadMoneyBar from '../../../components/moneyBar'
 import { Channel } from '../../../types'
 import { TEXT_STYLE, COLOR } from '../../../constants/style'
 
@@ -23,6 +24,9 @@ export const loadShopModal = (resources: PIXI.IResourceDictionary, channel: Chan
   const shopModalBg = new PIXI.Sprite(resources['art/shop-modal-bg'].texture)
   shopModal.addChild(shopModalBg)
 
+  const moneyBar = loadMoneyBar(resources)
+  moneyBar.position.set(0,600)
+  shopModal.addChild(moneyBar)
   //text
   const buyChannelText = new PIXI.Text('เลือกซื้อช่องทางสื่อ', TEXT_STYLE.HEADER_THAI)
   buyChannelText.position.set(527, 50)
