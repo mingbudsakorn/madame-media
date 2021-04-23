@@ -7,6 +7,7 @@ import loadMoneyBar from '../../components/moneyBar'
 import loadCardModal from './components/cardModal'
 import loadCardContainer from './components/cardContainer'
 import loadSpecialEventModal from './components/specialEventModal'
+import loadShopModal from './components/shopModal'
 
 import { TEXT_STYLE } from '../../constants/style'
 import { PEOPLE_BAR_CONFIG } from '../../constants/gameConfig'
@@ -126,6 +127,8 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
     specialEventText.text = title
   }
 
+  //buy channel 
+  
   return {
     scene: gamePlayScene,
     children: {
