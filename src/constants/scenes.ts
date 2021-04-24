@@ -9,4 +9,5 @@ export const scenes = {
   joinRoom: 7,
   gameLobby: 8,
   startGame: 9,
+  endGame: 10,
 }
