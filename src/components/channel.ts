@@ -1,13 +1,21 @@
 import * as PIXI from 'pixi.js'
 import { TEXT_STYLE } from '../constants/style'
 import { Channel } from '../types'
+import { CardType } from './card'
+
+export interface ChannelType extends PIXI.Container {
+  setCard: (card: CardType) => void
+  getCard: () => CardType
+  isAvailable: () => boolean
+  getChannelConfig: () => Channel
+}
 
 const loadChannel = (
   resources: PIXI.IResourceDictionary,
   channelConfig: Channel,
   isAvailable: boolean,
 ) => {
-  let channel = new PIXI.Container()
+  let channel = new PIXI.Container() as ChannelType
 
   let channelName = new PIXI.Text(
     channelConfig.name,
@@ -55,6 +63,36 @@ const loadChannel = (
   percentageText.anchor.set(0.5, 0)
   percentageText.position.set(channelBg.width / 2, channelBg.y + 20)
   channel.addChild(percentageText)
+
+  // Card in the channel
+  const cardContainer = new PIXI.Container()
+  channel.setCard = (card) => {
+    // clear former card
+    if (cardContainer.children[0]) cardContainer.removeChild(cardContainer.children[0])
+    if (card) {
+      card.width = 170
+      card.height = 250
+      card.x = 0
+      card.y = channel.height - 285
+      cardContainer.addChild(card)
+    }
+  }
+  cardContainer.x = 0
+  cardContainer.y = 0
+
+  channel.addChild(cardContainer)
+
+  channel.getCard = () => {
+    return cardContainer.children.length > 0 ? (cardContainer.children[0] as CardType) : undefined
+  }
+
+  channel.isAvailable = () => {
+    return isAvailable
+  }
+
+  channel.getChannelConfig = () => {
+    return channelConfig
+  }
 
   return channel
 }

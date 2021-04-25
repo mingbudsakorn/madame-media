@@ -3,12 +3,15 @@ import { CardType } from '../../../components/card'
 
 interface Type extends PIXI.Container {
   setCards: (cards: CardType[]) => void
+  useCard: (index: number) => void
 }
 
 const loadCardExpanded = (resources: PIXI.IResourceDictionary, onClose: () => void) => {
   const cardExpanded = new PIXI.Container() as Type
 
   const overlay = new PIXI.Sprite(resources['art/overlay'].texture)
+  overlay.interactive = true
+  overlay.on('mousedown', onClose)
   cardExpanded.addChild(overlay)
 
   const cardContainer = new PIXI.Container()
@@ -17,7 +20,10 @@ const loadCardExpanded = (resources: PIXI.IResourceDictionary, onClose: () => vo
     card.setIsReal(!card.getIsReal())
   }
 
-  const displayCards = (cards: CardType[]) => {
+  let cardArray = []
+
+  const displayCards = async (cards: CardType[]) => {
+    cardArray.length = 0
     cards.forEach((card, i) => {
       const singleCardContainer = new PIXI.Container()
       card.width = 275
@@ -25,7 +31,6 @@ const loadCardExpanded = (resources: PIXI.IResourceDictionary, onClose: () => vo
       card.x = 300 * i
       card.y = 0
       card.interactive = true
-      card.on('mousedown', onClose)
       singleCardContainer.addChild(card)
 
       const toggleButton = new PIXI.Sprite(resources['art/toggle-button'].texture)
@@ -33,7 +38,7 @@ const loadCardExpanded = (resources: PIXI.IResourceDictionary, onClose: () => vo
       toggleButton.width = 275
       toggleButton.height = 68
       toggleButton.interactive = true
-      toggleButton.on('mousedown', () => toggleCard(card)).on('touchstart', () => toggleCard(card))
+      toggleButton.on('mousedown', () => toggleCard(card))
       toggleButton.alpha = 0
       singleCardContainer.addChild(toggleButton)
 
@@ -43,6 +48,9 @@ const loadCardExpanded = (resources: PIXI.IResourceDictionary, onClose: () => vo
       useCardButton.height = 68
       useCardButton.interactive = true
       useCardButton.alpha = 0
+      // useCardButton.on('mousedown', () => {
+      //   onUseCard(card)
+      // })
       singleCardContainer.addChild(useCardButton)
 
       singleCardContainer.interactive = true
@@ -56,6 +64,12 @@ const loadCardExpanded = (resources: PIXI.IResourceDictionary, onClose: () => vo
         useCardButton.alpha = 0
       })
       cardContainer.addChild(singleCardContainer)
+
+      cardArray.push({
+        useButton: useCardButton,
+        toggleButton: toggleButton,
+        card: card,
+      })
     })
 
     cardContainer.x = overlay.width / 2 - cardContainer.width / 2
@@ -63,6 +77,11 @@ const loadCardExpanded = (resources: PIXI.IResourceDictionary, onClose: () => vo
   }
 
   cardExpanded.addChild(cardContainer)
+
+  cardExpanded.useCard = (index) => {
+    cardArray[index].useButton.visible = false
+    cardArray[index].toggleButton.visible = false
+  }
 
   cardExpanded.setCards = (cards: CardType[]) => {
     // clear old cards
@@ -72,7 +91,10 @@ const loadCardExpanded = (resources: PIXI.IResourceDictionary, onClose: () => vo
     displayCards(cards)
   }
 
-  return cardExpanded
+  return {
+    scene: cardExpanded,
+    cardArray,
+  }
 }
 
 export default loadCardExpanded
