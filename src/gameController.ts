@@ -12,7 +12,7 @@ import loadEndGameScene from './scenes/endGame'
 const gameController = (app: PIXI.Application) => {
   const resources = app.loader.resources
 
-  let currentScene = scenes.endGame
+  let currentScene = scenes.gameplay
   const setCurrentScene = (scene: number) => {
     currentScene = scene
     renderScene()

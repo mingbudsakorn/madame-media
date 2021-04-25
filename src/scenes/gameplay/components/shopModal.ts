@@ -9,7 +9,7 @@ interface LoadShopModalType extends PIXI.Container {
 }
 
 export const loadShopModal = (resources: PIXI.IResourceDictionary, channel: Channel) => {
-  let isShowing = false 
+  let isShowing = false
 
   const shopModalWithOverlay = new PIXI.Container() as LoadShopModalType
   shopModalWithOverlay.position.set(0, 0)
@@ -24,17 +24,23 @@ export const loadShopModal = (resources: PIXI.IResourceDictionary, channel: Chan
   const shopModalBg = new PIXI.Sprite(resources['art/shop-modal-bg'].texture)
   shopModal.addChild(shopModalBg)
 
+  const panelBg = new PIXI.Sprite(resources['art/buy-channel-panel-bg'].texture)
+  panelBg.anchor.set(0.5,0)
+  panelBg.position.set(shopModalBg.x + shopModalBg.width/2, 150)
+  shopModal.addChild(panelBg)
+
   const moneyBar = loadMoneyBar(resources)
-  moneyBar.position.set(0,600)
+  moneyBar.position.set(85, 595)
   shopModal.addChild(moneyBar)
+
   //text
   const buyChannelText = new PIXI.Text('เลือกซื้อช่องทางสื่อ', TEXT_STYLE.HEADER_THAI)
-  buyChannelText.position.set(527, 50)
+  buyChannelText.position.set(527, 60)
   shopModal.addChild(buyChannelText)
 
   //button
   const buyButton = new PIXI.Sprite(resources['art/buy-button'].texture)
-  buyButton.position.set(527, 686)
+  buyButton.position.set(527, 700)
   buyButton.interactive = true
   buyButton.buttonMode = true
   shopModal.addChild(buyButton)
@@ -43,20 +49,24 @@ export const loadShopModal = (resources: PIXI.IResourceDictionary, channel: Chan
   closeButton.position.set(1350, 50)
   closeButton.interactive = true
   closeButton.buttonMode = true
+  closeButton
+    .on('mousedown', () => shopModalWithOverlay.toggle())
+    .on('touchstart', () => shopModalWithOverlay.toggle())
   shopModal.addChild(closeButton)
 
   const leftButton = new PIXI.Sprite(resources['art/button-polygon-left'].texture)
-  leftButton.position.set(20, 297)
+  leftButton.anchor.set(0.5)
+  leftButton.position.set(panelBg.x-panelBg.width/2, panelBg.y+panelBg.height/2)
   leftButton.interactive = true
   leftButton.buttonMode = true
   shopModal.addChild(leftButton)
 
   const rightButton = new PIXI.Sprite(resources['art/button-polygon-right'].texture)
-  rightButton.position.set(1365,297)
+  rightButton.anchor.set(0.5)
+  rightButton.position.set(panelBg.x+panelBg.width/2, leftButton.y)
   rightButton.interactive = true
   rightButton.buttonMode = true
   shopModal.addChild(rightButton)
-
 
   //visibility
   shopModalWithOverlay.visible = isShowing
@@ -70,6 +80,9 @@ export const loadShopModal = (resources: PIXI.IResourceDictionary, channel: Chan
       shopModalWithOverlay.visible = false
     }
   }
+
+  overlay.interactive = true
+
   return shopModalWithOverlay
 }
 export default loadShopModal

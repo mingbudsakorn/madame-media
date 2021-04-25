@@ -50,15 +50,6 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
   buyChannelButton.interactive = true
   buyChannelButton.buttonMode = true
   gamePlayScene.addChild(buyChannelButton)
-
-  const shopModal = loadShopModal(resources)
-  gamePlayScene.addChild(shopModal)
-  
-  // buyChannelButton
-  //   .on('mousedown', () => shopModal.toggle())
-  //   .on('touchstart', () => shopModal.toggle())
-  // shopModal.visible = false 
-
   // -------------------------------------------------- //
 
   // ----------------------text---------------------- //
@@ -136,7 +127,13 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
     specialEventText.text = title
   }
 
-  //buy channel 
+  //buy channel
+  const shopModal = loadShopModal(resources)
+  gamePlayScene.addChild(shopModal)
+  
+  buyChannelButton
+    .on('mousedown', () => shopModal.toggle())
+    .on('touchstart', () => shopModal.toggle())
   
   return {
     scene: gamePlayScene,
