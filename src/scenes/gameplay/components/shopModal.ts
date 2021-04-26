@@ -116,7 +116,7 @@ export const loadShopModal = (resources: PIXI.IResourceDictionary) => {
   }
 
   shopModalWithOverlay.setTotalCost = (totalCost: number) => {
-    totalCostText.text = 'ราคารวม: ' + totalCost.toString() + 'เหรียญ'
+    totalCostText.text = 'ราคารวม: ' + totalCost.toString() + ' เหรียญ'
   } 
   overlay.interactive = true
 

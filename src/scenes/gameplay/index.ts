@@ -25,6 +25,7 @@ const GameplayScene = (
     channelDeck,
     specialEventModal,
     specialEvent,
+    shopModal,
   } = gameplayScene.children
   const scene = gameplayScene.scene as Scene
 
@@ -66,6 +67,7 @@ const GameplayScene = (
   // specialEvent.setSpecialEvent('พายุเข้า!!')  
   // specialEvent.visible = true
 
+  shopModal.setTotalCost(1000)
   scene.onAppear = () => {
     // Timing
     let timeLeft = TIME_BAR_CONFIG.TIME_PER_TURN

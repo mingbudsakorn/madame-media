@@ -153,6 +153,7 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
       player2,
       specialEventModal,
       specialEvent,
+      shopModal,
     },
   }
 }
