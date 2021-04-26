@@ -3,13 +3,14 @@ import { Channel } from '../../../types'
 import { TEXT_STYLE } from '../../../constants/style'
 
 interface channelInShopType extends PIXI.Container{
-
+  toggle: () => void
 }
 export const loadChannelInShop = (
   resources: PIXI.IResourceDictionary, 
   channelConfig: Channel, 
   isOwned: boolean) => 
   {
+  let isSelected = false ;
   const channelInShop = new PIXI.Container  as channelInShopType
 
   let channelName = new PIXI.Text(
@@ -51,6 +52,42 @@ export const loadChannelInShop = (
   textIcon.position.set(visualIcon.x + visualIcon.width + 23, audioIcon.y)
   channelInShop.addChild(textIcon)
 
+  if(!isOwned){
+    const moneyIcon = new PIXI.Sprite(resources['art/coin'].texture)
+    const channelCost = new PIXI.Text(channelConfig.price.toString(),TEXT_STYLE.HEADER_THAI)
+    const tickBox = new PIXI.Sprite(resources['art/unchecked-channel'].texture)
+    moneyIcon.anchor.set(0.5,0)
+    channelCost.anchor.set(0.5,0)
+    tickBox.anchor.set(0.5,0)
+
+    moneyIcon.height = 45
+    moneyIcon.width = 45
+
+    moneyIcon.position.set(channelBg.width/2, channelBg.height/2 -20)
+    channelCost.position.set(channelBg.width/2, moneyIcon.y+moneyIcon.height+10)
+    tickBox.position.set(channelBg.width/2, channelCost.y+channelCost.height+20)
+
+    tickBox.buttonMode = true 
+    tickBox.interactive = true 
+    tickBox
+    .on('mousedown', () => toggle())
+    .on('touchstart', () => toggle())
+  
+    channelInShop.addChild(moneyIcon)
+    channelInShop.addChild(channelCost)
+    channelInShop.addChild(tickBox)
+
+    const toggle = () => {
+      isSelected = !isSelected
+      if(isSelected){
+        tickBox.texture = resources['art/checked-channel'].texture
+      }
+      else{
+        tickBox.texture = resources['art/unchecked-channel'].texture
+      }
+    }
+
+  }
   return channelInShop
 
   }
