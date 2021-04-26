@@ -1,14 +1,46 @@
 import * as PIXI from 'pixi.js'
 import loadChannel from '../../../components/channel'
 import loadMoneyBar from '../../../components/moneyBar'
-import { Channel } from '../../../types'
+import { CHANNEL } from '../../../constants/channels'
 import { TEXT_STYLE, COLOR } from '../../../constants/style'
+import loadChannelShop from './channelShop'
 
+
+const mockChannelInShopList = [
+  {
+    channelConfig: CHANNEL.SOCIAL_MEDIA,
+    isOwned : false
+  },
+  {
+    channelConfig: CHANNEL.MOUTH,
+    isOwned : true
+  },
+  {
+    channelConfig: CHANNEL.WEBPAGE,
+    isOwned : true
+  },
+  {
+    channelConfig: CHANNEL.TV,
+    isOwned : false
+  },
+  {
+    channelConfig: CHANNEL.RADIO,
+    isOwned : true
+  },
+  {
+    channelConfig: CHANNEL.PUBLICATION,
+    isOwned : true
+  },
+  {
+    channelConfig: CHANNEL.OUT_OF_HOME,
+    isOwned : false
+  },
+]
 interface LoadShopModalType extends PIXI.Container {
   toggle: () => void
 }
 
-export const loadShopModal = (resources: PIXI.IResourceDictionary, channel: Channel) => {
+export const loadShopModal = (resources: PIXI.IResourceDictionary) => {
   let isShowing = false
 
   const shopModalWithOverlay = new PIXI.Container() as LoadShopModalType
@@ -32,6 +64,12 @@ export const loadShopModal = (resources: PIXI.IResourceDictionary, channel: Chan
   const moneyBar = loadMoneyBar(resources)
   moneyBar.position.set(85, 595)
   shopModal.addChild(moneyBar)
+
+  //channels
+  const channelShopDeck = loadChannelShop(resources)
+  channelShopDeck.setChannelShop(mockChannelInShopList)
+  channelShopDeck.position.set(140,165)
+  shopModal.addChild(channelShopDeck)
 
   //text
   const buyChannelText = new PIXI.Text('เลือกซื้อช่องทางสื่อ', TEXT_STYLE.HEADER_THAI)
