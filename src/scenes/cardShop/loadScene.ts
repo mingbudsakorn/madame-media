@@ -18,6 +18,7 @@ const loadCardShopScene = (resources: PIXI.IResourceDictionary) => {
 
   //cards 
   const cardShopDeck = loadCardShopDeck(resources)
+  cardShopDeck.position.set(327,340)
   cardShopScene.addChild(cardShopDeck)
 
   //button

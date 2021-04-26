@@ -2,10 +2,13 @@ import * as PIXI from 'pixi.js'
 import loadCardShopScene from './loadScene'
 import { Scene } from '../../types'
 import { scenes } from '../../constants/scenes'
-
+import {CARD} from '../../constants/card'
 const mockCardShopList = [
-  {card: 1},
-  {card: 0},
+  CARD[0].real,
+  CARD[1].real,
+  CARD[2].real,
+  CARD[3].real,
+  CARD[4].real
 ]
 const CardShopScene = (
   resources: PIXI.IResourceDictionary,
