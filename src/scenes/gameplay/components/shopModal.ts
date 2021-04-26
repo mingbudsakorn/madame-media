@@ -37,6 +37,7 @@ const mockChannelInShopList = [
   },
 ]
 interface LoadShopModalType extends PIXI.Container {
+  totalcost : number
   toggle: () => void
 }
 
@@ -50,11 +51,11 @@ export const loadShopModal = (resources: PIXI.IResourceDictionary) => {
   shopModalWithOverlay.addChild(overlay)
 
   const shopModal = new PIXI.Container()
-  shopModal.position.set(216, 113)
   shopModalWithOverlay.addChild(shopModal)
 
   const shopModalBg = new PIXI.Sprite(resources['art/shop-modal-bg'].texture)
   shopModal.addChild(shopModalBg)
+  shopModal.position.set(overlay.width/2-(shopModalBg.width/2), 113)
 
   const panelBg = new PIXI.Sprite(resources['art/buy-channel-panel-bg'].texture)
   panelBg.anchor.set(0.5,0)
@@ -62,49 +63,43 @@ export const loadShopModal = (resources: PIXI.IResourceDictionary) => {
   shopModal.addChild(panelBg)
 
   const moneyBar = loadMoneyBar(resources)
-  moneyBar.position.set(85, 595)
+  moneyBar.position.set(panelBg.x-panelBg.width/2, 595)
   shopModal.addChild(moneyBar)
+
 
   //channels
   const channelShopDeck = loadChannelShop(resources)
   channelShopDeck.setChannelShop(mockChannelInShopList)
-  channelShopDeck.position.set(140,165)
+  channelShopDeck.position.set(shopModalBg.width/2 - channelShopDeck.width/2,165)
   shopModal.addChild(channelShopDeck)
 
   //text
   const buyChannelText = new PIXI.Text('เลือกซื้อช่องทางสื่อ', TEXT_STYLE.HEADER_THAI)
-  buyChannelText.position.set(527, 60)
+  buyChannelText.anchor.set(0.5,0)
+  buyChannelText.position.set(shopModalBg.width/2, 60)
   shopModal.addChild(buyChannelText)
+
+  const totalCostText = new PIXI.Text('ราคารวม: ' + '0 เหรียญ', TEXT_STYLE.SUBHEADER_THAI)
+  totalCostText.anchor.set(1,0.5)
+  totalCostText.position.set(panelBg.x+panelBg.width/2,moneyBar.y+moneyBar.height/2)
+  shopModal.addChild(totalCostText)
 
   //button
   const buyButton = new PIXI.Sprite(resources['art/buy-button'].texture)
-  buyButton.position.set(527, 700)
+  buyButton.anchor.set(0.5,0)
+  buyButton.position.set(shopModalBg.width/2, 700)
   buyButton.interactive = true
   buyButton.buttonMode = true
   shopModal.addChild(buyButton)
 
   const closeButton = new PIXI.Sprite(resources['art/close-button'].texture)
-  closeButton.position.set(1350, 50)
+  closeButton.position.set(1700, 50)
   closeButton.interactive = true
   closeButton.buttonMode = true
   closeButton
     .on('mousedown', () => shopModalWithOverlay.toggle())
     .on('touchstart', () => shopModalWithOverlay.toggle())
   shopModal.addChild(closeButton)
-
-  const leftButton = new PIXI.Sprite(resources['art/button-polygon-left'].texture)
-  leftButton.anchor.set(0.5)
-  leftButton.position.set(panelBg.x-panelBg.width/2, panelBg.y+panelBg.height/2)
-  leftButton.interactive = true
-  leftButton.buttonMode = true
-  shopModal.addChild(leftButton)
-
-  const rightButton = new PIXI.Sprite(resources['art/button-polygon-right'].texture)
-  rightButton.anchor.set(0.5)
-  rightButton.position.set(panelBg.x+panelBg.width/2, leftButton.y)
-  rightButton.interactive = true
-  rightButton.buttonMode = true
-  shopModal.addChild(rightButton)
 
   //visibility
   shopModalWithOverlay.visible = isShowing
