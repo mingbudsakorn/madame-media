@@ -39,6 +39,7 @@ const mockChannelInShopList = [
 interface LoadShopModalType extends PIXI.Container {
   totalcost : number
   toggle: () => void
+  setTotalCost:(totalCost: number) => void
 }
 
 export const loadShopModal = (resources: PIXI.IResourceDictionary) => {
@@ -114,6 +115,9 @@ export const loadShopModal = (resources: PIXI.IResourceDictionary) => {
     }
   }
 
+  shopModalWithOverlay.setTotalCost = (totalCost: number) => {
+    totalCostText.text = 'ราคารวม: ' + totalCost.toString() + 'เหรียญ'
+  } 
   overlay.interactive = true
 
   return shopModalWithOverlay
