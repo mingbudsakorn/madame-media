@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js'
 import { TEXT_STYLE, COLOR } from '../../constants/style'
+import loadCardShopDeck from './components/cardShopDeck'
 
 const cardShopScene = new PIXI.Container()
 cardShopScene.position.set(0, 0)
@@ -15,6 +16,10 @@ const loadCardShopScene = (resources: PIXI.IResourceDictionary) => {
   buyChannelText.position.set(bg.width / 2, 147)
   cardShopScene.addChild(buyChannelText)
 
+  //cards 
+  const cardShopDeck = loadCardShopDeck(resources)
+  cardShopScene.addChild(cardShopDeck)
+
   //button
   const confirmButton = new PIXI.Sprite(resources['art/confirm-btn'].texture)
   confirmButton.position.set(751,  897)
@@ -27,6 +32,7 @@ const loadCardShopScene = (resources: PIXI.IResourceDictionary) => {
     children: {
       bg,
       confirmButton,
+      cardShopDeck,
     },
   }
 
