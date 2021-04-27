@@ -1,16 +1,14 @@
 import * as PIXI from 'pixi.js'
 import { TEXT_STYLE } from '../../../constants/style'
 import { CHANNEL } from '../../../constants/channels'
-import { CARD } from '../../../constants/card'
-import { DuelChannel } from '../../../types'
-import loadCard from '../../../components/card'
+import { CardSlots } from '../../../types'
 
 interface DuelChannelType extends PIXI.Container {
   bg: PIXI.Sprite
 }
 
 interface ChannelContainerType extends PIXI.Container {
-  setChannels: (channels: DuelChannel[]) => void
+  setChannels: (cards: CardSlots) => void
 }
 
 const loadDuelChannel = (resources, channel, isBottom) => {
@@ -36,7 +34,7 @@ const loadDuelChannel = (resources, channel, isBottom) => {
 
 export const loadChannelContainer = (
   resources: PIXI.IResourceDictionary,
-  cardList: DuelChannel[],
+  cardList: CardSlots,
   isBottom: boolean,
 ) => {
   // have to set position outside
@@ -81,17 +79,18 @@ export const loadChannelContainer = (
   channelContainer.addChild(channel6)
 
   const loadCards = (cardList) => {
-    for (let i in cardList) {
-      let temp = cardList[i]
-      let card = loadCard(resources, CARD[temp.card].real, true)
-      card.position.set(channelList[temp.channel].x, channelList[temp.channel].bg.y)
-      card.width = channel0.bg.width
-      card.height = channel0.bg.height
-      channelContainer.addChild(card)
-    }
+    Object.keys(cardList).forEach((channel, i) => {
+      let card = cardList[channel]
+      if (card) {
+        card.position.set(channelList[i].x, channelList[i].bg.y)
+        card.width = channel0.bg.width
+        card.height = channel0.bg.height
+        channelContainer.addChild(card)
+      }
+    })
   }
 
-  channelContainer.setChannels = (channels: DuelChannel[]) => {
+  channelContainer.setChannels = (channels: CardSlots) => {
     loadCards(channels)
   }
 

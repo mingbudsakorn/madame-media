@@ -2,13 +2,15 @@ import * as PIXI from 'pixi.js'
 import { scenes } from './constants/scenes'
 import loadGameplayScene from './scenes/gameplay'
 import loadDuelScene from './scenes/duel'
+import { GameState, Scene } from './types'
 
 const gameController = (app: PIXI.Application) => {
   const resources = app.loader.resources
 
   let currentScene = scenes.gameplay
-  const setCurrentScene = (scene: number) => {
+  const setCurrentScene = (scene: number, gameState: GameState, sceneObject: Scene) => {
     currentScene = scene
+    sceneObject.setGameState(gameState)
     renderScene()
   }
 
@@ -16,6 +18,13 @@ const gameController = (app: PIXI.Application) => {
   gameplayScene.visible = false
   const duelScene = loadDuelScene(resources, setCurrentScene)
   duelScene.visible = false
+
+  gameplayScene.setNextPossibleScenes({
+    [scenes.duel]: duelScene,
+  })
+  duelScene.setNextPossibleScenes({
+    [scenes.gameplay]: gameplayScene,
+  })
 
   const renderScene = () => {
     switch (currentScene) {

@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js'
 import { TEXT_STYLE } from '../../../constants/style'
 
-interface AvatarType extends PIXI.Container {
+export interface AvatarType extends PIXI.Container {
   setAvatarImg: (imgName: string) => void
   setAvatarName: (name: String) => void
 }
@@ -13,7 +13,7 @@ export const loadAvatar = (resources: PIXI.IResourceDictionary, imgName: string,
 
   const avatarImg = new PIXI.Sprite(resources[imgName].texture)
   avatarImg.anchor.set(0.5, 0)
-  avatarImg.height = avatarImg.height*130/avatarImg.width
+  avatarImg.height = (avatarImg.height * 130) / avatarImg.width
   avatarImg.width = 130
   avatar.addChild(avatarImg)
 

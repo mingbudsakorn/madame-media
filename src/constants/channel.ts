@@ -5,7 +5,7 @@ export const CHANNEL = {
     visual: 1,
     text: 1,
     price: 500,
-    percentage: 20
+    percentage: 15,
   },
   1: {
     name: 'ปากต่อปาก',
@@ -13,7 +13,7 @@ export const CHANNEL = {
     visual: 0,
     text: 0,
     price: 0,
-    percentage: 3
+    percentage: 3,
   },
   2: {
     name: 'เว็บเพจ',
@@ -21,7 +21,7 @@ export const CHANNEL = {
     visual: 1,
     text: 1,
     price: 0,
-    percentage: 5
+    percentage: 5,
   },
   3: {
     name: 'โทรทัศน์',
@@ -29,7 +29,7 @@ export const CHANNEL = {
     visual: 1,
     text: 0,
     price: 300,
-    percentage: 12
+    percentage: 12,
   },
   4: {
     name: 'วิทยุ',
@@ -37,7 +37,7 @@ export const CHANNEL = {
     visual: 0,
     text: 0,
     price: 150,
-    percentage: 5
+    percentage: 5,
   },
   5: {
     name: 'สิ่งพิมพ์',
@@ -45,7 +45,7 @@ export const CHANNEL = {
     visual: 1,
     text: 1,
     price: 0,
-    percentage: 8
+    percentage: 8,
   },
   6: {
     name: 'สื่อนอกบ้าน',
@@ -53,6 +53,6 @@ export const CHANNEL = {
     visual: 1,
     text: 1,
     price: 250,
-    percentage: 10
-  }
+    percentage: 10,
+  },
 }

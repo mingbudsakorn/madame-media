@@ -2,17 +2,18 @@ import * as PIXI from 'pixi.js'
 import loadGameplayScene from './loadScene'
 import { scenes } from '../../constants/scenes'
 
+import { gameState as initGameState } from '../../constants/initialState'
 import { MONEY_CONFIG, PEOPLE_BAR_CONFIG, TIME_BAR_CONFIG } from '../../constants/gameConfig'
-import { Scene } from '../../types'
+import { GameState, Scene, SceneWrapper } from '../../types'
 import { AVATAR } from '../../constants/avatar'
 import { CardType } from '../../components/card'
 import { ChannelType } from '../../components/channel'
 
 const GameplayScene = (
   resources: PIXI.IResourceDictionary,
-  setCurrentScene: (scene: number) => void,
+  setCurrentScene: (scene: number, gameState: GameState, sceneObject: Scene) => void,
 ) => {
-  const gameplayScene = loadGameplayScene(resources)
+  const gameplayScene = loadGameplayScene(resources) as SceneWrapper
   const {
     finishButton,
     buyChannelButton,
@@ -26,47 +27,44 @@ const GameplayScene = (
     expandedContainer,
     channelDeck,
   } = gameplayScene.children
-  const scene = gameplayScene.scene
+  const scene = gameplayScene.scene as Scene
+
+  let nextPossibleScenes
+  scene.setNextPossibleScenes = (scenes) => {
+    nextPossibleScenes = scenes
+  }
+
+  // Init
+  let gameState = initGameState
+
+  scene.setGameState = (settingState: GameState) => {
+    gameState = settingState
+  }
+
+  let { cards, money } = gameState
 
   let timer
+  scene.onAppear = () => {
+    // Timing
+    // let timeLeft = TIME_BAR_CONFIG.TIME_PER_TURN
+    // timer = setInterval(() => {
+    //   if (timeLeft === 0) {
+    //     clearInterval(timer)
+    //     return
+    //   }
+    //   timeBar.setTime(timeLeft - 1)
+    //   timeLeft -= 1
+    // }, 1000)
+  }
 
   // Game States
   let currentlySelectingCards = false
   let currentCard = null
   let currentCardIndex = null
-  let currentChannels = {
-    SOCIAL_MEDIA: null,
-    MOUTH: null,
-    WEBPAGE: null,
-    TV: null,
-    RADIO: null,
-    PUBLICATION: null,
-    OUT_OF_HOME: null,
-  }
-  let money = MONEY_CONFIG.INIT
-
-  // Init
   moneyBar.setMoney(money)
   peopleBar.setPeople(PEOPLE_BAR_CONFIG.INIT_MY_PEOPLE, PEOPLE_BAR_CONFIG.INIT_OPPONENT_PEOPLE)
   // example to set turnText
   // turnText.setTurnText(2)
-
-  // Buttons
-  finishButton
-    .on('mousedown', () => onClickFinishButton(setCurrentScene))
-    .on('touchstart', () => onClickFinishButton(setCurrentScene))
-  const onClickFinishButton = (setCurrentScene: (scene: number) => void) => {
-    clearInterval(timer)
-    setCurrentScene(scenes.duel)
-  }
-
-  // buyChannelButton
-  //   .on('mousedown', () => onClickBuyChannel(setCurrentScene))
-  //   .on('touchstart', () => onClickBuyChannel(setCurrentScene))
-
-  // const onClickBuyChannel = (setCurrentScene: (scene: number) => void) => {
-  //   setCurrentScene(scenes.shop)
-  // }
 
   // Select Card
   const insertCard = (channel: ChannelType, card: CardType) => {
@@ -79,20 +77,21 @@ const GameplayScene = (
     channelObject.on('mousedown', () => {
       if (currentlySelectingCards && channelObject.isAvailable()) {
         insertCard(channelObject, currentCard)
-        currentChannels[channel] = currentCard
-        console.log(currentChannels)
+        cards[channel] = currentCard
         currentlySelectingCards = false
-        channelDeck.scene.setOnSelect(false)
         expandedContainer.scene.useCard(currentCardIndex)
-        currentCard = null
 
         // DEDUCT MONEY
-        money = money - channelObject.getChannelConfig().price
+        money = money - currentCard.getCardConfig().price
         moneyBar.setMoney(money)
+
+        channelDeck.scene.setOnSelect(false)
+        currentCard = null
       }
     })
   })
 
+  // SELECT CARD FROM DECK
   expandedContainer.cardArray.forEach((e, i) => {
     const price = e.card.getCardConfig().price
     if (money < price) {
@@ -117,23 +116,13 @@ const GameplayScene = (
     }
   })
 
-  //example to set avatar
-  // player1.setAvatarName('พอล')
-  // player1.setAvatarImg(AVATAR.man2)
-
-  // Set Cards
-
-  scene.onAppear = () => {
-    // Timing
-    // let timeLeft = TIME_BAR_CONFIG.TIME_PER_TURN
-    // timer = setInterval(() => {
-    //   if (timeLeft === 0) {
-    //     clearInterval(timer)
-    //     return
-    //   }
-    //   timeBar.setTime(timeLeft - 1)
-    //   timeLeft -= 1
-    // }, 1000)
+  // FINISH
+  finishButton
+    .on('mousedown', () => onClickFinishButton())
+    .on('touchstart', () => onClickFinishButton())
+  const onClickFinishButton = () => {
+    clearInterval(timer)
+    setCurrentScene(scenes.duel, gameState, nextPossibleScenes[scenes.duel])
   }
 
   return scene

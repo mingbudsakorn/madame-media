@@ -1,41 +1,44 @@
 import * as PIXI from 'pixi.js'
 import loadDuelScene from './loadScene'
-import { Scene } from '../../types'
+import { GameState, Scene, SceneWrapper } from '../../types'
 import { scenes } from '../../constants/scenes'
+import { gameState as initGameState } from '../../constants/initialState'
+import loadCard from '../../components/card'
+import { CARD } from '../../constants/card'
 
-const mockCardList = [
-  {
-    channel: 0,
-    card: 1,
-  },
-  {
-    channel: 1,
-    card: 0,
-  },
-]
-const mockCardList2 = [
-  {
-    channel: 1,
-    card: 0,
-  },
-  {
-    channel: 4,
-    card: 1,
-  },
-]
+const mockOpponentCard = (resources: PIXI.IResourceDictionary) => {
+  const card1 = loadCard(resources, CARD[12].fake)
+  const card2 = loadCard(resources, CARD[8].real)
+  return {
+    SOCIAL_MEDIA: null,
+    MOUTH: card1,
+    WEBPAGE: null,
+    TV: card2,
+    RADIO: null,
+    PUBLICATION: null,
+    OUT_OF_HOME: null,
+  }
+}
 
 const DuelScene = (
   resources: PIXI.IResourceDictionary,
-  setCurrentScene: (scene: number) => void,
+  setCurrentScene: (scene: number, gameState: GameState, sceneObject: Scene) => void,
 ) => {
-  const duelScene = loadDuelScene(resources)
+  const duelScene = loadDuelScene(resources) as SceneWrapper
 
   const { duelCompareBg, opponentChannelContainer, myChannelContainer } = duelScene.children
   const scene = duelScene.scene as Scene
 
-  // Init channels
-  myChannelContainer.setChannels(mockCardList)
-  opponentChannelContainer.setChannels(mockCardList2)
+  let nextPossibleScenes
+  scene.setNextPossibleScenes = (scenes) => {
+    nextPossibleScenes = scenes
+  }
+
+  // INIT STATES
+  let gameState = initGameState
+  scene.setGameState = (settingState: GameState) => {
+    gameState = settingState
+  }
 
   scene.onAppear = () => {
     const channelPadding = 25
@@ -43,12 +46,17 @@ const DuelScene = (
     setInterval(() => {
       if (channelCount >= 6) {
         clearInterval()
-        setCurrentScene(scenes.gameplay)
+        setCurrentScene(scenes.gameplay, gameState, scene)
         return
       }
       channelCount += 1
       duelCompareBg.x = duelCompareBg.x + duelCompareBg.width + channelPadding
-    }, 1000)
+    }, 2000)
+
+    const { cards } = gameState
+
+    myChannelContainer.setChannels(cards)
+    opponentChannelContainer.setChannels(mockOpponentCard(resources))
   }
 
   return scene
