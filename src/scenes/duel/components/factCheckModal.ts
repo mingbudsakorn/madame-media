@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js'
-
+import { TEXT_STYLE } from '../../../constants/style'
+TEXT_STYLE
 
 interface factCheckType extends PIXI.Container{
   setOpponetCardList: (opponentCardList) => void
@@ -12,9 +13,20 @@ export const loadFactCheck = (
 )=>
 {
   const factCheckContainer = new PIXI.Container as factCheckType
+
+  const  factCheckBg = new PIXI.Sprite(resources['art/fact-check-bg'].texture)
+  const selectCardText = new PIXI.Text('เลือกการ์ดที่จะตรวจสอบ', TEXT_STYLE.HEADER_THAI) 
+  const factCheckDescription = new PIXI.Sprite(resources['art/fact-check-description'].texture)
+  const confirmButton = new PIXI.Sprite(resources['art/confirm-btn'].texture)
+
+  factCheckContainer.addChild(factCheckBg)
+  factCheckContainer.addChild(selectCardText)
+  factCheckContainer.addChild(factCheckDescription)
+  factCheckContainer.addChild(confirmButton)
+
   factCheckContainer.setOpponetCardList = (opponentCardList) => {
     for(let i in opponentCardList){
-      let card = opponentCardList[i]
+      let card = opponentCardList[i].cardConfig
       card.buttonMode = true
       card.interactive = true
       card.on('mousedown', (card) => doFactCheck(card))
