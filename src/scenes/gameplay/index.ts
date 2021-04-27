@@ -16,6 +16,17 @@ const GameplayScene = (
   setCurrentScene: (scene: number, gameState: GameState, sceneObject: Scene) => void,
 ) => {
   const gameplayScene = loadGameplayScene(resources) as SceneWrapper
+  const scene = gameplayScene.scene as Scene
+  // Init
+  let nextPossibleScenes
+  scene.setNextPossibleScenes = (scenes) => {
+    nextPossibleScenes = scenes
+  }
+  let gameState = initGameState
+  scene.setGameState = (settingState: GameState) => {
+    gameState = settingState
+  }
+
   const {
     finishButton,
     buyChannelButton,
@@ -32,19 +43,6 @@ const GameplayScene = (
     specialEvent,
     shopModal,
   } = gameplayScene.children
-  const scene = gameplayScene.scene as Scene
-
-  let nextPossibleScenes
-  scene.setNextPossibleScenes = (scenes) => {
-    nextPossibleScenes = scenes
-  }
-
-  // Init
-  let gameState = initGameState
-
-  scene.setGameState = (settingState: GameState) => {
-    gameState = settingState
-  }
 
   let { cards, money } = gameState
 
@@ -99,9 +97,6 @@ const GameplayScene = (
   //example to set avatar
   // player1.setAvatarName('พอล')
   // player1.setAvatarImg(AVATAR.man2)
-
-  //example to set channel and card
-  channelDeck.setChannel(INIT_CHANNEL_CARD_LIST)
 
   // example set special event modal
   // specialEventModal.setSpecialEvent('พายุเข้า!! -> สัญญาณหาย \nส่งผลให้ตานี้ประสิทธิภาพช่องทางสื่อ โซเชี่ยลมีเดีย และ เว็บเพจ ลดลง 50% ในขณะที่ โทรทัศน์ และ วิทยุ ใช้การไม่ได้')

@@ -1,25 +1,39 @@
 import * as PIXI from 'pixi.js'
 import loadStartGameScene from './loadScene'
-import { Scene } from '../../types'
+import { GameState, Scene, SceneWrapper } from '../../types'
 import { scenes } from '../../constants/scenes'
+import { gameState as initialState } from '../../constants/initialState'
 
 const StartGameScene = (
   resources: PIXI.IResourceDictionary,
-  setCurrentScene: (scene: number) => void,
+  setCurrentScene: (scene: number, gameState: GameState, sceneObject: Scene) => void,
 ) => {
   const startGameScene = loadStartGameScene(resources)
-
-  const { createRoomButton, joinRoomButton, howToPlayButton, quitButton } = startGameScene.children
   const scene = startGameScene.scene as Scene
+  // Init
+  let nextPossibleScenes
+  scene.setNextPossibleScenes = (scenes) => {
+    nextPossibleScenes = scenes
+  }
+  let gameState = initialState
+  scene.setGameState = (settingState: GameState) => {
+    gameState = settingState
+  }
+
+  const { createRoomButton, joinRoomButton, howToPlayButton } = startGameScene.children
 
   // Buttons
+  createRoomButton
+    .on('mousedown', () => onClickCreateRoom())
+    .on('touchstart', () => onClickCreateRoom())
+  joinRoomButton.on('mousedown', () => onClickJoinRoom()).on('touchstart', () => onClickJoinRoom())
 
-  // createRoomButton
-  //   .on('mousedown', () => onClickCreateRoom(setCurrentScene))
-  //   .on('touchstart', () => onClickCreateRoom(setCurrentScene))
-  // const onClickCreateRoom = (setCurrentScene: (scene: number) => void) => {
-  //   setCurrentScene(scenes.createRoom)
-  // }
+  const onClickCreateRoom = () => {
+    setCurrentScene(scenes.createRoom, gameState, nextPossibleScenes[scenes.createRoom])
+  }
+  const onClickJoinRoom = () => {
+    setCurrentScene(scenes.joinRoom, gameState, nextPossibleScenes[scenes.joinRoom])
+  }
 
   return scene
 }

@@ -43,11 +43,6 @@ const loadStartGameScene = (resources: PIXI.IResourceDictionary) => {
   howToPlayButton.buttonMode = true
   startGameScene.addChild(howToPlayButton)
 
-  const quitButton = new PIXI.Sprite(resources['art/quit-btn'].texture)
-  quitButton.position.set(createRoomButton.x, howToPlayButton.y + howToPlayButton.height + 20)
-  quitButton.interactive = true
-  quitButton.buttonMode = true
-  startGameScene.addChild(quitButton)
   // -------------------------------------------------- //
 
   return {
@@ -57,7 +52,6 @@ const loadStartGameScene = (resources: PIXI.IResourceDictionary) => {
       createRoomButton,
       joinRoomButton,
       howToPlayButton,
-      quitButton,
     },
   }
 }

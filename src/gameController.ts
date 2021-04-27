@@ -13,7 +13,7 @@ import loadEndGameScene from './scenes/endGame'
 const gameController = (app: PIXI.Application) => {
   const resources = app.loader.resources
 
-  let currentScene = scenes.gameplay
+  let currentScene = scenes.startGame
   const setCurrentScene = (scene: number, gameState: GameState, sceneObject: Scene) => {
     currentScene = scene
     sceneObject.setGameState(gameState)
@@ -33,12 +33,28 @@ const gameController = (app: PIXI.Application) => {
   joinRoomScene.visible = false
   const createRoomScene = loadCreateRoomScene(resources, setCurrentScene)
   createRoomScene.visible = false
-  const cardShopScene = loadCardShopScene(resources, setCurrentScene)
-  cardShopScene.visible = false
-  const endGameScene = loadEndGameScene(resources, setCurrentScene)
-  endGameScene.visible = false
+  // const cardShopScene = loadCardShopScene(resources, setCurrentScene)
+  // cardShopScene.visible = false
+  // const endGameScene = loadEndGameScene(resources, setCurrentScene)
+  // endGameScene.visible = false
 
   // STATE DIAGRAM
+  startGameScene.setNextPossibleScenes({
+    [scenes.createRoom]: createRoomScene,
+    [scenes.joinRoom]: joinRoomScene,
+  })
+  createRoomScene.setNextPossibleScenes({
+    [scenes.gameLobby]: gameLobbyScene,
+    [scenes.startGame]: startGameScene,
+  })
+  joinRoomScene.setNextPossibleScenes({
+    [scenes.gameLobby]: gameLobbyScene,
+    [scenes.startGame]: startGameScene,
+  })
+  gameLobbyScene.setNextPossibleScenes({
+    [scenes.gameplay]: gameplayScene,
+    [scenes.startGame]: startGameScene,
+  })
   gameplayScene.setNextPossibleScenes({
     [scenes.duel]: duelScene,
   })
@@ -48,22 +64,28 @@ const gameController = (app: PIXI.Application) => {
 
   // RENDER
   const renderScene = () => {
+    startGameScene.visible = false
+    createRoomScene.visible = false
+    joinRoomScene.visible = false
+    gameLobbyScene.visible = false
+    gameplayScene.visible = false
+    duelScene.visible = false
+
     switch (currentScene) {
       case scenes.gameplay:
         gameplayScene.visible = true
         gameplayScene.onAppear()
-        duelScene.visible = false
         break
       case scenes.duel:
         duelScene.visible = true
         duelScene.onAppear()
-        gameplayScene.visible = false
         break
       case scenes.startGame:
         startGameScene.visible = true
         break
       case scenes.gameLobby:
         gameLobbyScene.visible = true
+        gameLobbyScene.onAppear()
         break
       case scenes.joinRoom:
         joinRoomScene.visible = true
@@ -71,11 +93,11 @@ const gameController = (app: PIXI.Application) => {
       case scenes.createRoom:
         createRoomScene.visible = true
         break
-      case scenes.cardShop:
-        cardShopScene.visible = true
-        break
-      case scenes.endGame:
-        endGameScene.visible = true
+      // case scenes.cardShop:
+      //   cardShopScene.visible = true
+      //   break
+      // case scenes.endGame:
+      //   endGameScene.visible = true
     }
   }
 
@@ -85,8 +107,8 @@ const gameController = (app: PIXI.Application) => {
   app.stage.addChild(gameLobbyScene)
   app.stage.addChild(joinRoomScene)
   app.stage.addChild(createRoomScene)
-  app.stage.addChild(cardShopScene)
-  app.stage.addChild(endGameScene)
+  // app.stage.addChild(cardShopScene)
+  // app.stage.addChild(endGameScene)
 
   renderScene()
 }

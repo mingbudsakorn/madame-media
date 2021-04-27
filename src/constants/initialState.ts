@@ -28,4 +28,7 @@ export const gameState = {
     name: '',
     avatar: null,
   },
+  gameId: null,
+  playerId: null,
+  turns: 0,
 } as GameState

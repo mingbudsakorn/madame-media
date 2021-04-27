@@ -25,7 +25,17 @@ const DuelScene = (
   resources: PIXI.IResourceDictionary,
   setCurrentScene: (scene: number, gameState: GameState, sceneObject: Scene) => void,
 ) => {
-  const duelScene = loadDuelScene(resources) as SceneWrapper
+  const duelScene = loadDuelScene(resources)
+  const scene = duelScene.scene as Scene
+  // Init
+  let nextPossibleScenes
+  scene.setNextPossibleScenes = (scenes) => {
+    nextPossibleScenes = scenes
+  }
+  let gameState = initGameState
+  scene.setGameState = (settingState: GameState) => {
+    gameState = settingState
+  }
 
   const {
     duelCompareBg,
@@ -33,18 +43,6 @@ const DuelScene = (
     myChannelContainer,
     specialActionContainer,
   } = duelScene.children
-  const scene = duelScene.scene as Scene
-
-  let nextPossibleScenes
-  scene.setNextPossibleScenes = (scenes) => {
-    nextPossibleScenes = scenes
-  }
-
-  // INIT STATES
-  let gameState = initGameState
-  scene.setGameState = (settingState: GameState) => {
-    gameState = settingState
-  }
 
   scene.onAppear = () => {
     const channelPadding = 25

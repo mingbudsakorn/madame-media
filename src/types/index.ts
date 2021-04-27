@@ -82,6 +82,9 @@ export interface GameState {
     name: string
     avatar: any
   }
+  gameId?: string
+  playerId?: string
+  turns: number
 }
 
 export interface Button extends PIXI.Sprite {
