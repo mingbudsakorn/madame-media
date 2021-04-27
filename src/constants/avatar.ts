@@ -8,3 +8,8 @@ export const AVATAR = {
   woman3: 'avatar/woman3',
   woman4: 'avatar/woman4',
 }
+
+export const AVATAR_BG = {
+  myAvatarBg: 'avatar/my-avatar-bg',
+  opponentAvatarBg: 'avatar/opponent-avatar-bg'
+}

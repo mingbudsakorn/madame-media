@@ -11,7 +11,7 @@ interface ChannelContainerType extends PIXI.Container {
   setChannels: (cards: CardSlots) => void
 }
 
-const loadDuelChannel = (resources, channel, isBottom) => {
+const loadDuelChannel = (resources: PIXI.IResourceDictionary, channel, isBottom) => {
   const duelChannel = new PIXI.Container() as DuelChannelType
 
   const duelChannelBg = new PIXI.Sprite(resources['art/duel-channel-bg'].texture)

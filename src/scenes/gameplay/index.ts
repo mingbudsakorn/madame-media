@@ -8,6 +8,8 @@ import { GameState, Scene, SceneWrapper } from '../../types'
 import { AVATAR } from '../../constants/avatar'
 import { CardType } from '../../components/card'
 import { ChannelType } from '../../components/channel'
+import { CHANNEL, INIT_CHANNEL_CARD_LIST } from '../../constants/channels'
+import { CARD } from '../../constants/card'
 
 const GameplayScene = (
   resources: PIXI.IResourceDictionary,
@@ -26,6 +28,9 @@ const GameplayScene = (
     cardContainer,
     expandedContainer,
     channelDeck,
+    specialEventModal,
+    specialEvent,
+    shopModal,
   } = gameplayScene.children
   const scene = gameplayScene.scene as Scene
 
@@ -90,6 +95,21 @@ const GameplayScene = (
       }
     })
   })
+
+  //example to set avatar
+  // player1.setAvatarName('พอล')
+  // player1.setAvatarImg(AVATAR.man2)
+
+  //example to set channel and card
+  channelDeck.setChannel(INIT_CHANNEL_CARD_LIST)
+
+  // example set special event modal
+  // specialEventModal.setSpecialEvent('พายุเข้า!! -> สัญญาณหาย \nส่งผลให้ตานี้ประสิทธิภาพช่องทางสื่อ โซเชี่ยลมีเดีย และ เว็บเพจ ลดลง 50% ในขณะที่ โทรทัศน์ และ วิทยุ ใช้การไม่ได้')
+  // specialEventModal.toggle()
+  // specialEvent.setSpecialEvent('พายุเข้า!!')
+  // specialEvent.visible = true
+
+  shopModal.setTotalCost(1000)
 
   // SELECT CARD FROM DECK
   expandedContainer.cardArray.forEach((e, i) => {

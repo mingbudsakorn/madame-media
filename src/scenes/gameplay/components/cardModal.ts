@@ -27,28 +27,32 @@ export const loadCardModal = (resources: PIXI.IResourceDictionary, card: CardSet
   const cardModalBg = new PIXI.Sprite(resources['art/card-modal-bg'].texture)
   cardModal.addChild(cardModalBg)
 
-  const realCard = loadCard(resources, card.real, true)
+  const realCard = loadCard(resources, card.real)
   realCard.position.set(38, 47)
   cardModal.addChild(realCard)
 
-  const fakeCard = loadCard(resources, card.fake, false)
+  const fakeCard = loadCard(resources, card.fake)
   fakeCard.position.set(realCard.x, realCard.y)
   cardModal.addChild(fakeCard)
 
   const toggleButton = new PIXI.Sprite(resources['art/toggle-button'].texture)
   toggleButton.position.set(576, 583)
   toggleButton.interactive = true
+  toggleButton.buttonMode = true
   toggleButton.on('mousedown', () => toggleCard()).on('touchstart', () => toggleCard())
 
   cardModal.addChild(toggleButton)
 
   const useCardButton = new PIXI.Sprite(resources['art/use-card-button'].texture)
   useCardButton.position.set(toggleButton.x, 697)
+  useCardButton.interactive = true
+  useCardButton.buttonMode = true
   cardModal.addChild(useCardButton)
 
   const closeButton = new PIXI.Sprite(resources['art/close-button'].texture)
   closeButton.position.set(882, 35)
   closeButton.interactive = true
+  closeButton.buttonMode = true
   closeButton
     .on('mousedown', () => cardModalWithOverlay.toggle())
     .on('touchstart', () => cardModalWithOverlay.toggle())

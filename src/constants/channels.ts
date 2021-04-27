@@ -1,6 +1,8 @@
 import { Channel } from '../types'
+//test
+import { CARD } from './card'
 
-interface ChannelList {
+interface ChannelConfigList {
   [key: string]: Channel
 }
 
@@ -61,4 +63,47 @@ export const CHANNEL = {
     price: 250,
     percentage: 10,
   },
-} as ChannelList
+} as ChannelConfigList
+
+export const INIT_CHANNEL_CARD_LIST = [
+  {
+    channelConfig: CHANNEL.MOUTH,
+    isAvailable: true,
+    // cardConfig: null,
+    // test
+    cardConfig: CARD[0].real,
+  },
+  {
+    channelConfig: CHANNEL.WEBPAGE,
+    isAvailable: true,
+    // cardConfig: null,
+    // test
+    cardConfig: CARD[3].fake,
+  },
+  {
+    channelConfig: CHANNEL.PUBLICATION,
+    isAvailable: true,
+    cardConfig: null,
+  },
+  {
+    channelConfig: CHANNEL.SOCIAL_MEDIA,
+    isAvailable: false,
+    cardConfig: null,
+  },
+  {
+    channelConfig: CHANNEL.TV,
+    isAvailable: false,
+    cardConfig: null,
+  },
+  {
+    channelConfig: CHANNEL.RADIO,
+    isAvailable: false,
+    cardConfig: null,
+  },
+  {
+    channelConfig: CHANNEL.OUT_OF_HOME,
+    isAvailable: false,
+    cardConfig: null,
+  },
+]
+

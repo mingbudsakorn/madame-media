@@ -21,6 +21,7 @@ export interface Card {
   price: number
   effect: string
   description: string
+  isReal: boolean
 }
 
 export interface Channel {
@@ -81,4 +82,10 @@ export interface GameState {
     name: string
     avatar: any
   }
+}
+
+export interface Button extends PIXI.Sprite {
+  setActive: (isActive: boolean) => void
+  setSelected: (isSelected: boolean) => void
+  onHover: () => void
 }

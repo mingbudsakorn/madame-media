@@ -5,6 +5,7 @@ import { scenes } from '../../constants/scenes'
 import { gameState as initGameState } from '../../constants/initialState'
 import loadCard from '../../components/card'
 import { CARD } from '../../constants/card'
+import { SPECIAL_ACTION } from '../../constants/gameConfig'
 
 const mockOpponentCard = (resources: PIXI.IResourceDictionary) => {
   const card1 = loadCard(resources, CARD[12].fake)
@@ -26,7 +27,12 @@ const DuelScene = (
 ) => {
   const duelScene = loadDuelScene(resources) as SceneWrapper
 
-  const { duelCompareBg, opponentChannelContainer, myChannelContainer } = duelScene.children
+  const {
+    duelCompareBg,
+    opponentChannelContainer,
+    myChannelContainer,
+    specialActionContainer,
+  } = duelScene.children
   const scene = duelScene.scene as Scene
 
   let nextPossibleScenes
@@ -46,7 +52,12 @@ const DuelScene = (
     setInterval(() => {
       if (channelCount >= 6) {
         clearInterval()
-        setCurrentScene(scenes.gameplay, gameState, scene)
+        duelCompareBg.visible = false
+        myChannelContainer.visible = false
+        // example
+        // specialActionContainer.moneyBar.setMoney(1000)
+        specialActionContainer.visible = true
+        // setCurrentScene(scenes.gameplay)
         return
       }
       channelCount += 1

@@ -8,6 +8,9 @@ export interface ChannelType extends PIXI.Container {
   getCard: () => CardType
   isAvailable: () => boolean
   getChannelConfig: () => Channel
+  getHeight: () => number
+  getWidth: () => number
+  getBg: () => PIXI.Sprite
 }
 
 const loadChannel = (
@@ -92,6 +95,18 @@ const loadChannel = (
 
   channel.getChannelConfig = () => {
     return channelConfig
+  }
+
+  channel.getHeight = () => {
+    return channelBg.height
+  }
+
+  channel.getWidth = () => {
+    return channelBg.width
+  }
+
+  channel.getBg = () => {
+    return channelBg
   }
 
   return channel

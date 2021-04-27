@@ -26,6 +26,7 @@ export const CARD = {
       price: 50,
       effect: TYPE.PR.effect,
       description: '',
+      isReal: true,
     },
     fake: {
       name: 'แนะนำตัวต่อสาธารณะชน',
@@ -36,6 +37,7 @@ export const CARD = {
       price: 25,
       effect: TYPE.PR.effect,
       description: '',
+      isReal: false,
     },
   },
   1: {
@@ -48,6 +50,7 @@ export const CARD = {
       price: 110,
       effect: TYPE.PR.effect,
       description: '',
+      isReal: true,
     },
     fake: {
       name: 'โอ้ย ฉันทำงานหนักแหละ',
@@ -58,6 +61,7 @@ export const CARD = {
       price: 55,
       effect: TYPE.PR.effect,
       description: '',
+      isReal: false,
     },
   },
   2: {
@@ -70,6 +74,7 @@ export const CARD = {
       price: 140,
       effect: TYPE.PR.effect,
       description: '',
+      isReal: true,
     },
     fake: {
       name: 'ประกาศนโยบาย',
@@ -80,6 +85,7 @@ export const CARD = {
       price: 70,
       effect: TYPE.PR.effect,
       description: '',
+      isReal: false,
     },
   },
   3: {
@@ -92,6 +98,7 @@ export const CARD = {
       price: 100,
       effect: TYPE.PR.effect,
       description: '',
+      isReal: true,
     },
     fake: {
       name: 'รักนะยัยประชาชน',
@@ -102,6 +109,7 @@ export const CARD = {
       price: 50,
       effect: TYPE.PR.effect,
       description: '',
+      isReal: false,
     },
   },
   4: {
@@ -114,6 +122,7 @@ export const CARD = {
       price: 220,
       effect: TYPE.PR.effect,
       description: '',
+      isReal: true,
     },
     fake: {
       name: 'บริจาคการกุศล',
@@ -124,6 +133,7 @@ export const CARD = {
       price: 110,
       effect: TYPE.PR.effect,
       description: '',
+      isReal: false,
     },
   },
   5: {
@@ -136,6 +146,7 @@ export const CARD = {
       price: 130,
       effect: TYPE.PR.effect,
       description: '',
+      isReal: true,
     },
     fake: {
       name: 'ไปบ้านเด็กกำพร้า',
@@ -146,6 +157,7 @@ export const CARD = {
       price: 65,
       effect: TYPE.PR.effect,
       description: '',
+      isReal: false,
     },
   },
   6: {
@@ -158,6 +170,7 @@ export const CARD = {
       price: 180,
       effect: TYPE.PR.effect,
       description: '',
+      isReal: true,
     },
     fake: {
       name: 'รณรงค์เรื่องเพศหลากหลาย',
@@ -168,6 +181,7 @@ export const CARD = {
       price: 90,
       effect: TYPE.PR.effect,
       description: '',
+      isReal: false,
     },
   },
   7: {
@@ -180,6 +194,7 @@ export const CARD = {
       price: 320,
       effect: TYPE.PR.effect,
       description: '',
+      isReal: true,
     },
     fake: {
       name: 'ลงพื้นที่ไปหาชาวบ้าน',
@@ -190,6 +205,7 @@ export const CARD = {
       price: 160,
       effect: TYPE.PR.effect,
       description: '',
+      isReal: false,
     },
   },
   8: {
@@ -202,6 +218,7 @@ export const CARD = {
       price: 160,
       effect: TYPE.PR.effect,
       description: '',
+      isReal: true,
     },
     fake: {
       name: 'ฉันจบเกียรตินิยม มหาลัยชั้นนำนะจ๊ะ!',
@@ -212,6 +229,7 @@ export const CARD = {
       price: 80,
       effect: TYPE.PR.effect,
       description: '',
+      isReal: false,
     },
   },
   9: {
@@ -224,6 +242,7 @@ export const CARD = {
       price: 240,
       effect: TYPE.PR.effect,
       description: '',
+      isReal: true,
     },
     fake: {
       name: 'ร้องเพลงปลุกใจประชาชน',
@@ -234,6 +253,7 @@ export const CARD = {
       price: 120,
       effect: TYPE.PR.effect,
       description: '',
+      isReal: false,
     },
   },
   10: {
@@ -246,6 +266,7 @@ export const CARD = {
       price: 300,
       effect: TYPE.ATTACK.effect,
       description: '',
+      isReal: true,
     },
     fake: {
       name: 'แอบปล่อยรูปหลุด',
@@ -256,6 +277,7 @@ export const CARD = {
       price: 150,
       effect: TYPE.ATTACK.effect,
       description: '',
+      isReal: false,
     },
   },
   11: {
@@ -268,6 +290,7 @@ export const CARD = {
       price: 140,
       effect: TYPE.ATTACK.effect,
       description: '',
+      isReal: true,
     },
     fake: {
       name: 'มันด่าประชาชน!!!',
@@ -278,6 +301,7 @@ export const CARD = {
       price: 70,
       effect: TYPE.ATTACK.effect,
       description: '',
+      isReal: false,
     },
   },
   12: {
@@ -290,6 +314,7 @@ export const CARD = {
       price: 150,
       effect: TYPE.ATTACK.effect,
       description: '',
+      isReal: true,
     },
     fake: {
       name: 'นโยบายเขาแย่',
@@ -300,6 +325,7 @@ export const CARD = {
       price: 75,
       effect: TYPE.ATTACK.effect,
       description: '',
+      isReal: false,
     },
   },
   13: {
@@ -312,6 +338,7 @@ export const CARD = {
       price: 420,
       effect: TYPE.ATTACK.effect,
       description: '',
+      isReal: true,
     },
     fake: {
       name: 'เธอ ซื้อ เสียง',
@@ -322,6 +349,7 @@ export const CARD = {
       price: 210,
       effect: TYPE.ATTACK.effect,
       description: '',
+      isReal: false,
     },
   },
   14: {
@@ -334,6 +362,7 @@ export const CARD = {
       price: 120,
       effect: TYPE.ATTACK.effect,
       description: '',
+      isReal: true,
     },
     fake: {
       name: 'นางทำงานไม่เป็น',
@@ -344,6 +373,7 @@ export const CARD = {
       price: 60,
       effect: TYPE.ATTACK.effect,
       description: '',
+      isReal: false,
     },
   },
   15: {
@@ -356,6 +386,7 @@ export const CARD = {
       price: 130,
       effect: TYPE.ATTACK.effect,
       description: '',
+      isReal: true,
     },
     fake: {
       name: 'ลูกชายนางเป็นเด็กเกเร',
@@ -366,6 +397,7 @@ export const CARD = {
       price: 65,
       effect: TYPE.ATTACK.effect,
       description: '',
+      isReal: false,
     },
   },
   16: {
@@ -378,6 +410,7 @@ export const CARD = {
       price: 200,
       effect: TYPE.ATTACK.effect,
       description: '',
+      isReal: true,
     },
     fake: {
       name: 'นางแอบล่าสัตว์สงวน',
@@ -388,6 +421,7 @@ export const CARD = {
       price: 100,
       effect: TYPE.ATTACK.effect,
       description: '',
+      isReal: false,
     },
   },
   17: {
@@ -400,6 +434,7 @@ export const CARD = {
       price: 60,
       effect: TYPE.ATTACK.effect,
       description: '',
+      isReal: true,
     },
     fake: {
       name: 'นางซื้อกระเป๋าจระเข้',
@@ -410,6 +445,7 @@ export const CARD = {
       price: 30,
       effect: TYPE.ATTACK.effect,
       description: '',
+      isReal: false,
     },
   },
   18: {
@@ -422,6 +458,7 @@ export const CARD = {
       price: 240,
       effect: TYPE.ATTACK.effect,
       description: '',
+      isReal: true,
     },
     fake: {
       name: 'นางโพสต์บุลลี่เพื่อนค่า!',
@@ -432,6 +469,7 @@ export const CARD = {
       price: 120,
       effect: TYPE.ATTACK.effect,
       description: '',
+      isReal: false,
     },
   },
 } as CardList

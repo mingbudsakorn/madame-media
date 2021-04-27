@@ -5,6 +5,7 @@ import * as PIXI from 'pixi.js'
 
 import loadChannelContainer from './components/channelContainer'
 import loadPeopleBar from '../../components/peopleBar'
+import loadSpecialActionContainer from './components/specialActionContainer'
 // // // test
 // // import loadChannel from '../../components/Channel.js'
 // // import { CHANNEL } from '../../utils/channel.js'
@@ -34,6 +35,11 @@ const loadDuelScene = (resources: PIXI.IResourceDictionary) => {
   peopleBar.position.set(435, 509)
   duelScene.addChild(peopleBar)
 
+  const specialActionContainer = loadSpecialActionContainer(resources)
+  specialActionContainer.position.set(65, 635)
+  duelScene.addChild(specialActionContainer)
+  specialActionContainer.visible = false
+
   return {
     scene: duelScene,
     children: {
@@ -42,6 +48,7 @@ const loadDuelScene = (resources: PIXI.IResourceDictionary) => {
       opponentChannelContainer,
       myChannelContainer,
       peopleBar,
+      specialActionContainer
     },
   }
 }
