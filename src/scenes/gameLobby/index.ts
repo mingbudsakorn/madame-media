@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js'
+import axios from 'axios'
 import loadGameLobbyScene from './loadScene'
 import { GameState, Scene, SceneWrapper } from '../../types'
 import { scenes } from '../../constants/scenes'
@@ -29,17 +30,13 @@ const GameLobbyScene = (
     myAvatar,
     opponentAvatar,
     backButton,
+    startGameButton,
   } = gameLobbyScene.children
   // Buttons
 
   scene.onAppear = () => {
     turn.setTurn(gameState.turns)
     roomId.setRoomId(gameState.gameId)
-
-    // if (gameState.player1.avatar) {
-    //   myAvatar.setAvatarImg(gameState.player1.avatar)
-    // }
-    // myAvatar.setAvatarName(gameState.player1.name)
 
     // SOCKETS
     socket.emit('join-game', gameState.gameId)
@@ -56,10 +53,39 @@ const GameLobbyScene = (
         avatar: player1.avatar,
       },
       player2: {
-        name: player2.name,
-        avatar: player2.avatar,
+        name: player2 ? player2.name : null,
+        avatar: player2 ? player2.avatar : null,
       },
     }
+
+    if (player1.avatar) {
+      myAvatar.setAvatarImg(player1.avatar)
+    }
+    myAvatar.setAvatarName(player1.name)
+    if (player2) {
+      if (player2.avatar) {
+        opponentAvatar.setAvatarImg(player2.avatar)
+      }
+      opponentAvatar.setAvatarName(player2.name)
+    }
+  })
+
+  const onStartGame = async () => {
+    const url = process.env.BACKEND_URL
+    if (gameState.player2) {
+      axios
+        .post(`${url}/start-game`, {
+          gameId: gameState.gameId,
+        })
+        .then(() => {
+          setCurrentScene(scenes.gameplay, gameState, nextPossibleScenes[scenes.gameplay])
+        })
+    }
+  }
+  startGameButton.on('mousedown', onStartGame).on('touchstart', onStartGame)
+
+  socket.on('start-game', () => {
+    setCurrentScene(scenes.gameplay, gameState, nextPossibleScenes[scenes.gameplay])
   })
 
   const onBack = () => {

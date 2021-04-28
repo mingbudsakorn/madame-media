@@ -11,6 +11,11 @@ import { ChannelType } from '../../components/channel'
 import { CHANNEL, INIT_CHANNEL_CARD_LIST } from '../../constants/channels'
 import { CARD } from '../../constants/card'
 
+import socket from '../../socket'
+import axios from 'axios'
+
+socket.emit('start-game')
+
 const GameplayScene = (
   resources: PIXI.IResourceDictionary,
   setCurrentScene: (scene: number, gameState: GameState, sceneObject: Scene) => void,
@@ -44,32 +49,67 @@ const GameplayScene = (
     shopModal,
   } = gameplayScene.children
 
-  let { cards, money } = gameState
-
-  let timer
-  scene.onAppear = () => {
-    // Timing
-    // let timeLeft = TIME_BAR_CONFIG.TIME_PER_TURN
-    // timer = setInterval(() => {
-    //   if (timeLeft === 0) {
-    //     clearInterval(timer)
-    //     return
-    //   }
-    //   timeBar.setTime(timeLeft - 1)
-    //   timeLeft -= 1
-    // }, 1000)
-  }
-
+  const { cards } = gameState
   // Game States
   let currentlySelectingCards = false
   let currentCard = null
   let currentCardIndex = null
-  moneyBar.setMoney(money)
-  peopleBar.setPeople(PEOPLE_BAR_CONFIG.INIT_MY_PEOPLE, PEOPLE_BAR_CONFIG.INIT_OPPONENT_PEOPLE)
-  // example to set turnText
-  // turnText.setTurnText(2)
 
-  // Select Card
+  scene.onAppear = async () => {
+    player1.setAvatarImg(gameState.player1.avatar)
+    player1.setAvatarName(gameState.player1.name)
+    player2.setAvatarImg(gameState.player2.avatar)
+    player2.setAvatarName(gameState.player2.name)
+
+    const url = process.env.BACKEND_URL
+    const res = await axios.get(
+      `${url}/state?gameId=${gameState.gameId}&playerId=${gameState.playerId}`,
+    )
+    if (res && res.data) {
+      const { people, neutral, opponent, gold, round } = res.data
+      peopleBar.setPeople(people, opponent)
+      moneyBar.setMoney(gold)
+      turnText.setTurnText(round)
+
+      // Set in Game State
+      gameState.people.ours = people
+      gameState.people.theirs = opponent
+      gameState.people.neutral = neutral
+      gameState.money = gold
+      gameState.currentTurn = round
+    }
+  }
+
+  // TIMER
+  socket.on('countdown', (timeLeft) => {
+    if (timeLeft <= 0) {
+      ready()
+    } else {
+      timeBar.setTime(timeLeft)
+    }
+  })
+
+  // READY/FINISH/TIMEOUT
+  const ready = async () => {
+    const url = process.env.BACKEND_URL
+    await axios.post(`${url}/ready-battle`, {
+      gameId: gameState.gameId,
+      playerId: gameState.playerId,
+    })
+  }
+
+  socket.on('battle-result', () => {
+    setCurrentScene(scenes.duel, gameState, nextPossibleScenes[scenes.duel])
+  })
+
+  finishButton
+    .on('mousedown', () => onClickFinishButton())
+    .on('touchstart', () => onClickFinishButton())
+  const onClickFinishButton = () => {
+    ready()
+  }
+
+  // SELECT CARD
   const insertCard = (channel: ChannelType, card: CardType) => {
     channel.setCard(card)
   }
@@ -85,18 +125,17 @@ const GameplayScene = (
         expandedContainer.scene.useCard(currentCardIndex)
 
         // DEDUCT MONEY
-        money = money - currentCard.getCardConfig().price
-        moneyBar.setMoney(money)
+        const deductedMoney = gameState.money - currentCard.getCardConfig().price
+        console.log(currentCard)
+        gameState.money = deductedMoney
+        moneyBar.setMoney(deductedMoney)
 
         channelDeck.scene.setOnSelect(false)
         currentCard = null
+        refreshExpandedContainer()
       }
     })
   })
-
-  //example to set avatar
-  // player1.setAvatarName('พอล')
-  // player1.setAvatarImg(AVATAR.man2)
 
   // example set special event modal
   // specialEventModal.setSpecialEvent('พายุเข้า!! -> สัญญาณหาย \nส่งผลให้ตานี้ประสิทธิภาพช่องทางสื่อ โซเชี่ยลมีเดีย และ เว็บเพจ ลดลง 50% ในขณะที่ โทรทัศน์ และ วิทยุ ใช้การไม่ได้')
@@ -104,41 +143,34 @@ const GameplayScene = (
   // specialEvent.setSpecialEvent('พายุเข้า!!')
   // specialEvent.visible = true
 
-  shopModal.setTotalCost(1000)
-
   // SELECT CARD FROM DECK
-  expandedContainer.cardArray.forEach((e, i) => {
-    const price = e.card.getCardConfig().price
-    if (money < price) {
-      e.card.interactive = false
-      e.card.opacity = 0.7
-    } else {
-      e.card.interactive = true
-      e.useButton.on('mousedown', () => {
-        channelDeck.scene.setOnSelect(true)
-        currentlySelectingCards = true
-        currentCard = e.card
-        currentCardIndex = i
-        expandedContainer.scene.visible = false
-      })
-      e.card.on('mousedown', () => {
-        channelDeck.scene.setOnSelect(true)
-        currentCard = e.card
-        currentCardIndex = i
-        currentlySelectingCards = true
-        expandedContainer.scene.visible = false
-      })
-    }
-  })
-
-  // FINISH
-  finishButton
-    .on('mousedown', () => onClickFinishButton())
-    .on('touchstart', () => onClickFinishButton())
-  const onClickFinishButton = () => {
-    clearInterval(timer)
-    setCurrentScene(scenes.duel, gameState, nextPossibleScenes[scenes.duel])
+  const refreshExpandedContainer = () => {
+    expandedContainer.cardArray.forEach((e, i) => {
+      const price = e.card.getCardConfig().price
+      e.useButton.removeAllListeners()
+      e.card.removeAllListeners()
+      if (gameState.money < price) {
+        e.card.interactive = false
+      } else {
+        e.card.interactive = true
+        e.useButton.on('mousedown', () => {
+          channelDeck.scene.setOnSelect(true)
+          currentlySelectingCards = true
+          currentCard = e.card
+          currentCardIndex = i
+          expandedContainer.scene.visible = false
+        })
+        e.card.on('mousedown', () => {
+          channelDeck.scene.setOnSelect(true)
+          currentCard = e.card
+          currentCardIndex = i
+          currentlySelectingCards = true
+          expandedContainer.scene.visible = false
+        })
+      }
+    })
   }
+  refreshExpandedContainer()
 
   return scene
 }

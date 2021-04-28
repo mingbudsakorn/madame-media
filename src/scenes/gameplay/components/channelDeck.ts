@@ -56,7 +56,7 @@ export const loadChannelDeck = (resources: PIXI.IResourceDictionary) => {
   channel6.position.set(channel5.x + channel.width + channelPadding, channel.y)
   channelDeck.addChild(channel6)
 
-  const channel7 = loadChannel(resources, CHANNEL.OUT_OF_HOME, false)
+  const channel7 = loadChannel(resources, CHANNEL.OUT_OF_HOME, true)
   channel7.position.set(channel6.x + channel.width + channelPadding, channel.y)
   channelDeck.addChild(channel7)
   // ------------------------- //

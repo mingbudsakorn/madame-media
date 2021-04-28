@@ -84,7 +84,8 @@ export interface GameState {
   }
   gameId?: string
   playerId?: string
-  turns: number
+  turns?: number
+  currentTurn?: number
 }
 
 export interface Button extends PIXI.Sprite {

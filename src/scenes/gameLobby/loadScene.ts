@@ -146,6 +146,7 @@ const loadGameLobbyScene = (resources: PIXI.IResourceDictionary) => {
       selectTurn,
       vsText,
       backButton,
+      startGameButton,
     },
   }
 }

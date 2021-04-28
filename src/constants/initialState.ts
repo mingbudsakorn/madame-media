@@ -31,4 +31,5 @@ export const gameState = {
   gameId: null,
   playerId: null,
   turns: 0,
+  currentTurn: 1,
 } as GameState
