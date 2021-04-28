@@ -15,6 +15,8 @@ import { AVATAR } from '../../constants/avatar'
 import loadCard from '../../components/card'
 import { CARD } from '../../constants/card'
 import loadCardExpanded from './components/cardExpanded'
+import loadShopChannel from './components/shopChannel'
+import { CHANNEL } from '../../constants/channels'
 
 interface GamePlaySceneType extends PIXI.Container {
   onCardSelect: (CardType) => void
@@ -39,6 +41,38 @@ const randomCards = (resources: PIXI.IResourceDictionary) => {
   }
   return cards
 }
+//Sample Channel
+const mockChannelInShopList = [
+  {
+    channelConfig: CHANNEL.SOCIAL_MEDIA,
+    isOwned : false
+  },
+  {
+    channelConfig: CHANNEL.MOUTH,
+    isOwned : true
+  },
+  {
+    channelConfig: CHANNEL.WEBPAGE,
+    isOwned : true
+  },
+  {
+    channelConfig: CHANNEL.TV,
+    isOwned : false
+  },
+  {
+    channelConfig: CHANNEL.RADIO,
+    isOwned : true
+  },
+  {
+    channelConfig: CHANNEL.PUBLICATION,
+    isOwned : true
+  },
+  {
+    channelConfig: CHANNEL.OUT_OF_HOME,
+    isOwned : false
+  },
+]
+
 interface SpecialEventType extends PIXI.Container {
   setSpecialEvent: (title: string) => void
 }
@@ -159,14 +193,16 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
   specialEvent.setSpecialEvent = (title: string) => {
     specialEventText.text = title
   }
-
   //buy channel
-  const shopModal = loadShopModal(resources)
-  gamePlayScene.addChild(shopModal)
+  const shopModal = loadShopChannel(resources)
+
+  shopModal.scene.setChannels(mockChannelInShopList)
+  gamePlayScene.addChild(shopModal.scene)
 
   buyChannelButton
     .on('mousedown', () => shopModal.toggle())
     .on('touchstart', () => shopModal.toggle())
+  shopModal.scene.visible = false
 
   return {
     scene: gamePlayScene,
