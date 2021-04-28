@@ -9,11 +9,8 @@
   },
   "license": "MIT",
   "dependencies": {
-    "axios": "^0.21.1",
-    "dotenv": "^8.2.0",
     "pixi-text-input": "^1.0.6",
-    "pixi.js": "~5.3.3",
-    "socket.io-client": "^4.0.1"
+    "pixi.js": "~5.3.3"
   },
   "devDependencies": {
     "@types/jest": "~26.0.15",
