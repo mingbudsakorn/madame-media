@@ -196,12 +196,12 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
   //buy channel
   const shopModal = loadShopChannel(resources)
 
-  shopModal.scene.setChannels(mockChannelInShopList)
-  gamePlayScene.addChild(shopModal.scene)
+  // shopModal.scene.setChannels(mockChannelInShopList)
+  // gamePlayScene.addChild(shopModal.scene)
 
   buyChannelButton
-    .on('mousedown', () => shopModal.toggle())
-    .on('touchstart', () => shopModal.toggle())
+    .on('mousedown', () => shopModal.scene.toggle())
+    .on('touchstart', () => shopModal.scene.toggle())
   shopModal.scene.visible = false
 
   return {
