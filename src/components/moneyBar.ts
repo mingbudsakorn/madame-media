@@ -7,7 +7,7 @@ export interface MoneyBarType extends PIXI.Container {
   setMoney: (money: number) => void
 }
 
-export const loadMoneyBar = (resources: PIXI.IResourceDictionary) => {
+export const loadMoneyBar = (resources: PIXI.IResourceDictionary, color?: 'dark' | 'light') => {
   const moneyBar = new PIXI.Container() as MoneyBarType
 
   const coin = new PIXI.Sprite(resources['art/coin'].texture)
@@ -18,12 +18,18 @@ export const loadMoneyBar = (resources: PIXI.IResourceDictionary) => {
   moneyBackground.position.set(196, 35)
   moneyBar.addChild(moneyBackground)
 
-  const moneyText = new PIXI.Text('เงิน :', TEXT_STYLE.SUBHEADER_THAI)
+  const moneyText = new PIXI.Text(
+    'เงิน :',
+    color === 'light' ? TEXT_STYLE.SUBHEADER_THAI_WHITE : TEXT_STYLE.SUBHEADER_THAI,
+  )
   moneyText.anchor.set(0, 0.5)
   moneyText.position.set(87, 35)
   moneyBar.addChild(moneyText)
 
-  const marbleText = new PIXI.Text('เหรียญ', TEXT_STYLE.SUBHEADER_THAI)
+  const marbleText = new PIXI.Text(
+    'เหรียญ',
+    color === 'light' ? TEXT_STYLE.SUBHEADER_THAI_WHITE : TEXT_STYLE.SUBHEADER_THAI,
+  )
   marbleText.anchor.set(0, 0.5)
   marbleText.position.set(532, 35)
   moneyBar.addChild(marbleText)

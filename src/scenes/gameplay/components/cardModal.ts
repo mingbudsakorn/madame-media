@@ -7,7 +7,7 @@ interface LoadCardModalType extends PIXI.Container {
   toggle: () => void
 }
 
-export const loadCardModal = (resources: PIXI.IResourceDictionary, card: CardSet) => {
+export const loadCardModal = (resources: PIXI.IResourceDictionary, cardConfig: CardSet) => {
   // have to set position outside
   let isReal = true
   let isShowing = false
@@ -27,13 +27,9 @@ export const loadCardModal = (resources: PIXI.IResourceDictionary, card: CardSet
   const cardModalBg = new PIXI.Sprite(resources['art/card-modal-bg'].texture)
   cardModal.addChild(cardModalBg)
 
-  const realCard = loadCard(resources, card.real)
-  realCard.position.set(38, 47)
-  cardModal.addChild(realCard)
-
-  const fakeCard = loadCard(resources, card.fake)
-  fakeCard.position.set(realCard.x, realCard.y)
-  cardModal.addChild(fakeCard)
+  const card = loadCard(resources, cardConfig)
+  card.position.set(38, 47)
+  cardModal.addChild(card)
 
   const toggleButton = new PIXI.Sprite(resources['art/toggle-button'].texture)
   toggleButton.position.set(576, 583)
@@ -68,18 +64,13 @@ export const loadCardModal = (resources: PIXI.IResourceDictionary, card: CardSet
   // avatar.addChild(avatarName)
 
   cardModalWithOverlay.visible = isShowing
-  fakeCard.visible = false
 
   const toggleCard = () => {
     isReal = !isReal
     if (isReal) {
-      realCard.visible = true
-      fakeCard.visible = false
-      // cardConfig = card.real
+      card.setIsReal(true)
     } else {
-      realCard.visible = false
-      fakeCard.visible = true
-      // cardConfig = card.fake
+      card.setIsReal(false)
     }
   }
 

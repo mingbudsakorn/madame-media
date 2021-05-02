@@ -1,8 +1,10 @@
 import * as PIXI from 'pixi.js'
-import { CardType } from '../../../components/card'
+import loadCard, { CardType } from '../../../components/card'
+import loadMoneyBar from '../../../components/moneyBar'
+import { CARD } from '../../../constants/card'
 
 interface Type extends PIXI.Container {
-  setCards: (cards: CardType[]) => void
+  setCards: (cards: number[]) => void
   useCard: (index: number) => void
 }
 
@@ -22,10 +24,11 @@ const loadCardExpanded = (resources: PIXI.IResourceDictionary, onClose: () => vo
 
   let cardArray = []
 
-  const displayCards = async (cards: CardType[]) => {
+  const displayCards = async (cards: number[]) => {
     cardArray.length = 0
-    cards.forEach((card, i) => {
+    cards.forEach((cardNumber, i) => {
       const singleCardContainer = new PIXI.Container()
+      const card = loadCard(resources, CARD[cardNumber])
       card.width = 275
       card.height = 404
       card.x = 300 * i
@@ -83,7 +86,11 @@ const loadCardExpanded = (resources: PIXI.IResourceDictionary, onClose: () => vo
     cardArray[index].toggleButton.visible = false
   }
 
-  cardExpanded.setCards = (cards: CardType[]) => {
+  const moneyBar = loadMoneyBar(resources, 'light')
+  moneyBar.position.set(1170, 100)
+  cardExpanded.addChild(moneyBar)
+
+  cardExpanded.setCards = (cards: number[]) => {
     // clear old cards
     while (cardContainer.children[0]) {
       cardContainer.removeChild(cardContainer.children[0])
@@ -94,6 +101,7 @@ const loadCardExpanded = (resources: PIXI.IResourceDictionary, onClose: () => vo
   return {
     scene: cardExpanded,
     cardArray,
+    moneyBar,
   }
 }
 

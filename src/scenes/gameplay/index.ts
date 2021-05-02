@@ -4,7 +4,7 @@ import { scenes } from '../../constants/scenes'
 
 import { gameState as initGameState } from '../../constants/initialState'
 import { MONEY_CONFIG, PEOPLE_BAR_CONFIG, TIME_BAR_CONFIG } from '../../constants/gameConfig'
-import { GameState, Scene, SceneWrapper } from '../../types'
+import { Card, CardSet, GameState, Scene, SceneWrapper } from '../../types'
 import { AVATAR } from '../../constants/avatar'
 import { CardType } from '../../components/card'
 import { ChannelType } from '../../components/channel'
@@ -54,12 +54,15 @@ const GameplayScene = (
   let currentlySelectingCards = false
   let currentCard = null
   let currentCardIndex = null
+  let usedCards = []
 
   scene.onAppear = async () => {
-    player1.setAvatarImg(gameState.player1.avatar)
-    player1.setAvatarName(gameState.player1.name)
-    player2.setAvatarImg(gameState.player2.avatar)
-    player2.setAvatarName(gameState.player2.name)
+    if (gameState.player1 && gameState.player2) {
+      player1.setAvatarImg(gameState.player1.avatar)
+      player1.setAvatarName(gameState.player1.name)
+      player2.setAvatarImg(gameState.player2.avatar)
+      player2.setAvatarName(gameState.player2.name)
+    }
 
     const url = process.env.BACKEND_URL
     const res = await axios.get(
@@ -110,8 +113,8 @@ const GameplayScene = (
   }
 
   // SELECT CARD
-  const insertCard = (channel: ChannelType, card: CardType) => {
-    channel.setCard(card)
+  const insertCard = (channel: ChannelType, card: CardSet, isReal: boolean) => {
+    channel.setCard(card, isReal)
   }
 
   // PUT CARD INTO CHANNEL
@@ -119,16 +122,19 @@ const GameplayScene = (
     const channelObject = channelDeck.channels[channel]
     channelObject.on('mousedown', () => {
       if (currentlySelectingCards && channelObject.isAvailable()) {
-        insertCard(channelObject, currentCard)
-        cards[channel] = currentCard
+        insertCard(channelObject, currentCard, currentCard.isReal)
+        cards[channel] = currentCard.isReal ? currentCard.real : currentCard.fake
         currentlySelectingCards = false
         expandedContainer.scene.useCard(currentCardIndex)
 
         // DEDUCT MONEY
-        const deductedMoney = gameState.money - currentCard.getCardConfig().price
-        console.log(currentCard)
+        const cardPrice = currentCard.isReal ? currentCard.real.price : currentCard.fake.price
+        const deductedMoney = gameState.money - cardPrice
         gameState.money = deductedMoney
         moneyBar.setMoney(deductedMoney)
+
+        // DEDUCT CARD
+        usedCards.push(currentCard.index)
 
         channelDeck.scene.setOnSelect(false)
         currentCard = null
@@ -146,26 +152,37 @@ const GameplayScene = (
   // SELECT CARD FROM DECK
   const refreshExpandedContainer = () => {
     expandedContainer.cardArray.forEach((e, i) => {
-      const price = e.card.getCardConfig().price
+      expandedContainer.moneyBar.setMoney(gameState.money)
       e.useButton.removeAllListeners()
       e.card.removeAllListeners()
-      if (gameState.money < price) {
-        e.card.interactive = false
+      const used = usedCards.includes(i)
+      if (used) {
+        e.card.visible = false
       } else {
         e.card.interactive = true
+        const selectCard = () => {
+          const isReal = e.card.getIsReal()
+          const cardConfig = e.card.getCardConfig()
+          const price = isReal ? cardConfig.real.price : cardConfig.fake.price
+          if (gameState.money < price) {
+            // TODO: SHOW POPUP THAT MONEY IS NOT ENOUGH
+          } else {
+            channelDeck.scene.setOnSelect(true)
+            currentlySelectingCards = true
+            currentCard = {
+              ...cardConfig,
+              isReal,
+              index: i,
+            }
+            currentCardIndex = i
+            expandedContainer.scene.visible = false
+          }
+        }
         e.useButton.on('mousedown', () => {
-          channelDeck.scene.setOnSelect(true)
-          currentlySelectingCards = true
-          currentCard = e.card
-          currentCardIndex = i
-          expandedContainer.scene.visible = false
+          selectCard()
         })
         e.card.on('mousedown', () => {
-          channelDeck.scene.setOnSelect(true)
-          currentCard = e.card
-          currentCardIndex = i
-          currentlySelectingCards = true
-          expandedContainer.scene.visible = false
+          selectCard()
         })
       }
     })

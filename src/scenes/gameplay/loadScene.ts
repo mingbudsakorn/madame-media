@@ -30,46 +30,44 @@ interface TurnTextType extends PIXI.Text {
 }
 
 // SAMPLE RANDOM CARDS
-const randomCards = (resources: PIXI.IResourceDictionary) => {
+const randomCards = () => {
   const cards = []
   for (let i = 0; i < CARD_CONFIG.CARDS_PER_TURN; i++) {
     const cardNumber = Math.floor(Math.random() * 19) // 18 total types on cards
-    const card = loadCard(resources, CARD[cardNumber].real)
-    card.width = 170
-    card.height = 250
-    cards.push(card)
+    cards.push(cardNumber)
   }
   return cards
 }
+
 //Sample Channel
 const mockChannelInShopList = [
   {
     channelConfig: CHANNEL.SOCIAL_MEDIA,
-    isOwned : false
+    isOwned: false,
   },
   {
     channelConfig: CHANNEL.MOUTH,
-    isOwned : true
+    isOwned: true,
   },
   {
     channelConfig: CHANNEL.WEBPAGE,
-    isOwned : true
+    isOwned: true,
   },
   {
     channelConfig: CHANNEL.TV,
-    isOwned : false
+    isOwned: false,
   },
   {
     channelConfig: CHANNEL.RADIO,
-    isOwned : true
+    isOwned: true,
   },
   {
     channelConfig: CHANNEL.PUBLICATION,
-    isOwned : true
+    isOwned: true,
   },
   {
     channelConfig: CHANNEL.OUT_OF_HOME,
-    isOwned : false
+    isOwned: false,
   },
 ]
 
@@ -146,13 +144,14 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
   // const cardModalWithOverlay = loadCardModal(resources, CARD[0])
   // gamePlayScene.addChild(cardModalWithOverlay)
 
-  const cardContainer = loadCardContainer()
-  cardContainer.setCards(randomCards(resources))
+  const randomCardNumbers = randomCards()
+  const cardContainer = loadCardContainer(resources)
+  cardContainer.setCards(randomCardNumbers)
 
   const expandedContainer = loadCardExpanded(resources, () => {
     expandedContainer.scene.visible = false
   })
-  expandedContainer.scene.setCards(randomCards(resources))
+  expandedContainer.scene.setCards(randomCardNumbers)
   expandedContainer.scene.visible = false
 
   cardContainer.hitArea = new PIXI.Rectangle(0, 0, cardContainer.width, cardContainer.height)

@@ -1,10 +1,11 @@
 import * as PIXI from 'pixi.js'
+import { CARD } from '../constants/card'
 import { TEXT_STYLE } from '../constants/style'
-import { Channel } from '../types'
-import { CardType } from './card'
+import { Card, CardSet, Channel } from '../types'
+import loadCard, { CardType } from './card'
 
 export interface ChannelType extends PIXI.Container {
-  setCard: (card: CardType) => void
+  setCard: (card: CardSet, isReal: boolean) => void
   getCard: () => CardType
   isAvailable: () => boolean
   getChannelConfig: () => Channel
@@ -69,10 +70,13 @@ const loadChannel = (
 
   // Card in the channel
   const cardContainer = new PIXI.Container()
-  channel.setCard = (card) => {
+  channel.setCard = (cardConfig: CardSet, isReal: boolean) => {
     // clear former card
+    console.log(cardConfig)
     if (cardContainer.children[0]) cardContainer.removeChild(cardContainer.children[0])
-    if (card) {
+    if (cardConfig) {
+      const card = loadCard(resources, cardConfig)
+      card.setIsReal(isReal)
       card.width = 170
       card.height = 250
       card.x = 0

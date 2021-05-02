@@ -34,13 +34,13 @@ export interface Channel {
 }
 
 export interface CardSlots {
-  SOCIAL_MEDIA: CardType | null
-  MOUTH: CardType | null
-  WEBPAGE: CardType | null
-  TV: CardType | null
-  RADIO: CardType | null
-  PUBLICATION: CardType | null
-  OUT_OF_HOME: CardType | null
+  SOCIAL_MEDIA: number | null
+  MOUTH: number | null
+  WEBPAGE: number | null
+  TV: number | null
+  RADIO: number | null
+  PUBLICATION: number | null
+  OUT_OF_HOME: number | null
 }
 
 export interface SceneWrapper {
