@@ -2,7 +2,17 @@ import * as PIXI from 'pixi.js'
 import { COLOR, TEXT_STYLE } from '../../../constants/style'
 import { loadMoneyBar, MoneyBarType } from '../../../components/moneyBar'
 import { SPECIAL_ACTION } from '../../../constants/gameConfig'
-
+import loadFactCheck from './factCheckModal'
+import loadSpy from './spyModal'
+import loadExpose from './exposeModal'
+import {CARD} from '../../../constants/card'
+const mockOpponentCardList = [
+  CARD[0].real,
+  CARD[1].real,
+  CARD[2].real,
+  CARD[3].real,
+  CARD[4].real
+]
 interface SpecialActionContainerType extends PIXI.Container {
   skipButton: PIXI.Sprite
   factCheckButton: PIXI.Sprite
@@ -67,6 +77,7 @@ const loadSpecialActionContainer = (resources: PIXI.IResourceDictionary) => {
   factCheckButton
     .on('mouseover', () => onHoverSpecialActionButton(1))
     .on('mouseout', () => onMouseOut(1))
+    .on('mousedown', () => loadFactCheck(resources,mockOpponentCardList))
   specialActionButtonContainer.addChild(factCheckButton)
 
   const exposeButton = new PIXI.Sprite(resources['art/expose-btn'].texture)
