@@ -10,8 +10,8 @@ import { SPECIAL_ACTION } from '../../constants/gameConfig'
 import socket from '../../socket'
 
 const mockOpponentCard = (resources: PIXI.IResourceDictionary) => {
-  const card1 = loadCard(resources, CARD[12].fake)
-  const card2 = loadCard(resources, CARD[8].real)
+  const card1 = loadCard(resources, CARD[12])
+  const card2 = loadCard(resources, CARD[8])
   return {
     SOCIAL_MEDIA: null,
     MOUTH: card1,
@@ -61,7 +61,7 @@ const DuelScene = (
     //     myChannelContainer.visible = false
     //     // example
     //     // specialActionContainer.moneyBar.setMoney(1000)
-    //     specialActionContainer.visible = true
+        // specialActionContainer.visible = true
     //     // setCurrentScene(scenes.gameplay)
     //     return
     //   }
