@@ -5,7 +5,7 @@ import { scenes } from '../../constants/scenes'
 import { CARD } from '../../constants/card'
 import { gameState as initGameState } from '../../constants/initialState'
 
-const mockCardShopList = [CARD[0].real, CARD[1].real, CARD[2].real, CARD[3].real, CARD[4].real]
+const mockCardShopList = [CARD[0], CARD[1], CARD[2], CARD[3], CARD[4]]
 const CardShopScene = (
   resources: PIXI.IResourceDictionary,
   setCurrentScene: (scene: number, gameState: GameState, sceneObject: Scene) => void,
@@ -23,6 +23,8 @@ const CardShopScene = (
   }
 
   const { bg, confirmButton, cardShopDeck } = cardShopScene.children
+
+  confirmButton.on('mousedown', cardShopDeck.getSelectedCards).on('touchstart', cardShopDeck.getSelectedCards)
 
   cardShopDeck.setCard(mockCardShopList)
 

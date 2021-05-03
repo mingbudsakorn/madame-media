@@ -39,3 +39,5 @@ export const RESULT = {
     description: 'ไม่มีใครยอมใครเลยนะ เยี่ยมจริงๆ',
   },
 }
+
+export const SELECTED_CARD_NUM = 3

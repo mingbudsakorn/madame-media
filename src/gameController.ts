@@ -13,7 +13,7 @@ import loadEndGameScene from './scenes/endGame'
 const gameController = (app: PIXI.Application) => {
   const resources = app.loader.resources
 
-  let currentScene = scenes.gameplay
+  let currentScene = scenes.cardShop
   const setCurrentScene = (scene: number, gameState: GameState, sceneObject: Scene) => {
     currentScene = scene
     sceneObject.setGameState(gameState)
@@ -33,10 +33,10 @@ const gameController = (app: PIXI.Application) => {
   joinRoomScene.visible = false
   const createRoomScene = loadCreateRoomScene(resources, setCurrentScene)
   createRoomScene.visible = false
-  // const cardShopScene = loadCardShopScene(resources, setCurrentScene)
-  // cardShopScene.visible = false
-  // const endGameScene = loadEndGameScene(resources, setCurrentScene)
-  // endGameScene.visible = false
+  const cardShopScene = loadCardShopScene(resources, setCurrentScene)
+  cardShopScene.visible = false
+  const endGameScene = loadEndGameScene(resources, setCurrentScene)
+  endGameScene.visible = false
 
   // STATE DIAGRAM
   startGameScene.setNextPossibleScenes({
@@ -93,11 +93,11 @@ const gameController = (app: PIXI.Application) => {
       case scenes.createRoom:
         createRoomScene.visible = true
         break
-      // case scenes.cardShop:
-      //   cardShopScene.visible = true
-      //   break
-      // case scenes.endGame:
-      //   endGameScene.visible = true
+      case scenes.cardShop:
+        cardShopScene.visible = true
+        break
+      case scenes.endGame:
+        endGameScene.visible = true
     }
   }
 
@@ -107,8 +107,8 @@ const gameController = (app: PIXI.Application) => {
   app.stage.addChild(gameLobbyScene)
   app.stage.addChild(joinRoomScene)
   app.stage.addChild(createRoomScene)
-  // app.stage.addChild(cardShopScene)
-  // app.stage.addChild(endGameScene)
+  app.stage.addChild(cardShopScene)
+  app.stage.addChild(endGameScene)
 
   renderScene()
 }

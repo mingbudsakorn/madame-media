@@ -84,11 +84,7 @@ const loadChannelInShop = (
 
   //getters and setters
   channelInShop.toggleIsSelected = async () => {
-    if (isSelected) {
-      isSelected = false
-    } else {
-      isSelected = true
-    }
+    isSelected = !isSelected
     toggleTickBox()
   }
 

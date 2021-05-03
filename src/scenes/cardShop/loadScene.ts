@@ -1,11 +1,20 @@
 import * as PIXI from 'pixi.js'
 import { TEXT_STYLE, COLOR } from '../../constants/style'
-import loadCardShopDeck from './components/cardShopDeck'
+import loadCardInShop, { CardInShopType } from './components/cardInShop'
+import { Card, CardSet } from '../../types/index'
+import { Button } from '../../types/index'
 
 const cardShopScene = new PIXI.Container()
 cardShopScene.position.set(0, 0)
 
+interface CardShopDeckType extends PIXI.Container {
+  setCard: (cardConfigList: CardSet[]) => void
+  getSelectedCards: () => CardSet[]
+}
+
 const loadCardShopScene = (resources: PIXI.IResourceDictionary) => {
+  let cardsObject = []
+
   const bg = new PIXI.Sprite(resources['background/cardshop-bg'].texture)
   bg.position.set(0, 0)
   cardShopScene.addChild(bg)
@@ -16,19 +25,70 @@ const loadCardShopScene = (resources: PIXI.IResourceDictionary) => {
   buyChannelText.position.set(bg.width / 2, 147)
   cardShopScene.addChild(buyChannelText)
 
-  //cards 
-  const cardShopDeck = loadCardShopDeck(resources)
-  cardShopDeck.position.set(327,340)
+  //cards
+  const cardShopDeck = new PIXI.Container() as CardShopDeckType
+  cardShopDeck.position.set(327, 340)
   cardShopScene.addChild(cardShopDeck)
+  let count = 0
+
+  cardShopDeck.setCard = (cardConfigList: CardSet[]) => {
+    let prevX = 0
+    const padding = 20
+    for (let i in cardConfigList) {
+      let cardConfig = cardConfigList[i]
+      const cardInShop = loadCardInShop(resources, cardConfig)
+      cardInShop.x = i == '0' ? prevX : prevX + cardInShop.width + padding
+      prevX = cardInShop.x
+      cardShopDeck.addChild(cardInShop)
+
+      cardInShop.tickBox
+        .on('mousedown', () => {
+          cardInShop.toggle()
+          updateCount(cardInShop)
+        })
+        .on('touchstart', () => {
+          cardInShop.toggle()
+          updateCount(cardInShop)
+        })
+
+      cardsObject.push(cardInShop)
+    }
+  }
+
+  const updateCount = (cardInShop: CardInShopType) => {
+    if (cardInShop.getIsSelected()) {
+      count += 1
+    } else {
+      count -= 1
+    }
+    if (count == 3) {
+      setActiveConfirmButton(true)
+    } else {
+      setActiveConfirmButton(false)
+    }
+  }
+
+  cardShopDeck.getSelectedCards = () => {
+    let selectedCards = cardsObject.filter((card) => card.getIsSelected())
+    return selectedCards
+  }
 
   //button
-  const confirmButton = new PIXI.Sprite(resources['art/confirm-btn'].texture)
-  confirmButton.position.set(751,  897)
+  const confirmButton = new PIXI.Sprite(resources['art/disable-confirm-btn'].texture) as Button
+  confirmButton.position.set(751, 897)
   confirmButton.interactive = true
-  confirmButton.buttonMode = true
+  const setActiveConfirmButton = (isActive: Boolean) => {
+    if (isActive) {
+      confirmButton.texture = resources['art/confirm-btn'].texture
+      confirmButton.buttonMode = true
+    } else {
+      confirmButton.texture = resources['art/disable-confirm-btn'].texture
+      confirmButton.buttonMode = false
+    }
+  }
   cardShopScene.addChild(confirmButton)
 
-  return{
+  return {
     scene: cardShopScene,
     children: {
       bg,
@@ -36,6 +96,5 @@ const loadCardShopScene = (resources: PIXI.IResourceDictionary) => {
       cardShopDeck,
     },
   }
-
 }
 export default loadCardShopScene
