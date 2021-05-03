@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js'
 import card, { CardType } from '../../components/card'
 import loadChannelDeck from './components/channelDeck'
 import loadTimeBar from './components/timeBar'
+import loadModal from '../../components/modal'
 import loadPeopleBar from '../../components/peopleBar'
 import loadAvatar from './components/avatar'
 import loadMoneyBar from '../../components/moneyBar'
@@ -198,6 +199,16 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
   // shopModal.scene.setChannels(mockChannelInShopList)
   // gamePlayScene.addChild(shopModal.scene)
 
+  const notEnoughMoney = loadModal(resources)
+  gamePlayScene.addChild(notEnoughMoney)
+  notEnoughMoney.setText('เกิดข้อผิดพลาด', 'มีจำนวนเงินไม่เพียงพอ')
+  // notEnoughMoney.toggle()
+
+  const waitingModal = loadModal(resources)
+  gamePlayScene.addChild(waitingModal)
+  waitingModal.setText('กรุณารอสักครู่', 'กรุณารออีกฝั่งกด')
+  waitingModal.toggle()
+
   buyChannelButton
     .on('mousedown', () => shopModal.scene.toggle())
     .on('touchstart', () => shopModal.scene.toggle())
@@ -224,6 +235,7 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
       specialEventModal,
       specialEvent,
       shopModal,
+      notEnoughMoney
     },
   }
 }
