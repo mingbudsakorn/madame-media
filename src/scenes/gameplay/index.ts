@@ -4,18 +4,34 @@ import { scenes } from '../../constants/scenes'
 
 import { gameState as initGameState } from '../../constants/initialState'
 import { MONEY_CONFIG, PEOPLE_BAR_CONFIG, TIME_BAR_CONFIG } from '../../constants/gameConfig'
-import { GameState, Scene, SceneWrapper } from '../../types'
+import { Card, CardSet, GameState, Scene, SceneWrapper } from '../../types'
 import { AVATAR } from '../../constants/avatar'
 import { CardType } from '../../components/card'
 import { ChannelType } from '../../components/channel'
 import { CHANNEL, INIT_CHANNEL_CARD_LIST } from '../../constants/channels'
 import { CARD } from '../../constants/card'
 
+import socket from '../../socket'
+import axios from 'axios'
+
+socket.emit('start-game')
+
 const GameplayScene = (
   resources: PIXI.IResourceDictionary,
   setCurrentScene: (scene: number, gameState: GameState, sceneObject: Scene) => void,
 ) => {
   const gameplayScene = loadGameplayScene(resources) as SceneWrapper
+  const scene = gameplayScene.scene as Scene
+  // Init
+  let nextPossibleScenes
+  scene.setNextPossibleScenes = (scenes) => {
+    nextPossibleScenes = scenes
+  }
+  let gameState = initGameState
+  scene.setGameState = (settingState: GameState) => {
+    gameState = settingState
+  }
+
   const {
     finishButton,
     buyChannelButton,
@@ -32,48 +48,73 @@ const GameplayScene = (
     specialEvent,
     shopModal,
   } = gameplayScene.children
-  const scene = gameplayScene.scene as Scene
 
-  let nextPossibleScenes
-  scene.setNextPossibleScenes = (scenes) => {
-    nextPossibleScenes = scenes
-  }
-
-  // Init
-  let gameState = initGameState
-
-  scene.setGameState = (settingState: GameState) => {
-    gameState = settingState
-  }
-
-  let { cards, money } = gameState
-
-  let timer
-  scene.onAppear = () => {
-    // Timing
-    // let timeLeft = TIME_BAR_CONFIG.TIME_PER_TURN
-    // timer = setInterval(() => {
-    //   if (timeLeft === 0) {
-    //     clearInterval(timer)
-    //     return
-    //   }
-    //   timeBar.setTime(timeLeft - 1)
-    //   timeLeft -= 1
-    // }, 1000)
-  }
-
+  const { cards } = gameState
   // Game States
   let currentlySelectingCards = false
   let currentCard = null
   let currentCardIndex = null
-  moneyBar.setMoney(money)
-  peopleBar.setPeople(PEOPLE_BAR_CONFIG.INIT_MY_PEOPLE, PEOPLE_BAR_CONFIG.INIT_OPPONENT_PEOPLE)
-  // example to set turnText
-  // turnText.setTurnText(2)
+  let usedCards = []
 
-  // Select Card
-  const insertCard = (channel: ChannelType, card: CardType) => {
-    channel.setCard(card)
+  scene.onAppear = async () => {
+    if (gameState.player1 && gameState.player2) {
+      player1.setAvatarImg(gameState.player1.avatar)
+      player1.setAvatarName(gameState.player1.name)
+      player2.setAvatarImg(gameState.player2.avatar)
+      player2.setAvatarName(gameState.player2.name)
+    }
+
+    const url = process.env.BACKEND_URL
+    const res = await axios.get(
+      `${url}/state?gameId=${gameState.gameId}&playerId=${gameState.playerId}`,
+    )
+    if (res && res.data) {
+      const { people, neutral, opponent, gold, round } = res.data
+      peopleBar.setPeople(people, opponent)
+      moneyBar.setMoney(gold)
+      turnText.setTurnText(round)
+
+      // Set in Game State
+      gameState.people.ours = people
+      gameState.people.theirs = opponent
+      gameState.people.neutral = neutral
+      gameState.money = gold
+      gameState.currentTurn = round
+    }
+  }
+
+  // TIMER
+  socket.on('countdown', (timeLeft) => {
+    if (timeLeft <= 0) {
+      ready()
+    } else {
+      timeBar.setTime(timeLeft)
+    }
+  })
+
+  // READY/FINISH/TIMEOUT
+  const ready = async () => {
+    const url = process.env.BACKEND_URL
+    await axios.post(`${url}/ready-battle`, {
+      gameId: gameState.gameId,
+      playerId: gameState.playerId,
+    })
+  }
+
+  socket.on('battle-result', () => {
+    setCurrentScene(scenes.duel, gameState, nextPossibleScenes[scenes.duel])
+  })
+
+  finishButton
+    .on('mousedown', () => onClickFinishButton())
+    .on('touchstart', () => onClickFinishButton())
+  const onClickFinishButton = () => {
+    ready()
+  }
+
+  // SELECT CARD
+  const insertCard = (channel: ChannelType, card: CardSet, isReal: boolean) => {
+    channel.setCard(card, isReal)
   }
 
   // PUT CARD INTO CHANNEL
@@ -81,27 +122,26 @@ const GameplayScene = (
     const channelObject = channelDeck.channels[channel]
     channelObject.on('mousedown', () => {
       if (currentlySelectingCards && channelObject.isAvailable()) {
-        insertCard(channelObject, currentCard)
-        cards[channel] = currentCard
+        insertCard(channelObject, currentCard, currentCard.isReal)
+        cards[channel] = currentCard.isReal ? currentCard.real : currentCard.fake
         currentlySelectingCards = false
         expandedContainer.scene.useCard(currentCardIndex)
 
         // DEDUCT MONEY
-        money = money - currentCard.getCardConfig().price
-        moneyBar.setMoney(money)
+        const cardPrice = currentCard.isReal ? currentCard.real.price : currentCard.fake.price
+        const deductedMoney = gameState.money - cardPrice
+        gameState.money = deductedMoney
+        moneyBar.setMoney(deductedMoney)
+
+        // DEDUCT CARD
+        usedCards.push(currentCard.index)
 
         channelDeck.scene.setOnSelect(false)
         currentCard = null
+        refreshExpandedContainer()
       }
     })
   })
-
-  //example to set avatar
-  // player1.setAvatarName('พอล')
-  // player1.setAvatarImg(AVATAR.man2)
-
-  //example to set channel and card
-  // channelDeck.setChannel(INIT_CHANNEL_CARD_LIST)
 
   // example set special event modal
   // specialEventModal.setSpecialEvent('พายุเข้า!! -> สัญญาณหาย \nส่งผลให้ตานี้ประสิทธิภาพช่องทางสื่อ โซเชี่ยลมีเดีย และ เว็บเพจ ลดลง 50% ในขณะที่ โทรทัศน์ และ วิทยุ ใช้การไม่ได้')
@@ -109,41 +149,45 @@ const GameplayScene = (
   // specialEvent.setSpecialEvent('พายุเข้า!!')
   // specialEvent.visible = true
 
-  shopModal.setTotalCost(1000)
-
   // SELECT CARD FROM DECK
-  expandedContainer.cardArray.forEach((e, i) => {
-    const price = e.card.getCardConfig().price
-    if (money < price) {
-      e.card.interactive = false
-      e.card.opacity = 0.7
-    } else {
-      e.card.interactive = true
-      e.useButton.on('mousedown', () => {
-        channelDeck.scene.setOnSelect(true)
-        currentlySelectingCards = true
-        currentCard = e.card
-        currentCardIndex = i
-        expandedContainer.scene.visible = false
-      })
-      e.card.on('mousedown', () => {
-        channelDeck.scene.setOnSelect(true)
-        currentCard = e.card
-        currentCardIndex = i
-        currentlySelectingCards = true
-        expandedContainer.scene.visible = false
-      })
-    }
-  })
-
-  // FINISH
-  finishButton
-    .on('mousedown', () => onClickFinishButton())
-    .on('touchstart', () => onClickFinishButton())
-  const onClickFinishButton = () => {
-    clearInterval(timer)
-    setCurrentScene(scenes.duel, gameState, nextPossibleScenes[scenes.duel])
+  const refreshExpandedContainer = () => {
+    expandedContainer.cardArray.forEach((e, i) => {
+      expandedContainer.moneyBar.setMoney(gameState.money)
+      e.useButton.removeAllListeners()
+      e.card.removeAllListeners()
+      const used = usedCards.includes(i)
+      if (used) {
+        e.card.visible = false
+      } else {
+        e.card.interactive = true
+        const selectCard = () => {
+          const isReal = e.card.getIsReal()
+          const cardConfig = e.card.getCardConfig()
+          const price = isReal ? cardConfig.real.price : cardConfig.fake.price
+          if (gameState.money < price) {
+            // TODO: SHOW POPUP THAT MONEY IS NOT ENOUGH
+          } else {
+            channelDeck.scene.setOnSelect(true)
+            currentlySelectingCards = true
+            currentCard = {
+              ...cardConfig,
+              isReal,
+              index: i,
+            }
+            currentCardIndex = i
+            expandedContainer.scene.visible = false
+          }
+        }
+        e.useButton.on('mousedown', () => {
+          selectCard()
+        })
+        e.card.on('mousedown', () => {
+          selectCard()
+        })
+      }
+    })
   }
+  refreshExpandedContainer()
 
   return scene
 }

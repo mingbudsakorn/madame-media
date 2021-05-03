@@ -29,6 +29,7 @@ const loadCreateRoomScene = (resources: PIXI.IResourceDictionary) => {
   settingTurnText.anchor.set(0.5, 0)
   settingTurnText.position.set(bg.width * (3 / 4), settingAvatarText.y)
   createRoomScene.addChild(settingTurnText)
+
   // ------------------------------------------------ //
 
   const avatar = loadAvatar(resources, AVATAR_BG.myAvatarBg, AVATAR.man1, '', false)
@@ -136,6 +137,7 @@ const loadCreateRoomScene = (resources: PIXI.IResourceDictionary) => {
       fiveButton,
       tenButton,
       twentyButton,
+      backButton,
     },
   }
 }

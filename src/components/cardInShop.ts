@@ -1,39 +1,39 @@
 import * as PIXI from 'pixi.js'
 import { TEXT_STYLE } from '../constants/style'
-import { Card } from '../types'
+import { Card, CardSet } from '../types'
 import loadCard from './card'
 
 export interface CardInShopType extends PIXI.Container {
-  getCardConfig: () => Card
+  getCardConfig: () => CardSet
   getIsSelected: () => boolean
   setIsSelected: (boolean) => void
   // isSelected: boolean
   // toggle: () => void
 }
 
-const loadCardInShop = (resources: PIXI.IResourceDictionary, cardConfig: Card) => {
+const loadCardInShop = (resources: PIXI.IResourceDictionary, cardConfig: CardSet) => {
   const cardInShop = new PIXI.Container() as CardInShopType
 
-  let isSelected = false ;
+  let isSelected = false
 
   const tickBox = new PIXI.Sprite(resources['art/card-not-selected'].texture)
   const card = loadCard(resources, cardConfig)
-  card.height = card.height*235/card.width
+  card.height = (card.height * 235) / card.width
   card.width = 235
   cardInShop.addChild(card)
 
   cardInShop.setIsSelected = (selectedValue: boolean) => {
-    if(!selectedValue){
+    if (!selectedValue) {
       isSelected = false
-    } else{
+    } else {
       isSelected = true
     }
   }
 
   // tickBox.anchor.set(0.5,0)
   // tickBox.position.set(card.width/2,0)
-  // tickBox.buttonMode = true 
-  // tickBox.interactive = true 
+  // tickBox.buttonMode = true
+  // tickBox.interactive = true
   // tickBox
   // .on('mousedown', () => toggle())
   // .on('touchstart', () => toggle())
@@ -53,6 +53,5 @@ const loadCardInShop = (resources: PIXI.IResourceDictionary, cardConfig: Card) =
   // }
 
   return cardInShop
-
 }
 export default loadCardInShop

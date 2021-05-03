@@ -1,16 +1,28 @@
 import * as PIXI from 'pixi.js'
+import axios from 'axios'
 import loadCreateRoomScene from './loadScene'
-import { Scene } from '../../types'
+import { GameState, Scene } from '../../types'
 import { scenes } from '../../constants/scenes'
 import { AVATAR } from '../../constants/avatar'
+import { gameState as initGameState } from '../../constants/initialState'
 
 const avatarList = Object.values(AVATAR)
 
 const CreateRoomScene = (
   resources: PIXI.IResourceDictionary,
-  setCurrentScene: (scene: number) => void,
+  setCurrentScene: (scene: number, gameState: GameState, sceneObject: Scene) => void,
 ) => {
   const createRoomScene = loadCreateRoomScene(resources)
+  const scene = createRoomScene.scene as Scene
+  // Init
+  let nextPossibleScenes
+  scene.setNextPossibleScenes = (scenes) => {
+    nextPossibleScenes = scenes
+  }
+  let gameState = initGameState
+  scene.setGameState = (settingState: GameState) => {
+    gameState = settingState
+  }
 
   const {
     bg,
@@ -22,6 +34,7 @@ const CreateRoomScene = (
     fiveButton,
     tenButton,
     twentyButton,
+    backButton,
   } = createRoomScene.children
 
   // get input
@@ -102,7 +115,28 @@ const CreateRoomScene = (
     }
   }
 
-  const scene = createRoomScene.scene as Scene
+  const onConfirm = async () => {
+    const url = process.env.BACKEND_URL
+    const res = await axios.post(`${url}/create-room`, {
+      name: avatarNameInput.text.trim(),
+      avatar: avatarList[avatarIndex],
+    })
+    if (res && res.data) {
+      gameState = {
+        ...gameState,
+        gameId: res.data.gameId,
+        turns: turn,
+        playerId: res.data.playerId,
+      }
+      setCurrentScene(scenes.gameLobby, gameState, nextPossibleScenes[scenes.gameLobby])
+    }
+  }
+  confirmbutton.on('mousedown', onConfirm).on('touchstart', onConfirm)
+
+  const onBack = () => {
+    setCurrentScene(scenes.startGame, gameState, nextPossibleScenes[scenes.startGame])
+  }
+  backButton.on('mousedown', onBack).on('touchstart', onBack)
 
   return scene
 }

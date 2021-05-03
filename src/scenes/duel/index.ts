@@ -7,6 +7,8 @@ import loadCard from '../../components/card'
 import { CARD } from '../../constants/card'
 import { SPECIAL_ACTION } from '../../constants/gameConfig'
 
+import socket from '../../socket'
+
 const mockOpponentCard = (resources: PIXI.IResourceDictionary) => {
   const card1 = loadCard(resources, CARD[12].fake)
   const card2 = loadCard(resources, CARD[8].real)
@@ -25,7 +27,22 @@ const DuelScene = (
   resources: PIXI.IResourceDictionary,
   setCurrentScene: (scene: number, gameState: GameState, sceneObject: Scene) => void,
 ) => {
-  const duelScene = loadDuelScene(resources) as SceneWrapper
+  const duelScene = loadDuelScene(resources)
+  const scene = duelScene.scene as Scene
+  // Init
+  let nextPossibleScenes
+  scene.setNextPossibleScenes = (scenes) => {
+    nextPossibleScenes = scenes
+  }
+  let gameState = initGameState
+  scene.setGameState = (settingState: GameState) => {
+    gameState = settingState
+  }
+
+  // DUEL RESULTS
+  socket.on('battle-result', (res) => {
+    console.log(res)
+  })
 
   const {
     duelCompareBg,
@@ -33,36 +50,24 @@ const DuelScene = (
     myChannelContainer,
     specialActionContainer,
   } = duelScene.children
-  const scene = duelScene.scene as Scene
-
-  let nextPossibleScenes
-  scene.setNextPossibleScenes = (scenes) => {
-    nextPossibleScenes = scenes
-  }
-
-  // INIT STATES
-  let gameState = initGameState
-  scene.setGameState = (settingState: GameState) => {
-    gameState = settingState
-  }
 
   scene.onAppear = () => {
-    const channelPadding = 25
-    let channelCount = 0
-    setInterval(() => {
-      if (channelCount >= 6) {
-        clearInterval()
-        duelCompareBg.visible = false
-        myChannelContainer.visible = false
-        // example
-        // specialActionContainer.moneyBar.setMoney(1000)
-        specialActionContainer.visible = true
-        // setCurrentScene(scenes.gameplay)
-        return
-      }
-      channelCount += 1
-      duelCompareBg.x = duelCompareBg.x + duelCompareBg.width + channelPadding
-    }, 2000)
+    // const channelPadding = 25
+    // let channelCount = 0
+    // setInterval(() => {
+    //   if (channelCount >= 6) {
+    //     clearInterval()
+    //     duelCompareBg.visible = false
+    //     myChannelContainer.visible = false
+    //     // example
+    //     // specialActionContainer.moneyBar.setMoney(1000)
+    //     specialActionContainer.visible = true
+    //     // setCurrentScene(scenes.gameplay)
+    //     return
+    //   }
+    //   channelCount += 1
+    //   duelCompareBg.x = duelCompareBg.x + duelCompareBg.width + channelPadding
+    // }, 2000)
 
     const { cards } = gameState
 

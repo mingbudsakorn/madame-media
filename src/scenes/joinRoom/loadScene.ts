@@ -19,20 +19,20 @@ const loadJoinRoomScene = (resources: PIXI.IResourceDictionary) => {
   joinGameText.anchor.set(0.5, 0)
   joinGameText.position.set(bg.width / 2, 60)
   joinRoomScene.addChild(joinGameText)
-  
+
   const settingAvatarText = new PIXI.Text('ตั้งค่าตัวละคร', TEXT_STYLE.HEADER_THAI)
   settingAvatarText.anchor.set(0.5, 0)
-  settingAvatarText.position.set(bg.width/4, 190)
+  settingAvatarText.position.set(bg.width / 4, 190)
   joinRoomScene.addChild(settingAvatarText)
 
   const roomIdText = new PIXI.Text('ใส่รหัสของเกม', TEXT_STYLE.HEADER_THAI)
   roomIdText.anchor.set(0.5, 0)
-  roomIdText.position.set(bg.width*(3/4), 420)
+  roomIdText.position.set(bg.width * (3 / 4), 420)
   joinRoomScene.addChild(roomIdText)
   // // ------------------------------------------------ //
 
   const avatar = loadAvatar(resources, AVATAR_BG.myAvatarBg, AVATAR.man1, '', false)
-  avatar.position.set(bg.width/4 - avatar.width/2, 275)
+  avatar.position.set(bg.width / 4 - avatar.width / 2, 275)
   joinRoomScene.addChild(avatar)
 
   // // ----------------------button---------------------- //
@@ -44,7 +44,7 @@ const loadJoinRoomScene = (resources: PIXI.IResourceDictionary) => {
 
   const leftButton = new PIXI.Sprite(resources['art/button-polygon-left'].texture)
   leftButton.anchor.set(0.5)
-  leftButton.position.set(avatar.x, avatar.y+avatar.height/2)
+  leftButton.position.set(avatar.x, avatar.y + avatar.height / 2)
   leftButton.interactive = true
   leftButton.buttonMode = true
   joinRoomScene.addChild(leftButton)
@@ -58,7 +58,7 @@ const loadJoinRoomScene = (resources: PIXI.IResourceDictionary) => {
 
   const confirmbutton = new PIXI.Sprite(resources['art/disable-confirm-btn'].texture) as Button
   confirmbutton.anchor.set(0.5, 0)
-  confirmbutton.position.set(bg.width/2, 940)
+  confirmbutton.position.set(bg.width / 2, 940)
   confirmbutton.interactive = true
   confirmbutton.buttonMode = false
   joinRoomScene.addChild(confirmbutton)
@@ -67,8 +67,7 @@ const loadJoinRoomScene = (resources: PIXI.IResourceDictionary) => {
     if (isActive) {
       confirmbutton.texture = resources['art/confirm-btn'].texture
       confirmbutton.buttonMode = true
-    }
-    else {
+    } else {
       confirmbutton.texture = resources['art/disable-confirm-btn'].texture
       confirmbutton.buttonMode = false
     }
@@ -76,11 +75,11 @@ const loadJoinRoomScene = (resources: PIXI.IResourceDictionary) => {
   // // -------------------------------------------------- //
 
   const avatarNameInput = loadTextInput('ชื่อตัวละคร...')
-  avatarNameInput.position.set(bg.width/4 - avatarNameInput.width/2, 813)
+  avatarNameInput.position.set(bg.width / 4 - avatarNameInput.width / 2, 813)
   joinRoomScene.addChild(avatarNameInput)
 
   const roomIdInput = loadTextInput('รหัสห้อง...')
-  roomIdInput.position.set(bg.width*(3/4) - roomIdInput.width/2, 498)
+  roomIdInput.position.set(bg.width * (3 / 4) - roomIdInput.width / 2, 498)
   joinRoomScene.addChild(roomIdInput)
 
   return {
@@ -93,6 +92,7 @@ const loadJoinRoomScene = (resources: PIXI.IResourceDictionary) => {
       leftButton,
       rightButton,
       avatar,
+      backButton,
     },
   }
 }

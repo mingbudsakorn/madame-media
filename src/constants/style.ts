@@ -46,6 +46,11 @@ export const TEXT_STYLE = {
     fontFamily: 'Chonburi',
     fontSize: 36,
   }),
+  SUBHEADER_THAI_WHITE: new PIXI.TextStyle({
+    fontFamily: 'Chonburi',
+    fontSize: 36,
+    fill: COLOR.WHITE,
+  }),
   SUBHEADER_THAI_CHARCOAL: new PIXI.TextStyle({
     fontFamily: 'Chonburi',
     fontSize: 36,

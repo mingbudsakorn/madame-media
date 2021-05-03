@@ -11,6 +11,16 @@ import loadSpecialActionContainer from './components/specialActionContainer'
 // // import { CHANNEL } from '../../utils/channel.js'
 // import { CARD } from '../../constants/card'
 
+const emptySlot = {
+  SOCIAL_MEDIA: null,
+  MOUTH: null,
+  WEBPAGE: null,
+  TV: null,
+  RADIO: null,
+  PUBLICATION: null,
+  OUT_OF_HOME: null,
+}
+
 const duelScene = new PIXI.Container()
 duelScene.position.set(0, 0)
 // let localGameState
@@ -23,11 +33,11 @@ const loadDuelScene = (resources: PIXI.IResourceDictionary) => {
   duelCompareBg.position.set(66, 296)
   duelScene.addChild(duelCompareBg)
 
-  const opponentChannelContainer = loadChannelContainer(resources, [], false)
+  const opponentChannelContainer = loadChannelContainer(resources, emptySlot, false)
   opponentChannelContainer.position.set(66, 50)
   duelScene.addChild(opponentChannelContainer)
 
-  const myChannelContainer = loadChannelContainer(resources, [], true)
+  const myChannelContainer = loadChannelContainer(resources, emptySlot, true)
   myChannelContainer.position.set(opponentChannelContainer.x, 645)
   duelScene.addChild(myChannelContainer)
 
@@ -48,7 +58,7 @@ const loadDuelScene = (resources: PIXI.IResourceDictionary) => {
       opponentChannelContainer,
       myChannelContainer,
       peopleBar,
-      specialActionContainer
+      specialActionContainer,
     },
   }
 }
