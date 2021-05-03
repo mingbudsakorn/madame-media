@@ -16,7 +16,6 @@ import { AVATAR } from '../../constants/avatar'
 import loadCard from '../../components/card'
 import { CARD } from '../../constants/card'
 import loadCardExpanded from './components/cardExpanded'
-import loadShopChannel from './components/shopChannel'
 import { CHANNEL } from '../../constants/channels'
 
 interface GamePlaySceneType extends PIXI.Container {
@@ -194,25 +193,26 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
     specialEventText.text = title
   }
   //buy channel
-  const shopModal = loadShopChannel(resources)
+  const shopModal = loadShopModal(resources)
+  gamePlayScene.addChild(shopModal)
 
-  // shopModal.scene.setChannels(mockChannelInShopList)
-  // gamePlayScene.addChild(shopModal.scene)
+  // shopModal.setChannels(mockChannelInShopList)
+  // gamePlayScene.addChild(shopModal)
 
-  const notEnoughMoney = loadModal(resources)
-  gamePlayScene.addChild(notEnoughMoney)
-  notEnoughMoney.setText('เกิดข้อผิดพลาด', 'มีจำนวนเงินไม่เพียงพอ')
+  const notEnoughMoneyModal = loadModal(resources)
+  gamePlayScene.addChild(notEnoughMoneyModal)
+  notEnoughMoneyModal.setText('เกิดข้อผิดพลาด', 'มีจำนวนเงินไม่เพียงพอ')
   // notEnoughMoney.toggle()
 
   const waitingModal = loadModal(resources)
   gamePlayScene.addChild(waitingModal)
   waitingModal.setText('กรุณารอสักครู่', 'กรุณารออีกฝั่งกด')
-  waitingModal.toggle()
+  // waitingModal.toggle()
 
   buyChannelButton
-    .on('mousedown', () => shopModal.scene.toggle())
-    .on('touchstart', () => shopModal.scene.toggle())
-  shopModal.scene.visible = false
+    .on('mousedown', () => shopModal.toggle())
+    .on('touchstart', () => shopModal.toggle())
+  shopModal.visible = false
 
   return {
     scene: gamePlayScene,
@@ -235,7 +235,8 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
       specialEventModal,
       specialEvent,
       shopModal,
-      notEnoughMoney
+      notEnoughMoneyModal,
+      waitingModal
     },
   }
 }

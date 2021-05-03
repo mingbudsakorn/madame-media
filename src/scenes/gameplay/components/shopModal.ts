@@ -1,9 +1,9 @@
 import * as PIXI from 'pixi.js'
-import loadChannel from '../../../components/channel'
 import loadMoneyBar from '../../../components/moneyBar'
 import { CHANNEL } from '../../../constants/channels'
 import { TEXT_STYLE, COLOR } from '../../../constants/style'
-import loadChannelShop from './shopChannel'
+import { ChannelInShopList } from '../../../types/index'
+import loadChannelInShop, { ChannelInShopType } from '../../../components/channelInShop'
 
 const mockChannelInShopList = [
   {
@@ -35,16 +35,21 @@ const mockChannelInShopList = [
     isOwned: false,
   },
 ]
-interface LoadShopModalType extends PIXI.Container {
-  totalcost: number
+
+interface ShopModalType extends PIXI.Container {
+  totalCost: number
   toggle: () => void
   setTotalCost: (totalCost: number) => void
+  setChannels: (channels: ChannelInShopList[]) => void
+  getChannels: () => any[]
 }
 
 export const loadShopModal = (resources: PIXI.IResourceDictionary) => {
   let isShowing = false
+  let channelArray = []
+  let totalCost = 0
 
-  const shopModalWithOverlay = new PIXI.Container() as LoadShopModalType
+  const shopModalWithOverlay = new PIXI.Container() as ShopModalType
   shopModalWithOverlay.position.set(0, 0)
 
   const overlay = new PIXI.Sprite(resources['art/overlay'].texture)
@@ -66,11 +71,46 @@ export const loadShopModal = (resources: PIXI.IResourceDictionary) => {
   moneyBar.position.set(panelBg.x - panelBg.width / 2, 595)
   shopModal.addChild(moneyBar)
 
-  //channels
-  // const channelShopDeck = loadChannelShop(resources)
-  // channelShopDeck.setChannelShop(mockChannelInShopList)
+  // channels
+  // const channelShopDeck = loadChannelShopDeck(resources)
+  // channelShopDeck.setChannels(mockChannelInShopList)
   // channelShopDeck.position.set(shopModalBg.width / 2 - channelShopDeck.width / 2, 165)
   // shopModal.addChild(channelShopDeck)
+  shopModalWithOverlay.setChannels = (channels: ChannelInShopList[]) => {
+    let prevX = 88
+    let padding = 20
+    let channelY = panelBg.y + 20
+    channels.forEach((channel,i) => {
+      let channelConfig = channel.channelConfig
+      let isOwned = channel.isOwned
+      const channelInShop = loadChannelInShop(resources, channelConfig, isOwned)
+      channelInShop.x = i == 0 ? prevX : prevX + channelInShop.width + padding
+      prevX = channelInShop.x
+      channelInShop.y = channelY
+      shopModal.addChild(channelInShop)
+
+      channelInShop.tickBox
+        .on('mousedown', async () => {
+          channelInShop.toggleIsSelected()
+          toggleIsSelected(channelInShop)
+        })
+        .on('touchstart', () => {
+          channelInShop.toggleIsSelected()
+          toggleIsSelected(channelInShop)
+        })
+
+      shopModal.addChild(channelInShop)
+      channelArray.push({
+        tickBox: channelInShop.tickBox,
+        channel: channel,
+      })
+    });
+  }
+
+  shopModalWithOverlay.getChannels = () => {
+    return channelArray
+  }
+
 
   //text
   const buyChannelText = new PIXI.Text('เลือกซื้อช่องทางสื่อ', TEXT_STYLE.HEADER_THAI)
@@ -78,7 +118,7 @@ export const loadShopModal = (resources: PIXI.IResourceDictionary) => {
   buyChannelText.position.set(shopModalBg.width / 2, 60)
   shopModal.addChild(buyChannelText)
 
-  const totalCostText = new PIXI.Text('ราคารวม: ' + '0 เหรียญ', TEXT_STYLE.SUBHEADER_THAI)
+  const totalCostText = new PIXI.Text('ราคารวม: ' + totalCost.toString() + ' เหรียญ', TEXT_STYLE.SUBHEADER_THAI)
   totalCostText.anchor.set(1, 0.5)
   totalCostText.position.set(panelBg.x + panelBg.width / 2, moneyBar.y + moneyBar.height / 2)
   shopModal.addChild(totalCostText)
@@ -113,9 +153,20 @@ export const loadShopModal = (resources: PIXI.IResourceDictionary) => {
     }
   }
 
-  shopModalWithOverlay.setTotalCost = (totalCost: number) => {
+  const setTotalCost = (totalCost: number) => {
     totalCostText.text = 'ราคารวม: ' + totalCost.toString() + ' เหรียญ'
+    totalCost = totalCost
   }
+
+  const toggleIsSelected = (channel: ChannelInShopType) => {
+    if (channel.getIsSelected()) {
+      totalCost += channel.getChannelConfig().price
+    } else {
+      totalCost -= channel.getChannelConfig().price
+    }
+    setTotalCost(totalCost)
+  }
+
   overlay.interactive = true
 
   return shopModalWithOverlay

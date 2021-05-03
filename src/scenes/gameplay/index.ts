@@ -47,6 +47,8 @@ const GameplayScene = (
     specialEventModal,
     specialEvent,
     shopModal,
+    notEnoughMoneyModal,
+    waitingModal
   } = gameplayScene.children
 
   const { cards } = gameState
@@ -56,12 +58,46 @@ const GameplayScene = (
   let currentCardIndex = null
   let usedCards = []
 
+  //mock
+  const mockChannelInShopList = [
+    {
+      channelConfig: CHANNEL.SOCIAL_MEDIA,
+      isOwned: false,
+    },
+    {
+      channelConfig: CHANNEL.MOUTH,
+      isOwned: true,
+    },
+    {
+      channelConfig: CHANNEL.WEBPAGE,
+      isOwned: true,
+    },
+    {
+      channelConfig: CHANNEL.TV,
+      isOwned: false,
+    },
+    {
+      channelConfig: CHANNEL.RADIO,
+      isOwned: true,
+    },
+    {
+      channelConfig: CHANNEL.PUBLICATION,
+      isOwned: true,
+    },
+    {
+      channelConfig: CHANNEL.OUT_OF_HOME,
+      isOwned: false,
+    },
+  ]
+  shopModal.setChannels(mockChannelInShopList)
+
   scene.onAppear = async () => {
     if (gameState.player1 && gameState.player2) {
       player1.setAvatarImg(gameState.player1.avatar)
       player1.setAvatarName(gameState.player1.name)
       player2.setAvatarImg(gameState.player2.avatar)
       player2.setAvatarName(gameState.player2.name)
+      shopModal.setChannels(mockChannelInShopList)
     }
 
     const url = process.env.BACKEND_URL

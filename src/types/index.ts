@@ -93,3 +93,8 @@ export interface Button extends PIXI.Sprite {
   setSelected: (isSelected: boolean) => void
   onHover: () => void
 }
+
+export interface ChannelInShopList {
+    channelConfig: Channel,
+    isOwned: boolean,
+}[]
