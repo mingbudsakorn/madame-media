@@ -73,10 +73,6 @@ export const loadShopModal = (resources: PIXI.IResourceDictionary) => {
   shopModal.addChild(moneyBar)
 
   // channels
-  // const channelShopDeck = loadChannelShopDeck(resources)
-  // channelShopDeck.setChannels(mockChannelInShopList)
-  // channelShopDeck.position.set(shopModalBg.width / 2 - channelShopDeck.width / 2, 165)
-  // shopModal.addChild(channelShopDeck)
   shopModalWithOverlay.setChannels = (channels: ChannelInShopList[]) => {
     let prevX = 88
     let padding = 20
@@ -103,6 +99,7 @@ export const loadShopModal = (resources: PIXI.IResourceDictionary) => {
       shopModal.addChild(channelInShop)
       channelArray.push({
         channelConfig: channel.channelConfig,
+        isOwned: channel.isOwned,
         channelObject: channelInShop,
       })
     });
@@ -114,10 +111,9 @@ export const loadShopModal = (resources: PIXI.IResourceDictionary) => {
 
   shopModalWithOverlay.getSelectedChannels = () => {
     let selectedChannels = channelArray.filter((channel) => channel.channelObject.getIsSelected())
+    // console.log(selectedChannels)
     return selectedChannels
   }
-
-
 
   //text
   const buyChannelText = new PIXI.Text('เลือกซื้อช่องทางสื่อ', TEXT_STYLE.HEADER_THAI)
@@ -172,7 +168,6 @@ export const loadShopModal = (resources: PIXI.IResourceDictionary) => {
       totalCost -= channel.getChannelConfig().price
     }
     setTotalCost(totalCost)
-    // shopModalWithOverlay.getSelectedChannels()
   }
 
   overlay.interactive = true
