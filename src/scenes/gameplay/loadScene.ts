@@ -195,14 +195,12 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
   //buy channel
   const shopModal = loadShopModal(resources)
   gamePlayScene.addChild(shopModal)
-
-  // shopModal.setChannels(mockChannelInShopList)
-  // gamePlayScene.addChild(shopModal)
+  // shopModal.toggle()
 
   const notEnoughMoneyModal = loadModal(resources)
   gamePlayScene.addChild(notEnoughMoneyModal)
-  notEnoughMoneyModal.setText('เกิดข้อผิดพลาด', 'มีจำนวนเงินไม่เพียงพอ')
-  // notEnoughMoney.toggle()
+  notEnoughMoneyModal.setText('เกิดข้อผิดพลาด', 'คุณมีจำนวนเงินไม่เพียงพอ')
+  // notEnoughMoneyModal.toggle()
 
   const waitingModal = loadModal(resources)
   gamePlayScene.addChild(waitingModal)
@@ -212,7 +210,6 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
   buyChannelButton
     .on('mousedown', () => shopModal.toggle())
     .on('touchstart', () => shopModal.toggle())
-  shopModal.visible = false
 
   return {
     scene: gamePlayScene,

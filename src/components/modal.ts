@@ -83,6 +83,8 @@ export const loadModal = (resources: PIXI.IResourceDictionary) => {
     }
   }
 
+  overlay.interactive = true
+
   return modal
 }
 
