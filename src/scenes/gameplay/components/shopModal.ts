@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js'
 import loadMoneyBar from '../../../components/moneyBar'
 import { CHANNEL } from '../../../constants/channels'
 import { TEXT_STYLE, COLOR } from '../../../constants/style'
-import { ChannelInShopList } from '../../../types/index'
+import { ChannelInShopList, Channel } from '../../../types/index'
 import loadChannelInShop, { ChannelInShopType } from '../../../components/channelInShop'
 
 const mockChannelInShopList = [
@@ -42,6 +42,7 @@ interface ShopModalType extends PIXI.Container {
   setTotalCost: (totalCost: number) => void
   setChannels: (channels: ChannelInShopList[]) => void
   getChannels: () => any[]
+  getSelectedChannels: () => Channel[]
 }
 
 export const loadShopModal = (resources: PIXI.IResourceDictionary) => {
@@ -101,8 +102,8 @@ export const loadShopModal = (resources: PIXI.IResourceDictionary) => {
 
       shopModal.addChild(channelInShop)
       channelArray.push({
-        tickBox: channelInShop.tickBox,
-        channel: channel,
+        channelConfig: channel.channelConfig,
+        channelObject: channelInShop,
       })
     });
   }
@@ -110,6 +111,12 @@ export const loadShopModal = (resources: PIXI.IResourceDictionary) => {
   shopModalWithOverlay.getChannels = () => {
     return channelArray
   }
+
+  shopModalWithOverlay.getSelectedChannels = () => {
+    let selectedChannels = channelArray.filter((channel) => channel.channelObject.getIsSelected())
+    return selectedChannels
+  }
+
 
 
   //text
@@ -165,6 +172,7 @@ export const loadShopModal = (resources: PIXI.IResourceDictionary) => {
       totalCost -= channel.getChannelConfig().price
     }
     setTotalCost(totalCost)
+    // shopModalWithOverlay.getSelectedChannels()
   }
 
   overlay.interactive = true
