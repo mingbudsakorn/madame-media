@@ -133,7 +133,7 @@ const GameplayScene = (
   Object.keys(channelDeck.channels).forEach((channel) => {
     const channelObject = channelDeck.channels[channel]
     channelObject.on('mousedown', () => {
-      if (currentlySelectingCards && channelObject.isAvailable()) {
+      if (currentlySelectingCards && channelObject.getIsAvailable()) {
         insertCard(channelObject, currentCard, currentCard.isReal)
         cards[channel] = currentCard.isReal ? currentCard.real : currentCard.fake
         currentlySelectingCards = false
@@ -210,6 +210,7 @@ const GameplayScene = (
     gameState.money = gameState.money - shopModal.scene.getTotalCost()
     moneyBar.setMoney(gameState.money)
     shopModal.scene.setMoneyText(gameState.money)
+    expandedContainer.moneyBar.setMoney(gameState.money)
     shopModal.scene.visible = false
 
     // SET OWNED CHANNELS
@@ -217,7 +218,6 @@ const GameplayScene = (
     selectedChannels.forEach((e) => {
       newChannels[CHANNEL_THAI_NAME_MAP[e.channelConfig.name]].isOwned = true
     })
-    console.log(newChannels)
     shopModal.scene.setChannels(newChannels)
     channelDeck.scene.setAvailableChannels(newChannels)
   }

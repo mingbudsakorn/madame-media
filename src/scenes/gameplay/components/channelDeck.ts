@@ -91,7 +91,6 @@ export const loadChannelDeck = (
 
   const updateChannels = (availableChannels: ChannelSlots) => {
     if (availableChannels) {
-      console.log(availableChannels, 'channelDeck')
       Object.keys(availableChannels).forEach((channel) => {
         if (availableChannels[channel].isOwned) {
           channelMap[channel].setIsAvailable(true)
@@ -119,6 +118,15 @@ export const loadChannelDeck = (
       overlay.visible = false
     }
   }
+
+  overlay.interactive = true
+  overlay
+    .on('mousedown', () => {
+      overlay.visible = false
+    })
+    .on('touchstart', () => {
+      overlay.visible = false
+    })
 
   return {
     scene: channelDeck,
