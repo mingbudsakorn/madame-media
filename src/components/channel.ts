@@ -7,7 +7,8 @@ import loadCard, { CardType } from './card'
 export interface ChannelType extends PIXI.Container {
   setCard: (card: CardSet, isReal: boolean) => void
   getCard: () => CardType
-  isAvailable: () => boolean
+  setIsAvailable: (boolean) => void
+  getIsAvailable: () => boolean
   getChannelConfig: () => Channel
   getHeight: () => number
   getWidth: () => number
@@ -25,9 +26,10 @@ const loadChannel = (
     channelConfig.name,
     isAvailable ? TEXT_STYLE.BODY_THAI : TEXT_STYLE.BODY_THAI_CHARCOAL,
   )
-  let channelBg = isAvailable
-    ? new PIXI.Sprite(resources['channels/avail-channel-bg'].texture)
-    : new PIXI.Sprite(resources['channels/unavail-channel-bg'].texture)
+  let channelBg = new PIXI.Sprite(resources['channels/avail-channel-bg'].texture)
+
+  let channelUnavailCover = new PIXI.Sprite(resources['channels/unavail-channel-bg'].texture)
+  channelUnavailCover.position.set(0, channelName.height + 8)
 
   channelName.anchor.set(0.5, 0)
   channelName.position.set(channelBg.width / 2, 5)
@@ -61,7 +63,7 @@ const loadChannel = (
   channel.addChild(textIcon)
 
   let percentageText = new PIXI.Text(
-    channelConfig.percentage + '%',
+    channelConfig.baseFactor + '%',
     isAvailable ? TEXT_STYLE.BODY_THAI : TEXT_STYLE.BODY_THAI_CHARCOAL,
   )
   percentageText.anchor.set(0.5, 0)
@@ -72,7 +74,6 @@ const loadChannel = (
   const cardContainer = new PIXI.Container()
   channel.setCard = (cardConfig: CardSet, isReal: boolean) => {
     // clear former card
-    console.log(cardConfig)
     if (cardContainer.children[0]) cardContainer.removeChild(cardContainer.children[0])
     if (cardConfig) {
       const card = loadCard(resources, cardConfig)
@@ -93,7 +94,12 @@ const loadChannel = (
     return cardContainer.children.length > 0 ? (cardContainer.children[0] as CardType) : undefined
   }
 
-  channel.isAvailable = () => {
+  channel.setIsAvailable = (isAvailableSet: boolean) => {
+    channelUnavailCover.visible = !isAvailableSet
+    isAvailable = isAvailableSet
+  }
+
+  channel.getIsAvailable = () => {
     return isAvailable
   }
 
@@ -112,6 +118,8 @@ const loadChannel = (
   channel.getBg = () => {
     return channelBg
   }
+
+  channel.addChild(channelUnavailCover)
 
   return channel
 }

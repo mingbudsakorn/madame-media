@@ -48,7 +48,7 @@ const GameplayScene = (
     specialEvent,
     shopModal,
     notEnoughMoneyModal,
-    waitingModal
+    waitingModal,
   } = gameplayScene.children
 
   const { cards } = gameState
@@ -58,46 +58,12 @@ const GameplayScene = (
   let currentCardIndex = null
   let usedCards = []
 
-  //mock
-  const mockChannelInShopList = [
-    {
-      channelConfig: CHANNEL.SOCIAL_MEDIA,
-      isOwned: false,
-    },
-    {
-      channelConfig: CHANNEL.MOUTH,
-      isOwned: true,
-    },
-    {
-      channelConfig: CHANNEL.WEBPAGE,
-      isOwned: true,
-    },
-    {
-      channelConfig: CHANNEL.TV,
-      isOwned: false,
-    },
-    {
-      channelConfig: CHANNEL.RADIO,
-      isOwned: true,
-    },
-    {
-      channelConfig: CHANNEL.PUBLICATION,
-      isOwned: true,
-    },
-    {
-      channelConfig: CHANNEL.OUT_OF_HOME,
-      isOwned: false,
-    },
-  ]
-  shopModal.setChannels(mockChannelInShopList)
-
   scene.onAppear = async () => {
     if (gameState.player1 && gameState.player2) {
       player1.setAvatarImg(gameState.player1.avatar)
       player1.setAvatarName(gameState.player1.name)
       player2.setAvatarImg(gameState.player2.avatar)
       player2.setAvatarName(gameState.player2.name)
-      shopModal.setChannels(mockChannelInShopList)
     }
 
     const url = process.env.BACKEND_URL
@@ -105,7 +71,7 @@ const GameplayScene = (
       `${url}/state?gameId=${gameState.gameId}&playerId=${gameState.playerId}`,
     )
     if (res && res.data) {
-      const { people, neutral, opponent, gold, round } = res.data
+      const { people, neutral, opponent, gold, round, availableChannels } = res.data
       peopleBar.setPeople(people, opponent)
       moneyBar.setMoney(gold)
       turnText.setTurnText(round)
@@ -116,6 +82,12 @@ const GameplayScene = (
       gameState.people.neutral = neutral
       gameState.money = gold
       gameState.currentTurn = round
+      availableChannels.map((channel) => {
+        gameState.availableChannels[channel.name] = true
+      })
+
+      shopModal.setChannels(availableChannels)
+      channelDeck.setAvailableChannels()
     }
   }
 
@@ -201,7 +173,7 @@ const GameplayScene = (
           const cardConfig = e.card.getCardConfig()
           const price = isReal ? cardConfig.real.price : cardConfig.fake.price
           if (gameState.money < price) {
-            // TODO: SHOW POPUP THAT MONEY IS NOT ENOUGH
+            notEnoughMoneyModal.toggle()
           } else {
             channelDeck.scene.setOnSelect(true)
             currentlySelectingCards = true

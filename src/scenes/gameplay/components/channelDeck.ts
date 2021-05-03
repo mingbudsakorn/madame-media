@@ -3,15 +3,18 @@ import { CardType } from '../../../components/card'
 import loadChannel from '../../../components/channel'
 import { CHANNEL } from '../../../constants/channels'
 import { TEXT_STYLE } from '../../../constants/style'
+import { Channel, ChannelSlots } from '../../../types'
 
 interface ChannelDeckType extends PIXI.Container {
   setOnSelect: (boolean) => void
   insertCard: (channel: string, card: CardType) => void
+  setAvailableChannels: (channels: ChannelSlots) => void
 }
 
-export const loadChannelDeck = (resources: PIXI.IResourceDictionary) => {
-  let onSelect = false
-
+export const loadChannelDeck = (
+  resources: PIXI.IResourceDictionary,
+  availableChannels: ChannelSlots,
+) => {
   const channelDeck = new PIXI.Container() as ChannelDeckType
   channelDeck.position.set(97, 532)
 
@@ -32,31 +35,31 @@ export const loadChannelDeck = (resources: PIXI.IResourceDictionary) => {
   const firstChannelX = 37
 
   // ------test channel------- //
-  const channel = loadChannel(resources, CHANNEL.SOCIAL_MEDIA, true)
+  const channel = loadChannel(resources, CHANNEL.SOCIAL_MEDIA, false)
   channel.position.set(firstChannelX, channelY)
   channelDeck.addChild(channel)
 
-  const channel2 = loadChannel(resources, CHANNEL.MOUTH, true)
+  const channel2 = loadChannel(resources, CHANNEL.MOUTH, false)
   channel2.position.set(channel.x + channel.width + channelPadding, channel.y)
   channelDeck.addChild(channel2)
 
-  const channel3 = loadChannel(resources, CHANNEL.WEBPAGE, true)
+  const channel3 = loadChannel(resources, CHANNEL.WEBPAGE, false)
   channel3.position.set(channel2.x + channel.width + channelPadding, channel.y)
   channelDeck.addChild(channel3)
 
-  const channel4 = loadChannel(resources, CHANNEL.TV, true)
+  const channel4 = loadChannel(resources, CHANNEL.TV, false)
   channel4.position.set(channel3.x + channel.width + channelPadding, channel.y)
   channelDeck.addChild(channel4)
 
-  const channel5 = loadChannel(resources, CHANNEL.RADIO, true)
+  const channel5 = loadChannel(resources, CHANNEL.RADIO, false)
   channel5.position.set(channel4.x + channel.width + channelPadding, channel.y)
   channelDeck.addChild(channel5)
 
-  const channel6 = loadChannel(resources, CHANNEL.PUBLICATION, true)
+  const channel6 = loadChannel(resources, CHANNEL.PUBLICATION, false)
   channel6.position.set(channel5.x + channel.width + channelPadding, channel.y)
   channelDeck.addChild(channel6)
 
-  const channel7 = loadChannel(resources, CHANNEL.OUT_OF_HOME, true)
+  const channel7 = loadChannel(resources, CHANNEL.OUT_OF_HOME, false)
   channel7.position.set(channel6.x + channel.width + channelPadding, channel.y)
   channelDeck.addChild(channel7)
   // ------------------------- //
@@ -70,13 +73,6 @@ export const loadChannelDeck = (resources: PIXI.IResourceDictionary) => {
   // channelDeck.addChild(polygonButtonRight)
 
   // Insert Card to Channel
-  channel.interactive = true
-  channel2.interactive = true
-  channel3.interactive = true
-  channel4.interactive = true
-  channel5.interactive = true
-  channel6.interactive = true
-  channel7.interactive = true
 
   const channelMap = {
     SOCIAL_MEDIA: channel,
@@ -88,6 +84,28 @@ export const loadChannelDeck = (resources: PIXI.IResourceDictionary) => {
     OUT_OF_HOME: channel7,
   }
 
+  Object.keys(channelMap).forEach((channelObject) => {
+    channelMap[channelObject].interactive = true
+    channelMap[channelObject].setIsAvailable(false)
+  })
+
+  const updateChannels = (availableChannels: ChannelSlots) => {
+    if (availableChannels) {
+      Object.keys(availableChannels).forEach((channel) => {
+        if (availableChannels[channel].isOwned) {
+          channelMap[channel].setIsAvailable(true)
+        } else {
+          channelMap[channel].setIsAvailable(false)
+        }
+      })
+    }
+  }
+
+  channelDeck.setAvailableChannels = (availableChannels: ChannelSlots) => {
+    updateChannels(availableChannels)
+  }
+  updateChannels(availableChannels)
+
   channelDeck.insertCard = (channel: string, card: CardType) => {
     const selectedChannel = channelMap[channel]
     selectedChannel.setCard(card)
@@ -95,10 +113,8 @@ export const loadChannelDeck = (resources: PIXI.IResourceDictionary) => {
 
   channelDeck.setOnSelect = (select: boolean) => {
     if (select) {
-      onSelect = true
       overlay.visible = true
     } else {
-      onSelect = false
       overlay.visible = false
     }
   }

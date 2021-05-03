@@ -12,6 +12,15 @@ export const gameState = {
     PUBLICATION: null,
     OUT_OF_HOME: null,
   },
+  availableChannels: {
+    SOCIAL_MEDIA: false,
+    MOUTH: false,
+    WEBPAGE: false,
+    TV: false,
+    RADIO: false,
+    PUBLICATION: false,
+    OUT_OF_HOME: false,
+  },
   people: {
     ours: PEOPLE_BAR_CONFIG.INIT_MY_PEOPLE,
     neutral:

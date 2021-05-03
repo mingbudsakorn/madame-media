@@ -1,9 +1,40 @@
-import { Channel } from '../types'
+import { Channel, ChannelSlots } from '../types'
 //test
 import { CARD } from './card'
 
 interface ChannelConfigList {
   [key: string]: Channel
+}
+
+export const CHANNEL_THAI_NAME_MAP = {
+  โซเชียลมีเดีย: 'SOCIAL_MEDIA',
+  ปากต่อปาก: 'MOUTH',
+  เว็บเพจ: 'WEBPAGE',
+  โทรทัศน์: 'TV',
+  วิทยุ: 'RADIO',
+  สิ่งพิมพ์: 'PUBLICATION',
+  สื่อนอกบ้าน: 'OUT_OF_HOME',
+}
+
+const INIT_CHANNELS = {
+  SOCIAL_MEDIA: false,
+  MOUTH: false,
+  WEBPAGE: false,
+  TV: false,
+  RADIO: false,
+  PUBLICATION: false,
+  OUT_OF_HOME: false,
+}
+
+export const initChannelSlot = () => {
+  const channels = INIT_CHANNELS
+  Object.keys(CHANNEL).forEach((channelKey) => {
+    channels[channelKey] = {
+      channelConfig: CHANNEL[channelKey],
+      isOwned: false,
+    }
+  })
+  return (channels as unknown) as ChannelSlots
 }
 
 export const CHANNEL = {
@@ -13,7 +44,7 @@ export const CHANNEL = {
     visual: 1,
     text: 1,
     price: 500,
-    percentage: 20,
+    baseFactor: 20,
   },
   MOUTH: {
     name: 'ปากต่อปาก',
@@ -21,7 +52,7 @@ export const CHANNEL = {
     visual: 0,
     text: 0,
     price: 0,
-    percentage: 3,
+    baseFactor: 3,
   },
   WEBPAGE: {
     name: 'เว็บเพจ',
@@ -29,7 +60,7 @@ export const CHANNEL = {
     visual: 1,
     text: 1,
     price: 0,
-    percentage: 5,
+    baseFactor: 5,
   },
   TV: {
     name: 'โทรทัศน์',
@@ -37,7 +68,7 @@ export const CHANNEL = {
     visual: 1,
     text: 0,
     price: 300,
-    percentage: 12,
+    baseFactor: 12,
   },
   RADIO: {
     name: 'วิทยุ',
@@ -45,7 +76,7 @@ export const CHANNEL = {
     visual: 0,
     text: 0,
     price: 150,
-    percentage: 5,
+    baseFactor: 5,
   },
   PUBLICATION: {
     name: 'สิ่งพิมพ์',
@@ -53,7 +84,7 @@ export const CHANNEL = {
     visual: 1,
     text: 1,
     price: 0,
-    percentage: 8,
+    baseFactor: 8,
   },
   OUT_OF_HOME: {
     name: 'สื่อนอกบ้าน',
@@ -61,7 +92,7 @@ export const CHANNEL = {
     visual: 1,
     text: 1,
     price: 250,
-    percentage: 10,
+    baseFactor: 10,
   },
 } as ChannelConfigList
 
@@ -106,4 +137,3 @@ export const INIT_CHANNEL_CARD_LIST = [
     cardConfig: null,
   },
 ]
-

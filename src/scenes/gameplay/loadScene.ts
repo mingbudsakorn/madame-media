@@ -16,7 +16,7 @@ import { AVATAR } from '../../constants/avatar'
 import loadCard from '../../components/card'
 import { CARD } from '../../constants/card'
 import loadCardExpanded from './components/cardExpanded'
-import { CHANNEL } from '../../constants/channels'
+import { CHANNEL, initChannelSlot } from '../../constants/channels'
 
 interface GamePlaySceneType extends PIXI.Container {
   onCardSelect: (CardType) => void
@@ -161,7 +161,7 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
   })
   gamePlayScene.addChild(cardContainer)
 
-  const channelDeck = loadChannelDeck(resources)
+  const channelDeck = loadChannelDeck(resources, initChannelSlot())
   gamePlayScene.addChild(channelDeck.scene)
 
   gamePlayScene.addChild(expandedContainer.scene)
@@ -194,13 +194,12 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
   }
   //buy channel
   const shopModal = loadShopModal(resources)
+  shopModal.setChannels(initChannelSlot())
   gamePlayScene.addChild(shopModal)
-  // shopModal.toggle()
 
   const notEnoughMoneyModal = loadModal(resources)
   gamePlayScene.addChild(notEnoughMoneyModal)
   notEnoughMoneyModal.setText('เกิดข้อผิดพลาด', 'คุณมีจำนวนเงินไม่เพียงพอ')
-  // notEnoughMoneyModal.toggle()
 
   const waitingModal = loadModal(resources)
   gamePlayScene.addChild(waitingModal)
@@ -233,7 +232,7 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
       specialEvent,
       shopModal,
       notEnoughMoneyModal,
-      waitingModal
+      waitingModal,
     },
   }
 }

@@ -30,9 +30,39 @@ export interface Channel {
   visual: number
   text: number
   price: number
-  percentage: number
+  baseFactor: number
 }
 
+export interface ChannelSlots {
+  SOCIAL_MEDIA: {
+    channelConfig: Channel
+    isOwned: boolean
+  }
+  MOUTH: {
+    channelConfig: Channel
+    isOwned: boolean
+  }
+  WEBPAGE: {
+    channelConfig: Channel
+    isOwned: boolean
+  }
+  TV: {
+    channelConfig: Channel
+    isOwned: boolean
+  }
+  RADIO: {
+    channelConfig: Channel
+    isOwned: boolean
+  }
+  PUBLICATION: {
+    channelConfig: Channel
+    isOwned: boolean
+  }
+  OUT_OF_HOME: {
+    channelConfig: Channel
+    isOwned: boolean
+  }
+}
 export interface CardSlots {
   SOCIAL_MEDIA: number | null
   MOUTH: number | null
@@ -68,7 +98,15 @@ type ChannelName =
 export interface GameState {
   money?: number
   cards?: CardSlots
-  availableChannels?: ChannelName[]
+  availableChannels?: {
+    SOCIAL_MEDIA: boolean
+    MOUTH: boolean
+    WEBPAGE: boolean
+    TV: boolean
+    RADIO: boolean
+    PUBLICATION: boolean
+    OUT_OF_HOME: boolean
+  }
   people?: {
     ours: number
     neutral: number
@@ -95,6 +133,7 @@ export interface Button extends PIXI.Sprite {
 }
 
 export interface ChannelInShopList {
-    channelConfig: Channel,
-    isOwned: boolean,
-}[]
+  channelConfig: Channel
+  isOwned: boolean
+}
+;[]
