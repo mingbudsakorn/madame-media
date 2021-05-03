@@ -8,7 +8,7 @@ import { Card, CardSet, GameState, Scene, SceneWrapper } from '../../types'
 import { AVATAR } from '../../constants/avatar'
 import { CardType } from '../../components/card'
 import { ChannelType } from '../../components/channel'
-import { CHANNEL, INIT_CHANNEL_CARD_LIST } from '../../constants/channels'
+import { CHANNEL, CHANNEL_THAI_NAME_MAP, INIT_CHANNEL_CARD_LIST } from '../../constants/channels'
 import { CARD } from '../../constants/card'
 
 import socket from '../../socket'
@@ -120,6 +120,10 @@ const GameplayScene = (
     ready()
   }
 
+  buyChannelButton
+    .on('mousedown', () => (shopModal.scene.visible = true))
+    .on('touchstart', () => (shopModal.scene.visible = true))
+
   // SELECT CARD
   const insertCard = (channel: ChannelType, card: CardSet, isReal: boolean) => {
     channel.setCard(card, isReal)
@@ -196,6 +200,28 @@ const GameplayScene = (
     })
   }
   refreshExpandedContainer()
+
+  // BUY CHANNELS
+  const buyChannels = () => {
+    const selectedChannels = shopModal.scene.getSelectedChannels()
+    selectedChannels.forEach((e) => {
+      gameState.availableChannels[CHANNEL_THAI_NAME_MAP[e.channelConfig.name]] = true
+    })
+    gameState.money = gameState.money - shopModal.scene.getTotalCost()
+    moneyBar.setMoney(gameState.money)
+    shopModal.scene.setMoneyText(gameState.money)
+    shopModal.scene.visible = false
+
+    // SET OWNED CHANNELS
+    const newChannels = shopModal.scene.getChannels()
+    selectedChannels.forEach((e) => {
+      newChannels[CHANNEL_THAI_NAME_MAP[e.channelConfig.name]].isOwned = true
+    })
+    console.log(newChannels)
+    shopModal.scene.setChannels(newChannels)
+    channelDeck.scene.setAvailableChannels(newChannels)
+  }
+  shopModal.buyButton.on('mousedown', buyChannels).on('touchstart', buyChannels)
 
   return scene
 }

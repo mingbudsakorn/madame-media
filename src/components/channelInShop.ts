@@ -18,7 +18,6 @@ const loadChannelInShop = (
   const channelInShop = new PIXI.Container() as ChannelInShopType
 
   let isSelected = false
-  console.log(channelConfig)
   let channelName = new PIXI.Text(
     channelConfig.name,
     isOwned ? TEXT_STYLE.BODY_THAI_CHARCOAL : TEXT_STYLE.BODY_THAI,

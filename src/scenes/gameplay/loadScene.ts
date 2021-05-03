@@ -194,8 +194,8 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
   }
   //buy channel
   const shopModal = loadShopModal(resources)
-  shopModal.setChannels(initChannelSlot())
-  gamePlayScene.addChild(shopModal)
+  shopModal.scene.setChannels(initChannelSlot())
+  gamePlayScene.addChild(shopModal.scene)
 
   const notEnoughMoneyModal = loadModal(resources)
   gamePlayScene.addChild(notEnoughMoneyModal)
@@ -207,8 +207,8 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
   // waitingModal.toggle()
 
   buyChannelButton
-    .on('mousedown', () => shopModal.toggle())
-    .on('touchstart', () => shopModal.toggle())
+    .on('mousedown', () => shopModal.scene.toggle())
+    .on('touchstart', () => shopModal.scene.toggle())
 
   return {
     scene: gamePlayScene,

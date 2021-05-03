@@ -31,6 +31,7 @@ export const initChannelSlot = () => {
   Object.keys(CHANNEL).forEach((channelKey) => {
     channels[channelKey] = {
       channelConfig: CHANNEL[channelKey],
+      channelObject: null,
       isOwned: false,
     }
   })

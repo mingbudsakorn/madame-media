@@ -91,6 +91,7 @@ export const loadChannelDeck = (
 
   const updateChannels = (availableChannels: ChannelSlots) => {
     if (availableChannels) {
+      console.log(availableChannels, 'channelDeck')
       Object.keys(availableChannels).forEach((channel) => {
         if (availableChannels[channel].isOwned) {
           channelMap[channel].setIsAvailable(true)

@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js'
 import loadMoneyBar from '../../../components/moneyBar'
-import { CHANNEL, CHANNEL_THAI_NAME_MAP } from '../../../constants/channels'
+import { CHANNEL, CHANNEL_THAI_NAME_MAP, initChannelSlot } from '../../../constants/channels'
 import { TEXT_STYLE, COLOR } from '../../../constants/style'
 import { ChannelInShopList, Channel, ChannelSlots } from '../../../types/index'
 import loadChannelInShop, { ChannelInShopType } from '../../../components/channelInShop'
@@ -9,14 +9,17 @@ interface ShopModalType extends PIXI.Container {
   totalCost: number
   toggle: () => void
   setTotalCost: (totalCost: number) => void
+  getTotalCost: () => number
   setChannels: (channels: ChannelSlots) => void
-  getChannels: () => any[]
+  getChannels: () => ChannelSlots
   getSelectedChannels: () => Channel[]
   setAvailableChannels: (availableChannels: Channel[]) => void
+  setMoneyText: (number) => void
 }
 
 export const loadShopModal = (resources: PIXI.IResourceDictionary) => {
   let isShowing = false
+  let channelSlot = initChannelSlot()
   let channelArray = []
   let totalCost = 0
 
@@ -42,14 +45,21 @@ export const loadShopModal = (resources: PIXI.IResourceDictionary) => {
   moneyBar.position.set(panelBg.x - panelBg.width / 2, 595)
   shopModal.addChild(moneyBar)
 
+  const channelContainer = new PIXI.Container()
+
   // channels
   shopModalWithOverlay.setChannels = (channels: ChannelSlots) => {
     let prevX = 88
     let padding = 20
     let channelY = panelBg.y + 20
+
+    // Clear old children
+    while (channelContainer.children[0]) {
+      channelContainer.removeChild(channelContainer.children[0])
+    }
+
     Object.keys(channels).forEach((channelKey, i) => {
       const channelInSlot = channels[channelKey]
-      console.log(channelInSlot)
       const channelInShop = loadChannelInShop(
         resources,
         channelInSlot.channelConfig,
@@ -58,7 +68,7 @@ export const loadShopModal = (resources: PIXI.IResourceDictionary) => {
       channelInShop.x = i == 0 ? prevX : prevX + channelInShop.width + padding
       prevX = channelInShop.x
       channelInShop.y = channelY
-      shopModal.addChild(channelInShop)
+      channelContainer.addChild(channelInShop)
 
       channelInShop.tickBox
         .on('mousedown', async () => {
@@ -70,16 +80,24 @@ export const loadShopModal = (resources: PIXI.IResourceDictionary) => {
           toggleIsSelected(channelInShop)
         })
 
-      shopModal.addChild(channelInShop)
+      channelContainer.addChild(channelInShop)
+
+      channelSlot[
+        CHANNEL_THAI_NAME_MAP[channelInSlot.channelConfig.name]
+      ].channelObject = channelInShop
+      channelSlot[CHANNEL_THAI_NAME_MAP[channelInSlot.channelConfig.name]].isOwned =
+        channelInSlot.isOwned
+
       channelArray.push({
         channelConfig: channelInSlot.channelConfig,
         channelObject: channelInShop,
       })
     })
+    shopModal.addChild(channelContainer)
   }
 
   shopModalWithOverlay.getChannels = () => {
-    return channelArray
+    return channelSlot
   }
 
   shopModalWithOverlay.getSelectedChannels = () => {
@@ -131,6 +149,14 @@ export const loadShopModal = (resources: PIXI.IResourceDictionary) => {
     }
   }
 
+  shopModalWithOverlay.getTotalCost = () => {
+    return totalCost
+  }
+
+  shopModalWithOverlay.setMoneyText = (money: number) => {
+    moneyBar.setMoney(money)
+  }
+
   const setTotalCost = (totalCost: number) => {
     totalCostText.text = 'ราคารวม: ' + totalCost.toString() + ' เหรียญ'
     totalCost = totalCost
@@ -147,6 +173,9 @@ export const loadShopModal = (resources: PIXI.IResourceDictionary) => {
 
   overlay.interactive = true
 
-  return shopModalWithOverlay
+  return {
+    scene: shopModalWithOverlay,
+    buyButton,
+  }
 }
 export default loadShopModal
