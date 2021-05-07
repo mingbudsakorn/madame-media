@@ -6,6 +6,7 @@ import * as PIXI from 'pixi.js'
 import loadChannelContainer from './components/channelContainer'
 import loadPeopleBar from '../../components/peopleBar'
 import loadSpecialActionContainer from './components/specialActionContainer'
+import loadSummaryModal from './components/summaryModal'
 // // // test
 // // import loadChannel from '../../components/Channel.js'
 // // import { CHANNEL } from '../../utils/channel.js'
@@ -50,6 +51,10 @@ const loadDuelScene = (resources: PIXI.IResourceDictionary) => {
   duelScene.addChild(specialActionContainer)
   specialActionContainer.visible = false
 
+  const summaryModal = loadSummaryModal(resources)
+  duelScene.addChild(summaryModal)
+  summaryModal.visible = false
+
   return {
     scene: duelScene,
     children: {
@@ -59,6 +64,7 @@ const loadDuelScene = (resources: PIXI.IResourceDictionary) => {
       myChannelContainer,
       peopleBar,
       specialActionContainer,
+      summaryModal
     },
   }
 }
