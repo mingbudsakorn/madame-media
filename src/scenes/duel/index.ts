@@ -88,10 +88,19 @@ const DuelScene = (
     myChannelContainer.setChannels(cards)
     opponentChannelContainer.setChannels(mockOpponentCard(resources))
 
+    //set to fact check
+    // duelCompareBg.visible = false
+    // myChannelContainer.visible = false
+    // specialActionContainer.visible = true
+    // specialActionContainer.setToFactCheck()
+    // specialActionContainer.setToExpose()
+    // specialActionContainer.setSelect(1)
+    // opponentChannelContainer.setToSelect()
+
     //set summary
-    myChannelContainer.setSummary(cards, mockSummary())
-    opponentChannelContainer.setSummary(mockOpponentCard(resources), mockSummary())
-    summaryModal.visible = true
+    // myChannelContainer.setSummary(cards, mockSummary())
+    // opponentChannelContainer.setSummary(mockOpponentCard(resources), mockSummary())
+    // summaryModal.visible = true
   }
 
   return scene

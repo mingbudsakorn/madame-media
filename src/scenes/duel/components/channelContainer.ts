@@ -11,6 +11,7 @@ interface DuelChannelType extends PIXI.Container {
 interface ChannelContainerType extends PIXI.Container {
   setChannels: (cards: CardSlots) => void
   setSummary: (cardList: CardSlots, summaryList: SummarySlots) => void
+  setToSelect: () => void
   select: (card: Card) => void
 }
 
@@ -41,6 +42,7 @@ export const loadChannelContainer = (
   isBottom: boolean,
 ) => {
   // have to set position outside
+  let localCardList = []
   const channelPadding = 25
   const channelContainer = new PIXI.Container() as ChannelContainerType
 
@@ -88,6 +90,7 @@ export const loadChannelContainer = (
         card.position.set(channelList[i].x, channelList[i].bg.y)
         card.width = channel0.bg.width
         card.height = channel0.bg.height
+        localCardList.push(card)
         channelContainer.addChild(card)
       }
     })
@@ -103,7 +106,7 @@ export const loadChannelContainer = (
       if (card) {
         let overlayType = summaryList[channel]
         let cardOverlay = new PIXI.Sprite(resources[overlayType].texture)
-        cardOverlay.position.set(channelList[i].x-4, channelList[i].bg.y)
+        cardOverlay.position.set(channelList[i].x - 4, channelList[i].bg.y)
         channelContainer.addChild(cardOverlay)
       }
     })
