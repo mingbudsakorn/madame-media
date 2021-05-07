@@ -120,12 +120,15 @@ const CreateRoomScene = (
     const res = await axios.post(`${url}/create-room`, {
       name: avatarNameInput.text.trim(),
       avatar: avatarList[avatarIndex],
+      setting: {
+        numberOfRound: turn,
+      },
     })
     if (res && res.data) {
       gameState = {
         ...gameState,
         gameId: res.data.gameId,
-        turns: turn,
+        turns: res.data.setting.numberOfRound,
         playerId: res.data.playerId,
       }
       setCurrentScene(scenes.gameLobby, gameState, nextPossibleScenes[scenes.gameLobby])

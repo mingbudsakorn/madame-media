@@ -81,6 +81,7 @@ const JoinRoomScene = (
         ...gameState,
         gameId: roomIdInput.text.trim(),
         playerId: res.data.playerId,
+        turns: res.data.setting.numberOfRound,
       }
       setCurrentScene(scenes.gameLobby, gameState, nextPossibleScenes[scenes.gameLobby])
     }
