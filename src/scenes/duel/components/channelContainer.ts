@@ -1,7 +1,8 @@
 import * as PIXI from 'pixi.js'
 import { TEXT_STYLE } from '../../../constants/style'
 import { CHANNEL } from '../../../constants/channels'
-import { CardSlots } from '../../../types'
+import { Card, CardSlots, SummarySlots } from '../../../types'
+import { OVERLAY } from '../../../constants/specialAction'
 
 interface DuelChannelType extends PIXI.Container {
   bg: PIXI.Sprite
@@ -9,6 +10,8 @@ interface DuelChannelType extends PIXI.Container {
 
 interface ChannelContainerType extends PIXI.Container {
   setChannels: (cards: CardSlots) => void
+  setSummary: (cardList: CardSlots, summaryList: SummarySlots) => void
+  select: (card: Card) => void
 }
 
 const loadDuelChannel = (resources: PIXI.IResourceDictionary, channel, isBottom) => {
@@ -92,6 +95,18 @@ export const loadChannelContainer = (
 
   channelContainer.setChannels = (channels: CardSlots) => {
     loadCards(channels)
+  }
+
+  channelContainer.setSummary = (cardList: CardSlots, summaryList: SummarySlots) => {
+    Object.keys(cardList).forEach((channel, i) => {
+      let card = cardList[channel]
+      if (card) {
+        let overlayType = summaryList[channel]
+        let cardOverlay = new PIXI.Sprite(resources[overlayType].texture)
+        cardOverlay.position.set(channelList[i].x-4, channelList[i].bg.y)
+        channelContainer.addChild(cardOverlay)
+      }
+    })
   }
 
   loadCards(cardList)

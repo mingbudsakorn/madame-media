@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js'
 import loadDuelScene from './loadScene'
 import { GameState, Scene, SceneWrapper } from '../../types'
 import { scenes } from '../../constants/scenes'
+import { OVERLAY } from '../../constants/specialAction'
 import { gameState as initGameState } from '../../constants/initialState'
 import loadCard from '../../components/card'
 import { CARD } from '../../constants/card'
@@ -17,6 +18,18 @@ const mockOpponentCard = (resources: PIXI.IResourceDictionary) => {
     MOUTH: card1,
     WEBPAGE: null,
     TV: card2,
+    RADIO: null,
+    PUBLICATION: null,
+    OUT_OF_HOME: null,
+  }
+}
+
+const mockSummary = () => {
+  return {
+    SOCIAL_MEDIA: null,
+    MOUTH: OVERLAY.expose,
+    WEBPAGE: null,
+    TV: OVERLAY.factCheck,
     RADIO: null,
     PUBLICATION: null,
     OUT_OF_HOME: null,
@@ -49,6 +62,7 @@ const DuelScene = (
     opponentChannelContainer,
     myChannelContainer,
     specialActionContainer,
+    summaryModal,
   } = duelScene.children
 
   scene.onAppear = () => {
@@ -73,6 +87,11 @@ const DuelScene = (
 
     myChannelContainer.setChannels(cards)
     opponentChannelContainer.setChannels(mockOpponentCard(resources))
+
+    //set summary
+    myChannelContainer.setSummary(cards, mockSummary())
+    opponentChannelContainer.setSummary(mockOpponentCard(resources), mockSummary())
+    summaryModal.visible = true
   }
 
   return scene
