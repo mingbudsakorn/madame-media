@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "yarn clean && parcel src/index.html",
     "build": "yarn clean && parcel build src/index.html --public-url ./",
-    "build_serve": "yarn build && http-server ./dist",
+    "build_serve": "yarn build && http-server ./dist -p 80",
     "clean": "rimraf ./dist ./.cache"
   },
   "license": "MIT",
