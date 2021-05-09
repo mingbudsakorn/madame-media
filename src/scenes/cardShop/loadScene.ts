@@ -8,8 +8,8 @@ const cardShopScene = new PIXI.Container()
 cardShopScene.position.set(0, 0)
 
 interface CardShopDeckType extends PIXI.Container {
-  setCard: (cardConfigList: CardSet[]) => void
-  getSelectedCards: () => CardSet[]
+  setCard: (cardConfigList: Card[]) => void
+  getSelectedCards: () => Card[]
 }
 
 const loadCardShopScene = (resources: PIXI.IResourceDictionary) => {
@@ -31,7 +31,7 @@ const loadCardShopScene = (resources: PIXI.IResourceDictionary) => {
   cardShopScene.addChild(cardShopDeck)
   let count = 0
 
-  cardShopDeck.setCard = (cardConfigList: CardSet[]) => {
+  cardShopDeck.setCard = (cardConfigList: Card[]) => {
     let prevX = 0
     const padding = 20
     for (let i in cardConfigList) {

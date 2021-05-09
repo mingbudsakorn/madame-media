@@ -25,8 +25,6 @@ const GameLobbyScene = (
   const {
     roomId,
     turn,
-    leftButton,
-    rightButton,
     myAvatar,
     opponentAvatar,
     backButton,

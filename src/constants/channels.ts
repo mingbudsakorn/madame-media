@@ -38,6 +38,18 @@ export const initChannelSlot = () => {
   return (channels as unknown) as ChannelSlots
 }
 
+export const CHANNEL_ORDER = {
+  โซเชียลมีเดีย: 0,
+  ปากต่อปาก: 1,
+  เว็บเพจ: 2,
+  โทรทัศน์: 3,
+  วิทยุ: 4,
+  สิ่งพิมพ์: 5,
+  สื่อนอกบ้าน: 6,
+}
+
+export const CHANNEL_COUNT = 7
+
 export const CHANNEL = {
   SOCIAL_MEDIA: {
     name: 'โซเชียลมีเดีย',

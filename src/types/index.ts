@@ -13,15 +13,13 @@ export interface CardSet {
 }
 
 export interface Card {
-  name: string
-  type: string
-  audio: number
-  visual: number
-  text: number
-  price: number
-  effect: string
-  description: string
-  isReal: boolean
+  name: string // Card name
+  audioFactor: number // Card audio factor
+  visualFactor: number // Card visual factor
+  textFactor: number // Card text factor
+  cost: number // Card cost to play
+  effectType: 'pr' | 'attack' // Card effect type
+  id?: string // Card ID
 }
 
 export interface Channel {
@@ -106,22 +104,7 @@ type ChannelName =
   | 'OUT_OF_HOME'
 
 export interface GameState {
-  money?: number
-  cards?: CardSlots
-  availableChannels?: {
-    SOCIAL_MEDIA: boolean
-    MOUTH: boolean
-    WEBPAGE: boolean
-    TV: boolean
-    RADIO: boolean
-    PUBLICATION: boolean
-    OUT_OF_HOME: boolean
-  }
-  people?: {
-    ours: number
-    neutral: number
-    theirs: number
-  }
+  gold?: number
   player1?: {
     name: string
     avatar: any

@@ -1,6 +1,11 @@
 import * as PIXI from 'pixi.js'
 import loadMoneyBar from '../../../components/moneyBar'
-import { CHANNEL, CHANNEL_THAI_NAME_MAP, initChannelSlot } from '../../../constants/channels'
+import {
+  CHANNEL,
+  CHANNEL_ORDER,
+  CHANNEL_THAI_NAME_MAP,
+  initChannelSlot,
+} from '../../../constants/channels'
 import { TEXT_STYLE, COLOR } from '../../../constants/style'
 import { ChannelInShopList, Channel, ChannelSlots } from '../../../types/index'
 import loadChannelInShop, { ChannelInShopType } from '../../../components/channelInShop'
@@ -10,8 +15,7 @@ interface ShopModalType extends PIXI.Container {
   toggle: () => void
   setTotalCost: (totalCost: number) => void
   getTotalCost: () => number
-  setChannels: (channels: ChannelSlots) => void
-  getChannels: () => ChannelSlots
+  setChannels: (availableChannels: Channel[]) => void
   getSelectedChannels: () => Channel[]
   setAvailableChannels: (availableChannels: Channel[]) => void
   setMoneyText: (number) => void
@@ -19,7 +23,6 @@ interface ShopModalType extends PIXI.Container {
 
 export const loadShopModal = (resources: PIXI.IResourceDictionary) => {
   let isShowing = false
-  let channelSlot = initChannelSlot()
   let channelArray = []
   let totalCost = 0
 
@@ -48,7 +51,7 @@ export const loadShopModal = (resources: PIXI.IResourceDictionary) => {
   const channelContainer = new PIXI.Container()
 
   // channels
-  shopModalWithOverlay.setChannels = (channels: ChannelSlots) => {
+  shopModalWithOverlay.setChannels = (availableChannels: Channel[]) => {
     let prevX = 88
     let padding = 20
     let channelY = panelBg.y + 20
@@ -58,46 +61,34 @@ export const loadShopModal = (resources: PIXI.IResourceDictionary) => {
       channelContainer.removeChild(channelContainer.children[0])
     }
 
-    Object.keys(channels).forEach((channelKey, i) => {
-      const channelInSlot = channels[channelKey]
-      const channelInShop = loadChannelInShop(
-        resources,
-        channelInSlot.channelConfig,
-        channelInSlot.isOwned,
-      )
-      channelInShop.x = i == 0 ? prevX : prevX + channelInShop.width + padding
-      prevX = channelInShop.x
-      channelInShop.y = channelY
-      channelContainer.addChild(channelInShop)
+    // Object.keys(CHANNEL).forEach((channelKey, i) => {
+    //   const channelInShop = loadChannelInShop(resources, CHANNEL[channelKey])
+    //   channelInShop.x = i == 0 ? prevX : prevX + channelInShop.width + padding
+    //   prevX = channelInShop.x
+    //   channelInShop.y = channelY
+    //   channelContainer.addChild(channelInShop)
 
-      channelInShop.tickBox
-        .on('mousedown', async () => {
-          channelInShop.toggleIsSelected()
-          toggleIsSelected(channelInShop)
-        })
-        .on('touchstart', () => {
-          channelInShop.toggleIsSelected()
-          toggleIsSelected(channelInShop)
-        })
+    //   channelInShop.tickBox
+    //     .on('mousedown', async () => {
+    //       channelInShop.toggleIsSelected()
+    //       toggleIsSelected(channelInShop)
+    //     })
+    //     .on('touchstart', () => {
+    //       channelInShop.toggleIsSelected()
+    //       toggleIsSelected(channelInShop)
+    //     })
 
-      channelContainer.addChild(channelInShop)
+    //   channelArray.push(channelInShop)
+    //   channelContainer.addChild(channelInShop)
+    // })
 
-      channelSlot[
-        CHANNEL_THAI_NAME_MAP[channelInSlot.channelConfig.name]
-      ].channelObject = channelInShop
-      channelSlot[CHANNEL_THAI_NAME_MAP[channelInSlot.channelConfig.name]].isOwned =
-        channelInSlot.isOwned
+    // availableChannels.forEach((channel) => {
+    //   const order = CHANNEL_ORDER[channel.name]
+    //   const channelInArray = channelArray[order]
+    //   channelInArray.setIsOwned(true)
+    // })
 
-      channelArray.push({
-        channelConfig: channelInSlot.channelConfig,
-        channelObject: channelInShop,
-      })
-    })
     shopModal.addChild(channelContainer)
-  }
-
-  shopModalWithOverlay.getChannels = () => {
-    return channelSlot
   }
 
   shopModalWithOverlay.getSelectedChannels = () => {

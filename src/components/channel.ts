@@ -5,7 +5,7 @@ import { Card, CardSet, Channel } from '../types'
 import loadCard, { CardType } from './card'
 
 export interface ChannelType extends PIXI.Container {
-  setCard: (card: CardSet, isReal: boolean) => void
+  setCard: (card: Card, isReal: boolean) => void
   getCard: () => CardType
   setIsAvailable: (boolean) => void
   getIsAvailable: () => boolean
@@ -72,7 +72,7 @@ const loadChannel = (
 
   // Card in the channel
   const cardContainer = new PIXI.Container()
-  channel.setCard = (cardConfig: CardSet, isReal: boolean) => {
+  channel.setCard = (cardConfig: Card, isReal: boolean) => {
     // clear former card
     if (cardContainer.children[0]) cardContainer.removeChild(cardContainer.children[0])
     if (cardConfig) {
