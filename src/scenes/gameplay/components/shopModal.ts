@@ -1,14 +1,8 @@
 import * as PIXI from 'pixi.js'
 import loadMoneyBar from '../../../components/moneyBar'
-import {
-  CHANNEL,
-  CHANNEL_COUNT,
-  CHANNEL_ORDER,
-  CHANNEL_THAI_NAME_MAP,
-  initChannelSlot,
-} from '../../../constants/channels'
+import { CHANNEL_COUNT } from '../../../constants/channels'
 import { TEXT_STYLE, COLOR } from '../../../constants/style'
-import { ChannelInShopList, Channel, ChannelSlots } from '../../../types/index'
+import { Channel } from '../../../types/index'
 import loadChannelInShop, { ChannelInShopType } from '../../../components/channelInShop'
 
 interface ShopModalType extends PIXI.Container {
@@ -68,8 +62,7 @@ export const loadShopModal = (resources: PIXI.IResourceDictionary) => {
     }
     allChannels.forEach((channelConfig) => {
       const channelObject = loadChannelInShop(resources, channelConfig)
-      const order = CHANNEL_ORDER[channelConfig.name]
-      const channelContainer = channelContainerArray[order]
+      const channelContainer = channelContainerArray[channelConfig.type]
 
       channelObject.tickBox
         .on('mousedown', async () => {
@@ -82,16 +75,17 @@ export const loadShopModal = (resources: PIXI.IResourceDictionary) => {
         })
 
       channelContainer.addChild(channelObject)
-      channelArray[order] = channelObject
+      channelArray[channelConfig.type] = channelObject
     })
   }
 
   shopModalWithOverlay.updateChannels = (availableChannels: Channel[]) => {
     availableChannels.forEach((channelConfig) => {
-      const order = CHANNEL_ORDER[channelConfig.name]
-      const channelObject = channelArray[order]
+      const channelObject = channelArray[channelConfig.type]
 
       channelObject.setIsOwned(true)
+
+      setTotalCost(0)
     })
   }
 

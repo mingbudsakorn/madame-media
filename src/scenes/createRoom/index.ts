@@ -122,13 +122,15 @@ const CreateRoomScene = (
       avatar: avatarList[avatarIndex],
       setting: {
         numberOfRound: turn,
+        // numberOfRound: 2,
       },
     })
     if (res && res.data) {
       gameState = {
         ...gameState,
         gameId: res.data.gameId,
-        turns: res.data.setting.numberOfRound,
+        rounds: res.data.setting.numberOfRound,
+        // rounds: 2,
         playerId: res.data.playerId,
       }
       setCurrentScene(scenes.gameLobby, gameState, nextPossibleScenes[scenes.gameLobby])

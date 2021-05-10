@@ -7,20 +7,7 @@ import loadChannelContainer from './components/channelContainer'
 import loadPeopleBar from '../../components/peopleBar'
 import loadSpecialActionContainer from './components/specialActionContainer'
 import loadSummaryModal from './components/summaryModal'
-// // // test
-// // import loadChannel from '../../components/Channel.js'
-// // import { CHANNEL } from '../../utils/channel.js'
-// import { CARD } from '../../constants/card'
-
-const emptySlot = {
-  SOCIAL_MEDIA: null,
-  MOUTH: null,
-  WEBPAGE: null,
-  TV: null,
-  RADIO: null,
-  PUBLICATION: null,
-  OUT_OF_HOME: null,
-}
+import { Channel } from '../../types'
 
 const duelScene = new PIXI.Container()
 duelScene.position.set(0, 0)
@@ -34,11 +21,11 @@ const loadDuelScene = (resources: PIXI.IResourceDictionary) => {
   duelCompareBg.position.set(66, 296)
   duelScene.addChild(duelCompareBg)
 
-  const opponentChannelContainer = loadChannelContainer(resources, emptySlot, false)
+  const opponentChannelContainer = loadChannelContainer(resources, false)
   opponentChannelContainer.position.set(66, 50)
   duelScene.addChild(opponentChannelContainer)
 
-  const myChannelContainer = loadChannelContainer(resources, emptySlot, true)
+  const myChannelContainer = loadChannelContainer(resources, true)
   myChannelContainer.position.set(opponentChannelContainer.x, 645)
   duelScene.addChild(myChannelContainer)
 
@@ -64,7 +51,7 @@ const loadDuelScene = (resources: PIXI.IResourceDictionary) => {
       myChannelContainer,
       peopleBar,
       specialActionContainer,
-      summaryModal
+      summaryModal,
     },
   }
 }

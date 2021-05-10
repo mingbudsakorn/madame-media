@@ -9,32 +9,9 @@ import { CARD } from '../../constants/card'
 import { SPECIAL_ACTION } from '../../constants/gameConfig'
 
 import socket from '../../socket'
+import axios from 'axios'
 
-const mockOpponentCard = (resources: PIXI.IResourceDictionary) => {
-  const card1 = loadCard(resources, CARD[12])
-  const card2 = loadCard(resources, CARD[8])
-  return {
-    SOCIAL_MEDIA: null,
-    MOUTH: card1,
-    WEBPAGE: null,
-    TV: card2,
-    RADIO: null,
-    PUBLICATION: null,
-    OUT_OF_HOME: null,
-  }
-}
-
-const mockSummary = () => {
-  return {
-    SOCIAL_MEDIA: null,
-    MOUTH: OVERLAY.expose,
-    WEBPAGE: null,
-    TV: OVERLAY.factCheck,
-    RADIO: null,
-    PUBLICATION: null,
-    OUT_OF_HOME: null,
-  }
-}
+const url = process.env.BACKEND_URL
 
 const DuelScene = (
   resources: PIXI.IResourceDictionary,
@@ -52,46 +29,90 @@ const DuelScene = (
     gameState = settingState
   }
 
-  // DUEL RESULTS
-  socket.on('battle-result', (res) => {
-    console.log(res)
-  })
-
   const {
     duelCompareBg,
     opponentChannelContainer,
     myChannelContainer,
     specialActionContainer,
     summaryModal,
+    peopleBar,
   } = duelScene.children
 
-  scene.onAppear = () => {
-    // const channelPadding = 25
-    // let channelCount = 0
-    // setInterval(() => {
-    //   if (channelCount >= 6) {
-    //     clearInterval()
-    //     duelCompareBg.visible = false
-    //     myChannelContainer.visible = false
-    //     // example
-    //     // specialActionContainer.moneyBar.setMoney(1000)
-        // specialActionContainer.visible = true
-    //     // setCurrentScene(scenes.gameplay)
-    //     return
-    //   }
-    //   channelCount += 1
-    //   duelCompareBg.x = duelCompareBg.x + duelCompareBg.width + channelPadding
-    // }, 2000)
+  // TIMER
+  socket.on('countdown', (timeLeft) => {
+    if (timeLeft <= 0) {
+      showSummary()
+    } else {
+      specialActionContainer.setTime(timeLeft)
+    }
+  })
 
-    const { cards } = gameState
-
-    myChannelContainer.setChannels(cards)
-    opponentChannelContainer.setChannels(mockOpponentCard(resources))
-
-    //set summary
-    myChannelContainer.setSummary(cards, mockSummary())
-    opponentChannelContainer.setSummary(mockOpponentCard(resources), mockSummary())
+  const showSummary = () => {
+    // myChannelContainer.setSummary(channelSlots, mockSummary())
     summaryModal.visible = true
+  }
+
+  const nextTurn = () => {
+    if (gameState.currentRound === gameState.rounds) {
+      setCurrentScene(scenes.endGame, gameState, nextPossibleScenes[scenes.endGame])
+    } else {
+      setCurrentScene(scenes.cardShop, gameState, nextPossibleScenes[scenes.cardShop])
+    }
+  }
+
+  summaryModal.nextTurnButton.on('mousedown', nextTurn).on('touchstart', nextTurn)
+
+  specialActionContainer.skipButton.on('mousedown', showSummary).on('touchstart', showSummary)
+
+  scene.onAppear = async () => {
+    // INIT CHANNEL NAMES
+    const { allChannels, battleResult, playerId, gold } = gameState
+
+    opponentChannelContainer.initChannels(allChannels)
+
+    const res = await axios.get(
+      `${url}/state?gameId=${gameState.gameId}&playerId=${gameState.playerId}`,
+    )
+    if (res && res.data) {
+      const { channelSlots, people, opponent } = res.data
+      myChannelContainer.setCards(channelSlots)
+      // INIT PEOPLE
+      peopleBar.setPeople(people, opponent)
+    }
+
+    const channelPadding = 25
+    const resultCount = battleResult.length
+    let currentDuel = 0
+    const timer = setInterval(() => {
+      if (currentDuel >= resultCount - 1) {
+        clearInterval(timer)
+        duelCompareBg.visible = false
+        myChannelContainer.visible = false
+
+        specialActionContainer.moneyBar.setMoney(gold)
+        specialActionContainer.visible = true
+
+        axios.post(`${url}/ready-special-action`, {
+          gameId: gameState.gameId,
+          playerId: gameState.playerId,
+        })
+
+        return
+      }
+
+      let opponentId = ''
+      const sampleResult = battleResult[0]
+      Object.keys(sampleResult).forEach((id) => {
+        if (id !== playerId) opponentId = id
+      })
+
+      peopleBar.setPeople(
+        battleResult[currentDuel][playerId],
+        battleResult[currentDuel][opponentId],
+      )
+      duelCompareBg.x = duelCompareBg.x + duelCompareBg.width + channelPadding
+      currentDuel += 1
+    }, 2000)
   }
 
   return scene

@@ -3,16 +3,8 @@ import { COLOR, TEXT_STYLE } from '../../../constants/style'
 import { loadMoneyBar, MoneyBarType } from '../../../components/moneyBar'
 import { SPECIAL_ACTION } from '../../../constants/gameConfig'
 import loadFactCheck from './factCheckModal'
-import loadSpy from './spyModal'
-import loadExpose from './exposeModal'
-import {CARD} from '../../../constants/card'
-const mockOpponentCardList = [
-  CARD[0].real,
-  CARD[1].real,
-  CARD[2].real,
-  CARD[3].real,
-  CARD[4].real
-]
+import { CARD } from '../../../constants/card'
+const mockOpponentCardList = [CARD[0].real, CARD[1].real, CARD[2].real, CARD[3].real, CARD[4].real]
 interface SpecialActionContainerType extends PIXI.Container {
   skipButton: PIXI.Sprite
   factCheckButton: PIXI.Sprite
@@ -31,8 +23,11 @@ const loadSpecialActionContainer = (resources: PIXI.IResourceDictionary) => {
   timeLeftText.position.set(0, -42)
   specialActionContainer.addChild(timeLeftText)
 
-  const timeLeft = new PIXI.Text(SPECIAL_ACTION.INIT_TIME.toString(), TEXT_STYLE.SUBHEADER_THAI_RED_PURPLE)
-  timeLeft.anchor.set(0.5,0)
+  const timeLeft = new PIXI.Text(
+    SPECIAL_ACTION.INIT_TIME.toString(),
+    TEXT_STYLE.SUBHEADER_THAI_RED_PURPLE,
+  )
+  timeLeft.anchor.set(0.5, 0)
   timeLeft.position.set(timeLeftText.x + timeLeftText.width + 40, timeLeftText.y)
   specialActionContainer.addChild(timeLeft)
 
@@ -41,22 +36,23 @@ const loadSpecialActionContainer = (resources: PIXI.IResourceDictionary) => {
   specialActionContainer.addChild(secondText)
 
   const specialActionBg = new PIXI.Sprite(resources['art/special-action-bg'].texture)
-  specialActionBg.position.set(0,0)
+  specialActionBg.position.set(0, 0)
   specialActionContainer.addChild(specialActionBg)
 
   const specialActionText = new PIXI.Text('การกระทำพิเศษ', TEXT_STYLE.HEADER_THAI)
   specialActionText.anchor.set(0.5, 0)
-  specialActionText.position.set(specialActionBg.width/2, 32)
+  specialActionText.position.set(specialActionBg.width / 2, 32)
   specialActionContainer.addChild(specialActionText)
 
   const question = new PIXI.Sprite(resources['art/special-action-question'].texture)
   question.anchor.set(0, 0.5)
   question.interactive = true
   question.buttonMode = true
-  question
-    .on('mouseover', () => onHoverSpecialActionButton(0))
-    .on('mouseout', () => onMouseOut(0))
-  question.position.set(specialActionText.x + specialActionText.width/2 + 20, specialActionText.y + specialActionText.height/2)
+  question.on('mouseover', () => onHoverSpecialActionButton(0)).on('mouseout', () => onMouseOut(0))
+  question.position.set(
+    specialActionText.x + specialActionText.width / 2 + 20,
+    specialActionText.y + specialActionText.height / 2,
+  )
   specialActionContainer.addChild(question)
 
   let padding = 100
@@ -77,11 +73,14 @@ const loadSpecialActionContainer = (resources: PIXI.IResourceDictionary) => {
   factCheckButton
     .on('mouseover', () => onHoverSpecialActionButton(1))
     .on('mouseout', () => onMouseOut(1))
-    .on('mousedown', () => loadFactCheck(resources,mockOpponentCardList))
+    .on('mousedown', () => loadFactCheck(resources, mockOpponentCardList))
   specialActionButtonContainer.addChild(factCheckButton)
 
   const exposeButton = new PIXI.Sprite(resources['art/expose-btn'].texture)
-  exposeButton.position.set(factCheckButton.x + factCheckButton.width + btnPadding, factCheckButton.y)
+  exposeButton.position.set(
+    factCheckButton.x + factCheckButton.width + btnPadding,
+    factCheckButton.y,
+  )
   exposeButton.interactive = true
   exposeButton.buttonMode = true
   exposeButton
@@ -93,9 +92,7 @@ const loadSpecialActionContainer = (resources: PIXI.IResourceDictionary) => {
   spyButton.position.set(exposeButton.x + exposeButton.width + btnPadding, exposeButton.y)
   spyButton.interactive = true
   spyButton.buttonMode = true
-  spyButton
-    .on('mouseover', () => onHoverSpecialActionButton(3))
-    .on('mouseout', () => onMouseOut(3))
+  spyButton.on('mouseover', () => onHoverSpecialActionButton(3)).on('mouseout', () => onMouseOut(3))
   specialActionButtonContainer.addChild(spyButton)
 
   const descriptionBg = new PIXI.Sprite(resources['art/special-action-description-bg'].texture)
@@ -108,22 +105,25 @@ const loadSpecialActionContainer = (resources: PIXI.IResourceDictionary) => {
   skipButton.position.set(descriptionBg.x, descriptionBg.y + descriptionBg.height + 20)
   specialActionContainer.addChild(skipButton)
 
-  const textStyle =  new PIXI.TextStyle({
+  const textStyle = new PIXI.TextStyle({
     fontFamily: 'Chonburi',
     fontSize: 36,
     align: 'center',
     leading: 10,
     breakWords: true,
     wordWrap: true,
-    wordWrapWidth: descriptionBg.width - 20
+    wordWrapWidth: descriptionBg.width - 20,
   })
 
   const descriptionText = new PIXI.Text(SPECIAL_ACTION.DEFAULT_DES, textStyle)
   descriptionText.anchor.set(0.5)
-  descriptionText.position.set(descriptionBg.x + descriptionBg.width/2, descriptionBg.y + descriptionBg.height/2)
+  descriptionText.position.set(
+    descriptionBg.x + descriptionBg.width / 2,
+    descriptionBg.y + descriptionBg.height / 2,
+  )
   specialActionContainer.addChild(descriptionText)
 
-  const textStyle2 =  new PIXI.TextStyle({
+  const textStyle2 = new PIXI.TextStyle({
     fontFamily: 'Chonburi',
     fontSize: 36,
     align: 'center',
@@ -131,19 +131,21 @@ const loadSpecialActionContainer = (resources: PIXI.IResourceDictionary) => {
     leading: 10,
     breakWords: true,
     wordWrap: true,
-    wordWrapWidth: specialActionBg.width - 50
+    wordWrapWidth: specialActionBg.width - 50,
   })
 
   const generalDescription = new PIXI.Text(SPECIAL_ACTION.GENERAL_DES, textStyle2)
   generalDescription.anchor.set(0.5)
-  generalDescription.position.set(specialActionBg.x + specialActionBg.width/2, specialActionBg.y + specialActionBg.height/2)
+  generalDescription.position.set(
+    specialActionBg.x + specialActionBg.width / 2,
+    specialActionBg.y + specialActionBg.height / 2,
+  )
   specialActionContainer.addChild(generalDescription)
   generalDescription.visible = false
 
-
   const onHoverSpecialActionButton = (id: number) => {
-    switch(id) {
-      case 1: 
+    switch (id) {
+      case 1:
         descriptionText.text = SPECIAL_ACTION.FACK_CHECK_DES
         factCheckButton.texture = resources['art/fack-check-btn-on-hover'].texture
         break
@@ -155,7 +157,7 @@ const loadSpecialActionContainer = (resources: PIXI.IResourceDictionary) => {
         descriptionText.text = SPECIAL_ACTION.SPY_DES
         spyButton.texture = resources['art/spy-btn-on-hover'].texture
         break
-      default: 
+      default:
         specialActionButtonContainer.visible = false
         specialActionBg.texture = resources['art/special-action-bg-2'].texture
         generalDescription.visible = true
@@ -165,8 +167,8 @@ const loadSpecialActionContainer = (resources: PIXI.IResourceDictionary) => {
 
   const onMouseOut = (id: number) => {
     descriptionText.text = SPECIAL_ACTION.DEFAULT_DES
-    switch(id) {
-      case 1: 
+    switch (id) {
+      case 1:
         factCheckButton.texture = resources['art/fack-check-btn'].texture
         break
       case 2:
@@ -175,7 +177,7 @@ const loadSpecialActionContainer = (resources: PIXI.IResourceDictionary) => {
       case 3:
         spyButton.texture = resources['art/spy-btn'].texture
         break
-      default: 
+      default:
         specialActionButtonContainer.visible = true
         specialActionBg.texture = resources['art/special-action-bg'].texture
         generalDescription.visible = false

@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js'
 import { CardType } from '../../../components/card'
 import loadChannel from '../../../components/channel'
-import { CHANNEL_COUNT, CHANNEL_ORDER } from '../../../constants/channels'
+import { CHANNEL_COUNT } from '../../../constants/channels'
 import { TEXT_STYLE } from '../../../constants/style'
 import { Channel } from '../../../types'
 
@@ -47,27 +47,25 @@ export const loadChannelDeck = (resources: PIXI.IResourceDictionary) => {
       channelArray.push(null)
     }
     allChannels.forEach((channel) => {
-      const order = CHANNEL_ORDER[channel.name]
-      const channelContainer = channelContainerArray[order]
+      const channelContainer = channelContainerArray[channel.type]
       const channelObject = loadChannel(resources, channel, false)
       channelContainer.addChild(channelObject)
-      channelArray[order] = channelObject
+      channelObject.interactive = true
+      channelArray[channel.type] = channelObject
     })
   }
 
   // Call this method at initialization
   channelDeck.updateChannels = (availableChannels: Channel[]) => {
     availableChannels.forEach((channelConfig) => {
-      const order = CHANNEL_ORDER[channelConfig.name]
-      const channel = channelArray[order]
+      const channel = channelArray[channelConfig.type]
 
       channel.setIsAvailable(true)
     })
   }
 
-  channelDeck.insertCard = (channelName: string, card: CardType) => {
-    const order = CHANNEL_ORDER[channelName]
-    const selectedChannel = channelArray[order]
+  channelDeck.insertCard = (channelType: string, card: CardType) => {
+    const selectedChannel = channelArray[channelType]
     selectedChannel.setCard(card)
   }
 
@@ -90,6 +88,7 @@ export const loadChannelDeck = (resources: PIXI.IResourceDictionary) => {
 
   return {
     scene: channelDeck,
+    channelArray,
   }
 }
 

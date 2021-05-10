@@ -72,6 +72,7 @@ const loadChannelInShop = (resources: PIXI.IResourceDictionary, channelConfig: C
       tickBox.visible = false
       channelBg.texture = resources['art/owned-channel-bg'].texture
       channelName.style = TEXT_STYLE.BODY_THAI_CHARCOAL
+      isSelected = false
     } else {
       moneyIcon.visible = true
       channelCost.visible = true

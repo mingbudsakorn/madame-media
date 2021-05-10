@@ -70,7 +70,11 @@ const loadCardShopScene = (resources: PIXI.IResourceDictionary) => {
 
   cardShopDeck.getSelectedCards = () => {
     let selectedCards = cardsObject.filter((card) => card.getIsSelected())
-    return selectedCards
+    let selectedConfig = []
+    selectedCards.forEach((card) => {
+      selectedConfig.push(card.getCardConfig())
+    })
+    return selectedConfig
   }
 
   //button
