@@ -94,15 +94,6 @@ export interface Scene extends PIXI.Container {
   setNextPossibleScenes: (scenes: { [key: number]: PIXI.Container }) => void
 }
 
-type ChannelName =
-  | 'SOCIAL_MEDIA'
-  | 'MOUTH'
-  | 'WEBPAGE'
-  | 'TV'
-  | 'RADIO'
-  | 'PUBLICATION'
-  | 'OUT_OF_HOME'
-
 export interface GameState {
   gold?: number
   player1?: {
@@ -117,6 +108,7 @@ export interface GameState {
   playerId?: string
   turns?: number
   currentTurn?: number
+  allChannels?: Channel[]
 }
 
 export interface Button extends PIXI.Sprite {

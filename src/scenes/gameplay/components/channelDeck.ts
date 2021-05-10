@@ -1,20 +1,18 @@
 import * as PIXI from 'pixi.js'
 import { CardType } from '../../../components/card'
 import loadChannel from '../../../components/channel'
-import { CHANNEL, CHANNEL_COUNT, CHANNEL_ORDER } from '../../../constants/channels'
+import { CHANNEL_COUNT, CHANNEL_ORDER } from '../../../constants/channels'
 import { TEXT_STYLE } from '../../../constants/style'
-import { Channel, ChannelSlots } from '../../../types'
+import { Channel } from '../../../types'
 
 interface ChannelDeckType extends PIXI.Container {
   setOnSelect: (boolean) => void
   insertCard: (channel: string, card: CardType) => void
+  initChannels: (allChannels: Channel[]) => void
   updateChannels: (availableChannels: Channel[]) => void
 }
 
-export const loadChannelDeck = (
-  resources: PIXI.IResourceDictionary,
-  availableChannels: Channel[],
-) => {
+export const loadChannelDeck = (resources: PIXI.IResourceDictionary) => {
   const channelDeck = new PIXI.Container() as ChannelDeckType
   channelDeck.position.set(97, 532)
 
@@ -35,21 +33,32 @@ export const loadChannelDeck = (
   let prevChannelX = 37
 
   // Load channels
-  const channelContainerArray = []
-  Object.keys(CHANNEL).forEach((channelKey) => {
-    const channelConfig = CHANNEL[channelKey]
-    const channelContainer = loadChannel(resources, channelConfig, false)
-    channelContainer.x = prevChannelX
-    channelContainer.y = channelY
-    prevChannelX += channelPadding
-    channelDeck.addChild(channelContainer)
-    channelContainerArray.push(channelContainer)
-  })
+  const channelContainerArray = [] // might not be ordered
+  const channelArray = []
 
+  channelDeck.initChannels = (allChannels: Channel[]) => {
+    for (let i = 0; i < CHANNEL_COUNT; i++) {
+      const channelContainer = new PIXI.Container()
+      channelContainer.x = prevChannelX
+      channelContainer.y = channelY
+      prevChannelX += channelPadding + 170
+      channelDeck.addChild(channelContainer)
+      channelContainerArray.push(channelContainer)
+    }
+    allChannels.forEach((channel) => {
+      const order = CHANNEL_ORDER[channel.name]
+      const channelContainer = channelContainerArray[order]
+      const channelObject = loadChannel(resources, channel, false)
+      channelContainer.addChild(channelObject)
+      channelArray.push(channelObject)
+    })
+  }
+
+  // Call this method at initialization
   channelDeck.updateChannels = (availableChannels: Channel[]) => {
     availableChannels.forEach((channelConfig) => {
       const order = CHANNEL_ORDER[channelConfig.name]
-      const channel = channelContainerArray[order]
+      const channel = channelArray[order]
 
       channel.setIsAvailable(true)
     })
@@ -57,7 +66,7 @@ export const loadChannelDeck = (
 
   channelDeck.insertCard = (channelName: string, card: CardType) => {
     const order = CHANNEL_ORDER[channelName]
-    const selectedChannel = channelContainerArray[order]
+    const selectedChannel = channelArray[order]
     selectedChannel.setCard(card)
   }
 

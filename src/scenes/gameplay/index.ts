@@ -14,7 +14,7 @@ import { CARD } from '../../constants/card'
 import socket from '../../socket'
 import axios from 'axios'
 
-socket.emit('start-game')
+// socket.emit('start-game')
 const url = process.env.BACKEND_URL
 
 const GameplayScene = (
@@ -66,26 +66,26 @@ const GameplayScene = (
       player2.setAvatarName(gameState.player2.name)
     }
 
+    // Get all channels
+    const channelsRes = await axios.get(`${url}/channels`)
+    if (channelsRes && channelsRes.data) {
+      gameState.allChannels = channelsRes.data.channelData
+      channelDeck.scene.initChannels(channelsRes.data.channelData)
+    }
+
     // Get Game State
     const res = await axios.get(
       `${url}/state?gameId=${gameState.gameId}&playerId=${gameState.playerId}`,
     )
     if (res && res.data) {
-      const {
-        people,
-        opponent,
-        gold,
-        round,
-        availableChannels,
-        unavailableChannels,
-        cards,
-      } = res.data
+      console.log(res.data)
+      const { people, opponent, gold, round, availableChannels, cards } = res.data
       peopleBar.setPeople(people, opponent)
       moneyBar.setMoney(gold)
       turnText.setTurnText(round)
 
-      // shopModal.scene.setChannels(availableChannels, unavailableChannels)
-      // channelDeck.scene.setAvailableChannels(availableChannels)
+      // shopModal.scene.setChannels(availableChannels)
+      channelDeck.scene.updateChannels(availableChannels)
 
       cardContainer.setCards(cards)
       expandedContainer.scene.setCards(cards)

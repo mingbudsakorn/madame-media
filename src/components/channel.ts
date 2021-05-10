@@ -63,7 +63,7 @@ const loadChannel = (
   channel.addChild(textIcon)
 
   let percentageText = new PIXI.Text(
-    channelConfig.baseFactor + '%',
+    channelConfig.baseFactor * 100 + '%',
     isAvailable ? TEXT_STYLE.BODY_THAI : TEXT_STYLE.BODY_THAI_CHARCOAL,
   )
   percentageText.anchor.set(0.5, 0)

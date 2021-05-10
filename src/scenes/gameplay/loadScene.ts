@@ -108,7 +108,6 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
     expandedContainer.scene.visible = false
   })
   expandedContainer.scene.visible = false
-  gamePlayScene.addChild(expandedContainer.scene)
 
   cardContainer.hitArea = new PIXI.Rectangle(0, 0, 1000, 1000)
   cardContainer.interactive = true
@@ -117,8 +116,8 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
   })
   gamePlayScene.addChild(cardContainer)
 
-  // const channelDeck = loadChannelDeck(resources, initChannelSlot())
-  // gamePlayScene.addChild(channelDeck.scene)
+  const channelDeck = loadChannelDeck(resources)
+  gamePlayScene.addChild(channelDeck.scene)
 
   const specialEvent = new PIXI.Container() as SpecialEventType
   gamePlayScene.addChild(specialEvent)
@@ -159,6 +158,8 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
   waitingModal.setText('กรุณารอสักครู่', 'กรุณารออีกฝั่งกด')
   // waitingModal.toggle()
 
+  gamePlayScene.addChild(expandedContainer.scene)
+
   buyChannelButton
     .on('mousedown', () => shopModal.scene.toggle())
     .on('touchstart', () => shopModal.scene.toggle())
@@ -173,7 +174,7 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
       buyChannelButton,
       peopleText,
       turnText,
-      // channelDeck,
+      channelDeck,
       timeBar,
       peopleBar,
       moneyBar,
