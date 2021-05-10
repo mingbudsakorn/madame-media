@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js'
 import loadMoneyBar from '../../../components/moneyBar'
 import {
   CHANNEL,
+  CHANNEL_COUNT,
   CHANNEL_ORDER,
   CHANNEL_THAI_NAME_MAP,
   initChannelSlot,
@@ -15,7 +16,8 @@ interface ShopModalType extends PIXI.Container {
   toggle: () => void
   setTotalCost: (totalCost: number) => void
   getTotalCost: () => number
-  setChannels: (availableChannels: Channel[]) => void
+  initChannels: (allChannels: Channel[]) => void
+  updateChannels: (availableChannels: Channel[]) => void
   getSelectedChannels: () => Channel[]
   setAvailableChannels: (availableChannels: Channel[]) => void
   setMoneyText: (number) => void
@@ -23,7 +25,6 @@ interface ShopModalType extends PIXI.Container {
 
 export const loadShopModal = (resources: PIXI.IResourceDictionary) => {
   let isShowing = false
-  let channelArray = []
   let totalCost = 0
 
   const shopModalWithOverlay = new PIXI.Container() as ShopModalType
@@ -48,51 +49,54 @@ export const loadShopModal = (resources: PIXI.IResourceDictionary) => {
   moneyBar.position.set(panelBg.x - panelBg.width / 2, 595)
   shopModal.addChild(moneyBar)
 
-  const channelContainer = new PIXI.Container()
+  const channelContainerArray = []
+  const channelArray = []
 
-  // channels
-  shopModalWithOverlay.setChannels = (availableChannels: Channel[]) => {
+  shopModalWithOverlay.initChannels = (allChannels: Channel[]) => {
     let prevX = 88
     let padding = 20
     let channelY = panelBg.y + 20
 
-    // Clear old children
-    while (channelContainer.children[0]) {
-      channelContainer.removeChild(channelContainer.children[0])
+    for (let i = 0; i < CHANNEL_COUNT; i++) {
+      const channelContainer = new PIXI.Container()
+      channelContainer.x = prevX
+      channelContainer.y = channelY
+      shopModal.addChild(channelContainer)
+      channelContainerArray.push(channelContainer)
+      channelArray.push(null)
+      prevX += 220 + padding
     }
+    allChannels.forEach((channelConfig) => {
+      const channelObject = loadChannelInShop(resources, channelConfig)
+      const order = CHANNEL_ORDER[channelConfig.name]
+      const channelContainer = channelContainerArray[order]
 
-    // Object.keys(CHANNEL).forEach((channelKey, i) => {
-    //   const channelInShop = loadChannelInShop(resources, CHANNEL[channelKey])
-    //   channelInShop.x = i == 0 ? prevX : prevX + channelInShop.width + padding
-    //   prevX = channelInShop.x
-    //   channelInShop.y = channelY
-    //   channelContainer.addChild(channelInShop)
+      channelObject.tickBox
+        .on('mousedown', async () => {
+          channelObject.toggleIsSelected()
+          toggleIsSelected(channelObject)
+        })
+        .on('touchstart', () => {
+          channelObject.toggleIsSelected()
+          toggleIsSelected(channelObject)
+        })
 
-    //   channelInShop.tickBox
-    //     .on('mousedown', async () => {
-    //       channelInShop.toggleIsSelected()
-    //       toggleIsSelected(channelInShop)
-    //     })
-    //     .on('touchstart', () => {
-    //       channelInShop.toggleIsSelected()
-    //       toggleIsSelected(channelInShop)
-    //     })
+      channelContainer.addChild(channelObject)
+      channelArray[order] = channelObject
+    })
+  }
 
-    //   channelArray.push(channelInShop)
-    //   channelContainer.addChild(channelInShop)
-    // })
+  shopModalWithOverlay.updateChannels = (availableChannels: Channel[]) => {
+    availableChannels.forEach((channelConfig) => {
+      const order = CHANNEL_ORDER[channelConfig.name]
+      const channelObject = channelArray[order]
 
-    // availableChannels.forEach((channel) => {
-    //   const order = CHANNEL_ORDER[channel.name]
-    //   const channelInArray = channelArray[order]
-    //   channelInArray.setIsOwned(true)
-    // })
-
-    shopModal.addChild(channelContainer)
+      channelObject.setIsOwned(true)
+    })
   }
 
   shopModalWithOverlay.getSelectedChannels = () => {
-    let selectedChannels = channelArray.filter((channel) => channel.channelObject.getIsSelected())
+    let selectedChannels = channelArray.filter((channel) => channel.getIsSelected())
     return selectedChannels
   }
 

@@ -71,6 +71,7 @@ const GameplayScene = (
     if (channelsRes && channelsRes.data) {
       gameState.allChannels = channelsRes.data.channelData
       channelDeck.scene.initChannels(channelsRes.data.channelData)
+      shopModal.scene.initChannels(channelsRes.data.channelData)
     }
 
     // Get Game State
@@ -84,7 +85,7 @@ const GameplayScene = (
       moneyBar.setMoney(gold)
       turnText.setTurnText(round)
 
-      // shopModal.scene.setChannels(availableChannels)
+      shopModal.scene.updateChannels(availableChannels)
       channelDeck.scene.updateChannels(availableChannels)
 
       cardContainer.setCards(cards)

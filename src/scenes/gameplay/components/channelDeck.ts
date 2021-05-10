@@ -44,13 +44,14 @@ export const loadChannelDeck = (resources: PIXI.IResourceDictionary) => {
       prevChannelX += channelPadding + 170
       channelDeck.addChild(channelContainer)
       channelContainerArray.push(channelContainer)
+      channelArray.push(null)
     }
     allChannels.forEach((channel) => {
       const order = CHANNEL_ORDER[channel.name]
       const channelContainer = channelContainerArray[order]
       const channelObject = loadChannel(resources, channel, false)
       channelContainer.addChild(channelObject)
-      channelArray.push(channelObject)
+      channelArray[order] = channelObject
     })
   }
 

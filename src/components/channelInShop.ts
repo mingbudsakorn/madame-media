@@ -7,25 +7,17 @@ export interface ChannelInShopType extends PIXI.Container {
   getIsSelected: () => boolean
   setIsSelected: (isSelected: boolean) => void
   toggleIsSelected: () => void
+  setIsOwned: (isOwned: boolean) => void
   tickBox: PIXI.Sprite
 }
 
-const loadChannelInShop = (
-  resources: PIXI.IResourceDictionary,
-  channelConfig: Channel,
-  isOwned: boolean,
-) => {
+const loadChannelInShop = (resources: PIXI.IResourceDictionary, channelConfig: Channel) => {
   const channelInShop = new PIXI.Container() as ChannelInShopType
 
   let isSelected = false
-  let channelName = new PIXI.Text(
-    channelConfig.name,
-    isOwned ? TEXT_STYLE.BODY_THAI_CHARCOAL : TEXT_STYLE.BODY_THAI,
-  )
+  let channelName = new PIXI.Text(channelConfig.name, TEXT_STYLE.BODY_THAI)
 
-  let channelBg = isOwned
-    ? new PIXI.Sprite(resources['art/owned-channel-bg'].texture)
-    : new PIXI.Sprite(resources['art/not-owned-channel-bg'].texture)
+  let channelBg = new PIXI.Sprite(resources['art/not-owned-channel-bg'].texture)
 
   channelName.anchor.set(0.5, 0)
   channelName.position.set(channelBg.width / 2, 5)
@@ -58,20 +50,35 @@ const loadChannelInShop = (
   textIcon.position.set(visualIcon.x + visualIcon.width + 23, audioIcon.y)
   channelInShop.addChild(textIcon)
 
-  if (!isOwned) {
-    const moneyIcon = new PIXI.Sprite(resources['art/coin'].texture)
-    const channelCost = new PIXI.Text(channelConfig.price.toString(), TEXT_STYLE.HEADER_THAI)
-    moneyIcon.anchor.set(0.5, 0)
-    channelCost.anchor.set(0.5, 0)
+  // OWNED OR NOT
+  const moneyIcon = new PIXI.Sprite(resources['art/coin'].texture)
+  const channelCost = new PIXI.Text(channelConfig.price.toString(), TEXT_STYLE.HEADER_THAI)
+  moneyIcon.anchor.set(0.5, 0)
+  channelCost.anchor.set(0.5, 0)
 
-    moneyIcon.height = 45
-    moneyIcon.width = 45
+  moneyIcon.height = 45
+  moneyIcon.width = 45
 
-    moneyIcon.position.set(channelBg.width / 2, channelBg.height / 2 - 20)
-    channelCost.position.set(channelBg.width / 2, moneyIcon.y + moneyIcon.height + 10)
+  moneyIcon.position.set(channelBg.width / 2, channelBg.height / 2 - 20)
+  channelCost.position.set(channelBg.width / 2, moneyIcon.y + moneyIcon.height + 10)
 
-    channelInShop.addChild(moneyIcon)
-    channelInShop.addChild(channelCost)
+  channelInShop.addChild(moneyIcon)
+  channelInShop.addChild(channelCost)
+
+  channelInShop.setIsOwned = (newIsOwned: boolean) => {
+    if (newIsOwned) {
+      moneyIcon.visible = false
+      channelCost.visible = false
+      tickBox.visible = false
+      channelBg.texture = resources['art/owned-channel-bg'].texture
+      channelName.style = TEXT_STYLE.BODY_THAI_CHARCOAL
+    } else {
+      moneyIcon.visible = true
+      channelCost.visible = true
+      tickBox.visible = true
+      channelBg.texture = resources['art/not-owned-channel-bg'].texture
+      channelName.style = TEXT_STYLE.BODY_THAI
+    }
   }
 
   const tickBox = new PIXI.Sprite(resources['art/unchecked-channel'].texture)
@@ -102,8 +109,6 @@ const loadChannelInShop = (
   channelInShop.getChannelConfig = () => {
     return channelConfig
   }
-
-  tickBox.visible = !isOwned
 
   channelInShop.tickBox = tickBox
 
