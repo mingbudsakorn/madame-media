@@ -13,7 +13,7 @@ import loadEndGameScene from './scenes/endGame'
 const gameController = (app: PIXI.Application) => {
   const resources = app.loader.resources
 
-  let currentScene = scenes.startGame
+  let currentScene = scenes.duel
   const setCurrentScene = (scene: number, gameState: GameState, sceneObject: Scene) => {
     currentScene = scene
     sceneObject.setGameState(gameState)

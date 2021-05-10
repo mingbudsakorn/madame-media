@@ -3,6 +3,12 @@ import { TEXT_STYLE } from '../../../constants/style'
 import { CHANNEL } from '../../../constants/channels'
 import { Card, CardSlots, SummarySlots } from '../../../types'
 import { OVERLAY } from '../../../constants/specialAction'
+import { SpecialActionContainerType } from './specialActionContainer'
+import {
+  loadToSelectOverlayContainer,
+  ToSelectOverlayContainerType,
+} from './toSelectOverlayContainer'
+import { CardType } from '../../../components/card'
 
 interface DuelChannelType extends PIXI.Container {
   bg: PIXI.Sprite
@@ -13,9 +19,11 @@ interface ChannelContainerType extends PIXI.Container {
   setSummary: (cardList: CardSlots, summaryList: SummarySlots) => void
   setToSelect: () => void
   select: (card: Card) => void
+  getSelectedCard: () => CardType
+  toSelectOverlayContainer: ToSelectOverlayContainerType
 }
 
-const loadDuelChannel = (resources: PIXI.IResourceDictionary, channel, isBottom) => {
+const loadDuelChannel = (resources: PIXI.IResourceDictionary, channel, isBottom: boolean) => {
   const duelChannel = new PIXI.Container() as DuelChannelType
 
   const duelChannelBg = new PIXI.Sprite(resources['art/duel-channel-bg'].texture)
@@ -40,9 +48,10 @@ export const loadChannelContainer = (
   resources: PIXI.IResourceDictionary,
   cardList: CardSlots,
   isBottom: boolean,
+  specialActionContainer: SpecialActionContainerType,
 ) => {
   // have to set position outside
-  let localCardList = []
+  let localCardList: CardType[] = []
   const channelPadding = 25
   const channelContainer = new PIXI.Container() as ChannelContainerType
 
@@ -90,7 +99,7 @@ export const loadChannelContainer = (
         card.position.set(channelList[i].x, channelList[i].bg.y)
         card.width = channel0.bg.width
         card.height = channel0.bg.height
-        localCardList.push(card)
+        localCardList[i] = card
         channelContainer.addChild(card)
       }
     })
@@ -98,6 +107,20 @@ export const loadChannelContainer = (
 
   channelContainer.setChannels = (channels: CardSlots) => {
     loadCards(channels)
+  }
+
+  const toSelectOverlayContainer = loadToSelectOverlayContainer(
+    resources,
+    specialActionContainer,
+  )
+
+  channelContainer.setToSelect = () => {
+    toSelectOverlayContainer.setCardList(localCardList)
+    channelContainer.addChild(toSelectOverlayContainer)
+  }
+
+  channelContainer.getSelectedCard = () => {
+    return toSelectOverlayContainer.getSelectedCard()
   }
 
   channelContainer.setSummary = (cardList: CardSlots, summaryList: SummarySlots) => {

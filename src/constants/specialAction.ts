@@ -4,4 +4,5 @@ export const OVERLAY = {
   select: 'art/selected-overlay',
   factCheck: 'art/have-been-catch-overlay',
   expose: 'art/have-been-expose-overlay',
+  toSlect: 'art/to-select-overlay',
 }

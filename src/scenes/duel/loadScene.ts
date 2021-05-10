@@ -34,22 +34,22 @@ const loadDuelScene = (resources: PIXI.IResourceDictionary) => {
   duelCompareBg.position.set(66, 296)
   duelScene.addChild(duelCompareBg)
 
-  const opponentChannelContainer = loadChannelContainer(resources, emptySlot, false)
+  const specialActionContainer = loadSpecialActionContainer(resources)
+  specialActionContainer.position.set(65, 635)
+  duelScene.addChild(specialActionContainer)
+  specialActionContainer.visible = false
+
+  const opponentChannelContainer = loadChannelContainer(resources, emptySlot, false, specialActionContainer)
   opponentChannelContainer.position.set(66, 50)
   duelScene.addChild(opponentChannelContainer)
 
-  const myChannelContainer = loadChannelContainer(resources, emptySlot, true)
+  const myChannelContainer = loadChannelContainer(resources, emptySlot, true, specialActionContainer)
   myChannelContainer.position.set(opponentChannelContainer.x, 645)
   duelScene.addChild(myChannelContainer)
 
   const peopleBar = loadPeopleBar(resources, 0, 0)
   peopleBar.position.set(435, 509)
   duelScene.addChild(peopleBar)
-
-  const specialActionContainer = loadSpecialActionContainer(resources)
-  specialActionContainer.position.set(65, 635)
-  duelScene.addChild(specialActionContainer)
-  specialActionContainer.visible = false
 
   const summaryModal = loadSummaryModal(resources)
   duelScene.addChild(summaryModal)

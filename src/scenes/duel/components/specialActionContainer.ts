@@ -6,8 +6,10 @@ import loadFactCheck from './factCheckModal'
 // import loadSpy from './spyModal'
 // import loadExpose from './exposeModal'
 import { CARD } from '../../../constants/card'
+
 const mockOpponentCardList = [CARD[0].real, CARD[1].real, CARD[2].real, CARD[3].real, CARD[4].real]
-interface SpecialActionContainerType extends PIXI.Container {
+
+export interface SpecialActionContainerType extends PIXI.Container {
   skipButton: PIXI.Sprite
   factCheckButton: PIXI.Sprite
   exposeButton: PIXI.Sprite
