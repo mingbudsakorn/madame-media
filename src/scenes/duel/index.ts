@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js'
 import loadDuelScene from './loadScene'
 import { GameState, Scene, SceneWrapper } from '../../types'
 import { scenes } from '../../constants/scenes'
-import { OVERLAY } from '../../constants/specialAction'
+import { OVERLAY, RESULT } from '../../constants/specialAction'
 import { gameState as initGameState } from '../../constants/initialState'
 import loadCard from '../../components/card'
 import { CARD } from '../../constants/card'
@@ -89,17 +89,18 @@ const DuelScene = (
     opponentChannelContainer.setChannels(mockOpponentCard(resources))
 
     //set to fact check
-    duelCompareBg.visible = false
-    myChannelContainer.visible = false
-    specialActionContainer.visible = true
+    // duelCompareBg.visible = false
+    // myChannelContainer.visible = false
+    // specialActionContainer.visible = true
     // specialActionContainer.setToFactCheck()
     // specialActionContainer.setToExpose()
-    // specialActionContainer.setSelect(1)
     // opponentChannelContainer.setToSelect()
     
-    //when click confirm
+    //when click confirm special action
     // opponentChannelContainer.getSelectedCard()
-    
+    // specialActionContainer.displayFactCheckResult(RESULT.fail)
+    // specialActionContainer.displayExposeResult(RESULT.success)
+
     //set summary
     // myChannelContainer.setSummary(cards, mockSummary())
     // opponentChannelContainer.setSummary(mockOpponentCard(resources), mockSummary())

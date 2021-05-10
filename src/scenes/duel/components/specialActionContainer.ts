@@ -21,6 +21,8 @@ export interface SpecialActionContainerType extends PIXI.Container {
   setToFactCheck: () => void
   setToExpose: () => void
   setSelect: (n: number) => void
+  displayFactCheckResult: (text: String) => void
+  displayExposeResult: (text: String) => void
 }
 
 const loadSpecialActionContainer = (resources: PIXI.IResourceDictionary) => {
@@ -193,11 +195,64 @@ const loadSpecialActionContainer = (resources: PIXI.IResourceDictionary) => {
     195,
   )
 
+  const resultText = new PIXI.Text('', TEXT_STYLE.SUPER_HEADER_THAI_RED_PURPLE)
+  resultText.anchor.set(0.5, 1)
+  resultText.position.set(subSpecialActionBg.width / 2, selectCardTextContainer.y + 90 )
+  subSpecialActionContainer.addChild(resultText)
+  resultText.visible = false
+
   const confirmButton = new PIXI.Sprite(resources['art/long-confirm-btn'].texture)
   confirmButton.position.set(skipButton.x, skipButton.y)
   confirmButton.interactive = true
   confirmButton.buttonMode = true
   subSpecialActionContainer.addChild(confirmButton)
+
+  const factCheckAgainButton = new PIXI.Sprite(resources['art/fact-check-again-btn'].texture)
+  factCheckAgainButton.position.set(confirmButton.x, confirmButton.y)
+  factCheckAgainButton.visible = false
+  factCheckAgainButton.interactive = true
+  factCheckAgainButton.buttonMode = true
+  specialActionContainer.addChild(factCheckAgainButton)
+
+  const exposeAgainButton = new PIXI.Sprite(resources['art/expose-again-btn'].texture)
+  exposeAgainButton.position.set(confirmButton.x, confirmButton.y)
+  exposeAgainButton.visible = false
+  exposeAgainButton.interactive = true
+  exposeAgainButton.buttonMode = true
+  specialActionContainer.addChild(exposeAgainButton)
+
+  const finishButton = new PIXI.Sprite(resources['art/small-finish-special-action-btn'].texture)
+  finishButton.anchor.set(1,0)
+  finishButton.position.set(confirmButton.x + confirmButton.width, confirmButton.y)
+  finishButton.visible = false
+  finishButton.interactive = true
+  finishButton.buttonMode = true
+  specialActionContainer.addChild(finishButton)
+
+  const setResultText = (text: string) => {
+    resultText.text = text
+  }
+
+  const displayResult = () => {
+    selectCardTextContainer.visible = false
+    confirmButton.visible = false
+    resultText.visible = true
+    finishButton.visible = true
+  }
+
+  const displayFactCheckResult = (text: string) => {
+    setResultText(text)
+    descriptionText.text = SPECIAL_ACTION.FACT_CHECK_AGAIN
+    factCheckAgainButton.visible = true
+    displayResult()
+  }
+
+  const displayExposeResult = (text: string) => {
+    setResultText(text)
+    descriptionText.text = SPECIAL_ACTION.EXPOSE_AGAIN
+    exposeAgainButton.visible = true
+    displayResult()
+  }
 
   const onHoverSpecialActionButton = (id: number) => {
     switch (id) {
@@ -288,6 +343,8 @@ const loadSpecialActionContainer = (resources: PIXI.IResourceDictionary) => {
   specialActionContainer.exposeButton = exposeButton
   specialActionContainer.spyButton = spyButton
   specialActionContainer.moneyBar = moneyBar
+  specialActionContainer.displayFactCheckResult = displayFactCheckResult
+  specialActionContainer.displayExposeResult = displayExposeResult
 
   return specialActionContainer
 }

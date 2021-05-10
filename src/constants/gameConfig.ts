@@ -23,6 +23,8 @@ export const SPECIAL_ACTION = {
   DEFAULT_DES: 'กรุณาเลือกการกระทำพิเศษ',
   GENERAL_DES: 'การกระทำพิเศษ คือ การกระทำที่จะสามารถทำให้คุณได้เปรียบคู่ต่อสู้ได้ บลาๆๆๆ',
   INIT_TIME: 30,
+  FACT_CHECK_AGAIN: 'ตรวจสอบอีกครั้ง 75 เหรียญ',
+  EXPOSE_AGAIN: 'เปิดโปงอีกครั้ง 125 เหรียญ'
 }
 
 export const RESULT = {

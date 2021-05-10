@@ -28,6 +28,11 @@ export const TEXT_STYLE = {
     fontSize: 96,
     fill: COLOR.CHARCOAL,
   }),
+  SUPER_HEADER_THAI_RED_PURPLE: new PIXI.TextStyle({
+    fontFamily: 'Chonburi',
+    fontSize: 96,
+    fill: COLOR.RED_PURPLE,
+  }),
   HEADER_THAI: new PIXI.TextStyle({
     fontFamily: 'Chonburi',
     fontSize: 48,

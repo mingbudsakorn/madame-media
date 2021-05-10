@@ -6,3 +6,8 @@ export const OVERLAY = {
   expose: 'art/have-been-expose-overlay',
   toSlect: 'art/to-select-overlay',
 }
+
+export const RESULT = {
+  success: 'สำเร็จ!!',
+  fail: 'ล้มเหลว!!'
+}
