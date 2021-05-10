@@ -20,6 +20,7 @@ export interface SpecialActionContainerType extends PIXI.Container {
   setTime: (time: number) => void
   setToFactCheck: () => void
   setToExpose: () => void
+  setToSpy: () => void
   setSelect: (n: number) => void
   displayFactCheckResult: (text: String) => void
   displayExposeResult: (text: String) => void
@@ -229,6 +230,11 @@ const loadSpecialActionContainer = (resources: PIXI.IResourceDictionary) => {
   finishButton.buttonMode = true
   specialActionContainer.addChild(finishButton)
 
+  const displaySpyText = new PIXI.Text('การ์ดของฝั่งตรงข้ามเป็นดังนี้', TEXT_STYLE.HEADER_THAI)
+  displaySpyText.position.set(subSpecialActionBg.width/2 - displaySpyText.width/2, 195)
+  subSpecialActionContainer.addChild(displaySpyText)
+  displaySpyText.visible = false
+
   const setResultText = (text: string) => {
     resultText.text = text
   }
@@ -332,6 +338,18 @@ const loadSpecialActionContainer = (resources: PIXI.IResourceDictionary) => {
     pleaseSelectCardText.text = 'เลือกการ์ดที่จะเปิดโปง'
     descriptionText.text = SPECIAL_ACTION.EXPOSE_DES
     updateTextPosition()
+  }
+
+  specialActionContainer.setToSpy = () => {
+    subSpecialActionContainer.visible = true
+    specialActionButtonContainer.visible = false
+    actionText.text = 'สอดส่อง'
+    selectCardTextContainer.visible = false
+    descriptionText.text = 'หวังว่าคุณจะพอรู้กลยุทธ์ของคู่แข่ง มากขึ้นนะ!!'
+    displaySpyText.visible = true
+    finishButton.texture = resources['art/long-finish-btn'].texture
+    confirmButton.visible = false
+    finishButton.visible = true
   }
 
   specialActionContainer.setSelect = (n: number) => {

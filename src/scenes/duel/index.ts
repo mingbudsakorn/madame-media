@@ -89,12 +89,13 @@ const DuelScene = (
     opponentChannelContainer.setChannels(mockOpponentCard(resources))
 
     //set to fact check
-    // duelCompareBg.visible = false
-    // myChannelContainer.visible = false
-    // specialActionContainer.visible = true
+    duelCompareBg.visible = false
+    myChannelContainer.visible = false
+    specialActionContainer.visible = true
     // specialActionContainer.setToFactCheck()
     // specialActionContainer.setToExpose()
     // opponentChannelContainer.setToSelect()
+    specialActionContainer.setToSpy()
     
     //when click confirm special action
     // opponentChannelContainer.getSelectedCard()
