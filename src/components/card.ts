@@ -102,6 +102,13 @@ const loadCard = (resources: PIXI.IResourceDictionary, cardConfig: Card) => {
   cardImageBg.position.set(45, 147)
   card.addChild(cardImageBg)
 
+  let cardImagePath = resources['cards/' + cardConfig.name]
+  if (cardImagePath) {
+    cardImageBg.texture = cardImagePath.texture
+    cardImageBg.width = 400
+    cardImageBg.height = 385
+  }
+
   // Fake Text
   let fakeText = new PIXI.Text('ปลอม', TEXT_STYLE.SUPER_HEADER_THAI_CHACOAL)
   fakeText.anchor.set(0.5)
