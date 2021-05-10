@@ -71,13 +71,9 @@ const GameLobbyScene = (
   const onStartGame = async () => {
     const url = process.env.BACKEND_URL
     if (gameState.player2) {
-      axios
-        .post(`${url}/start-game`, {
-          gameId: gameState.gameId,
-        })
-        .then(() => {
-          setCurrentScene(scenes.gameplay, gameState, nextPossibleScenes[scenes.gameplay])
-        })
+      axios.post(`${url}/start-game`, {
+        gameId: gameState.gameId,
+      })
     }
   }
   startGameButton.on('mousedown', onStartGame).on('touchstart', onStartGame)
