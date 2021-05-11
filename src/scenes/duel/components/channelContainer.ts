@@ -114,6 +114,8 @@ export const loadChannelContainer = (
     specialActionContainer,
   )
 
+  channelContainer.toSelectOverlayContainer = toSelectOverlayContainer
+
   channelContainer.setToSelect = () => {
     toSelectOverlayContainer.setCardList(localCardList)
     channelContainer.addChild(toSelectOverlayContainer)

@@ -75,7 +75,7 @@ const DuelScene = (
     //     myChannelContainer.visible = false
     //     // example
     //     // specialActionContainer.moneyBar.setMoney(1000)
-        // specialActionContainer.visible = true
+    // specialActionContainer.visible = true
     //     // setCurrentScene(scenes.gameplay)
     //     return
     //   }
@@ -92,12 +92,19 @@ const DuelScene = (
     duelCompareBg.visible = false
     myChannelContainer.visible = false
     specialActionContainer.visible = true
-    // specialActionContainer.setToFactCheck()
+    specialActionContainer.setToFactCheck()
     // specialActionContainer.setToExpose()
-    // opponentChannelContainer.setToSelect()
-    specialActionContainer.setToSpy()
-    
+    opponentChannelContainer.setToSelect()
+    // specialActionContainer.setToSpy()
+
     //when click confirm special action
+    // setInterval(() => {
+    //   var card = opponentChannelContainer.getSelectedCard()
+    //   console.log(card)
+    //   if (card) {
+    //     opponentChannelContainer.toSelectOverlayContainer.setCardOverlay(true, card.x, card.y)
+    //   }
+    // }, 3000)
     // opponentChannelContainer.getSelectedCard()
     // specialActionContainer.displayFactCheckResult(RESULT.fail)
     // specialActionContainer.displayExposeResult(RESULT.success)

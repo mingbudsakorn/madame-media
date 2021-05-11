@@ -10,6 +10,7 @@ interface ToSelectOverlayType extends PIXI.Container {
   getCard: () => CardType
   toggle: () => void
   select: (select: boolean) => void
+  setOverlay: (texturePath: string) => void
 }
 
 export interface ToSelectOverlayContainerType extends PIXI.Container {
@@ -17,6 +18,7 @@ export interface ToSelectOverlayContainerType extends PIXI.Container {
   setCardList: (cardList: CardType[]) => void
   toggle: () => void
   select: (card: ToSelectOverlayType) => void
+  setCardOverlay: (isReal: boolean, x: number, y: number) => void
 }
 
 const loadToSelectOverlay = (resources: PIXI.IResourceDictionary, card: CardType) => {
@@ -54,12 +56,16 @@ const loadToSelectOverlay = (resources: PIXI.IResourceDictionary, card: CardType
       : resources[OVERLAY.toSlect].texture
   }
 
+  toSelectOverlay.setOverlay = (texturePath: string) => {
+    selectedOverlay.texture = resources[texturePath].texture
+  }
+
   return toSelectOverlay
 }
 
 export const loadToSelectOverlayContainer = (
   resources: PIXI.IResourceDictionary,
-  specialActionContainer: SpecialActionContainerType
+  specialActionContainer: SpecialActionContainerType,
 ) => {
   const toSelectOverlayContainer = new PIXI.Container() as ToSelectOverlayContainerType
 
@@ -83,7 +89,7 @@ export const loadToSelectOverlayContainer = (
       }
     })
   }
-  
+
   const select = (card: ToSelectOverlayType) => {
     specialActionContainer.setSelect(1)
     toSelectOverlayList.forEach((cardOverlay, i) => {
@@ -92,6 +98,25 @@ export const loadToSelectOverlayContainer = (
     card.select(true)
     selectedCard = card.getCard()
   }
+
+  const cardOverlay = new PIXI.Sprite(resources['art/real-card-overlay'].texture)
+  toSelectOverlayContainer.addChild(cardOverlay)
+  cardOverlay.visible = false
+
+  const setCardOverlay = (isReal: boolean, x: number, y: number) => {
+    if (isReal) {
+      cardOverlay.texture = resources['art/real-card-overlay'].texture
+    } else {
+      cardOverlay.texture = resources['art/fake-card-overlay'].texture
+    }
+    toSelectOverlayList.forEach((cardOverlay, i) => {
+      cardOverlay.select(false)
+    })
+    cardOverlay.position.set(x - 4, y)
+    cardOverlay.visible = true
+  }
+
+  toSelectOverlayContainer.setCardOverlay = setCardOverlay
 
   toSelectOverlayContainer.select = select
   toSelectOverlayContainer.setCardList = setCardList
