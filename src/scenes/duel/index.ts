@@ -104,7 +104,7 @@ const DuelScene = (
     //   if (card) {
     //     opponentChannelContainer.toSelectOverlayContainer.setCardOverlay(true, card.x, card.y)
     //   }
-    // }, 3000)
+    // }, 5000)
     // opponentChannelContainer.getSelectedCard()
     // specialActionContainer.displayFactCheckResult(RESULT.fail)
     // specialActionContainer.displayExposeResult(RESULT.success)
