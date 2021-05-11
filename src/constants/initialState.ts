@@ -16,4 +16,5 @@ export const gameState = {
   turns: 0,
   currentTurn: 1,
   allChannels: [],
+  winner: null,
 } as GameState

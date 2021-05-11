@@ -22,18 +22,12 @@ const GameLobbyScene = (
     gameState = settingState
   }
 
-  const {
-    roomId,
-    turn,
-    myAvatar,
-    opponentAvatar,
-    backButton,
-    startGameButton,
-  } = gameLobbyScene.children
+  const { roomId, turn, myAvatar, opponentAvatar, backButton, startGameButton } =
+    gameLobbyScene.children
   // Buttons
 
   scene.onAppear = () => {
-    turn.setTurn(gameState.turns)
+    turn.setTurn(gameState.rounds)
     roomId.setRoomId(gameState.gameId)
 
     // SOCKETS
@@ -78,7 +72,7 @@ const GameLobbyScene = (
   }
   startGameButton.on('mousedown', onStartGame).on('touchstart', onStartGame)
 
-  socket.on('start-game', () => {
+  socket.on('start-round', () => {
     setCurrentScene(scenes.gameplay, gameState, nextPossibleScenes[scenes.gameplay])
   })
 

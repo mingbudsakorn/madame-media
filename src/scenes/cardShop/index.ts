@@ -20,15 +20,18 @@ const CardShopScene = (
   scene.setNextPossibleScenes = (scenes) => {
     nextPossibleScenes = scenes
   }
-  let gameState = initGameState
+  let gameState = null
   scene.setGameState = (settingState: GameState) => {
     gameState = settingState
   }
 
-  const { confirmButton, cardShopDeck } = cardShopScene.children
+  const { confirmButton, cardShopDeck, waitingModal } = cardShopScene.children
 
-  socket.on('next-round', () => {
-    setCurrentScene(scenes.gameplay, gameState, nextPossibleScenes[scenes.gameplay])
+  socket.on('start-round', () => {
+    // if (scene.visible) {
+    console.log('start-round again')
+    setCurrentScene(scenes.gameplay, null, nextPossibleScenes[scenes.gameplay])
+    // }
   })
 
   const selectCards = async () => {
@@ -45,15 +48,14 @@ const CardShopScene = (
       cardTypes: typeArray,
     })
 
-    await axios.post(`${url}/ready-end-round`, {
-      gameId: gameState.gameId,
-      playerId: gameState.playerId,
-    })
+    waitingModal.setVisible(true)
   }
 
   confirmButton.on('mousedown', selectCards).on('touchstart', selectCards)
 
   scene.onAppear = async () => {
+    waitingModal.setVisible(false)
+
     const res = await axios.post(`${url}/deal-cards`, {
       gameId: gameState.gameId,
       playerId: gameState.playerId,

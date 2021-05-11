@@ -7,6 +7,7 @@ import loadCard, { CardType } from './card'
 export interface ChannelType extends PIXI.Container {
   setCard: (card: Card, isReal: boolean) => void
   getCard: () => CardType
+  removeCard: () => void
   setIsAvailable: (boolean) => void
   getIsAvailable: () => boolean
   getChannelConfig: () => Channel
@@ -89,6 +90,13 @@ const loadChannel = (
   cardContainer.y = 0
 
   channel.addChild(cardContainer)
+
+  channel.removeCard = () => {
+    while (cardContainer.children[0]) {
+      cardContainer.removeChildAt[0]
+      console.log('remove-card')
+    }
+  }
 
   channel.getCard = () => {
     return cardContainer.children.length > 0 ? (cardContainer.children[0] as CardType) : undefined

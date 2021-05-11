@@ -10,6 +10,7 @@ interface ChannelDeckType extends PIXI.Container {
   insertCard: (channel: string, card: CardType) => void
   initChannels: (allChannels: Channel[]) => void
   updateChannels: (availableChannels: Channel[]) => void
+  clearCards: () => void
 }
 
 export const loadChannelDeck = (resources: PIXI.IResourceDictionary) => {
@@ -34,7 +35,7 @@ export const loadChannelDeck = (resources: PIXI.IResourceDictionary) => {
 
   // Load channels
   const channelContainerArray = [] // might not be ordered
-  const channelArray = []
+  const channelArray = [null, null, null, null, null, null, null]
 
   channelDeck.initChannels = (allChannels: Channel[]) => {
     for (let i = 0; i < CHANNEL_COUNT; i++) {
@@ -44,7 +45,6 @@ export const loadChannelDeck = (resources: PIXI.IResourceDictionary) => {
       prevChannelX += channelPadding + 170
       channelDeck.addChild(channelContainer)
       channelContainerArray.push(channelContainer)
-      channelArray.push(null)
     }
     allChannels.forEach((channel) => {
       const channelContainer = channelContainerArray[channel.type]
@@ -67,6 +67,12 @@ export const loadChannelDeck = (resources: PIXI.IResourceDictionary) => {
   channelDeck.insertCard = (channelType: string, card: CardType) => {
     const selectedChannel = channelArray[channelType]
     selectedChannel.setCard(card)
+  }
+
+  channelDeck.clearCards = () => {
+    channelArray.forEach((channelObject) => {
+      channelObject.removeCard()
+    })
   }
 
   channelDeck.setOnSelect = (select: boolean) => {

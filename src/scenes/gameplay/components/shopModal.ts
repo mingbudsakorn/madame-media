@@ -44,7 +44,7 @@ export const loadShopModal = (resources: PIXI.IResourceDictionary) => {
   shopModal.addChild(moneyBar)
 
   const channelContainerArray = []
-  const channelArray = []
+  const channelArray = [null, null, null, null, null, null, null]
 
   shopModalWithOverlay.initChannels = (allChannels: Channel[]) => {
     let prevX = 88
@@ -57,7 +57,6 @@ export const loadShopModal = (resources: PIXI.IResourceDictionary) => {
       channelContainer.y = channelY
       shopModal.addChild(channelContainer)
       channelContainerArray.push(channelContainer)
-      channelArray.push(null)
       prevX += 220 + padding
     }
     allChannels.forEach((channelConfig) => {

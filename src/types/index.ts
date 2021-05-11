@@ -69,6 +69,7 @@ export interface GameState {
   currentRound?: number
   allChannels?: Channel[]
   battleResult?: any
+  winner?: null
 }
 
 export interface Button extends PIXI.Sprite {

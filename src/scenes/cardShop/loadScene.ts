@@ -3,6 +3,7 @@ import { TEXT_STYLE, COLOR } from '../../constants/style'
 import loadCardInShop, { CardInShopType } from './components/cardInShop'
 import { Card, CardSet } from '../../types/index'
 import { Button } from '../../types/index'
+import loadModal from '../../components/modal'
 
 const cardShopScene = new PIXI.Container()
 cardShopScene.position.set(0, 0)
@@ -92,12 +93,19 @@ const loadCardShopScene = (resources: PIXI.IResourceDictionary) => {
   }
   cardShopScene.addChild(confirmButton)
 
+  const waitingModal = loadModal(resources)
+  cardShopScene.addChild(waitingModal)
+  waitingModal.setText('กรุณารอสักครู่', 'กรุณารออีกฝั่ง')
+  waitingModal.setShowAcceptButton(false)
+  waitingModal.setClosable(false)
+
   return {
     scene: cardShopScene,
     children: {
       bg,
       confirmButton,
       cardShopDeck,
+      waitingModal,
     },
   }
 }

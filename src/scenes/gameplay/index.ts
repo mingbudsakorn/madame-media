@@ -24,7 +24,9 @@ const GameplayScene = (
   }
   let gameState = initGameState
   scene.setGameState = (settingState: GameState) => {
-    gameState = settingState
+    if (settingState) {
+      gameState = settingState
+    }
   }
 
   const {
@@ -60,15 +62,18 @@ const GameplayScene = (
 
   // TIMER
   socket.on('countdown', (timeLeft) => {
-    if (timeLeft <= 0) {
-      ready()
-    } else {
-      timeBar.setTime(timeLeft)
+    if (scene.visible) {
+      if (timeLeft <= 0) {
+        ready()
+      } else {
+        timeBar.setTime(timeLeft)
+      }
     }
   })
 
   // READY/FINISH/TIMEOUT
   const ready = async () => {
+    waitingModal.setVisible(true)
     const url = process.env.BACKEND_URL
     await axios.post(`${url}/ready-battle`, {
       gameId: gameState.gameId,
@@ -137,11 +142,17 @@ const GameplayScene = (
             .then((res) => {
               if (res && res.data) {
                 const newGameState = res.data
+                const { gold, cards } = newGameState
                 channelObject.setCard(currentCard, currentCard.isReal)
                 channelDeck.scene.setOnSelect(false)
                 currentCard = null
 
-                changeGold(newGameState.gold)
+                // change cards in deck
+                cardContainer.setCards(cards)
+                expandedContainer.scene.setCards(cards)
+                initExpandedContainer()
+
+                changeGold(gold)
               }
             })
         }
@@ -196,6 +207,9 @@ const GameplayScene = (
         shopModal.scene.initChannels(channelsRes.data.channelData)
       }
     }
+
+    waitingModal.setVisible(false)
+    channelDeck.scene.clearCards()
 
     // Get Game State
     const res = await axios.get(

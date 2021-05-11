@@ -8,6 +8,7 @@ import loadPeopleBar from '../../components/peopleBar'
 import loadSpecialActionContainer from './components/specialActionContainer'
 import loadSummaryModal from './components/summaryModal'
 import { Channel } from '../../types'
+import loadModal from '../../components/modal'
 
 const duelScene = new PIXI.Container()
 duelScene.position.set(0, 0)
@@ -42,6 +43,12 @@ const loadDuelScene = (resources: PIXI.IResourceDictionary) => {
   duelScene.addChild(summaryModal)
   summaryModal.visible = false
 
+  const waitingModal = loadModal(resources)
+  duelScene.addChild(waitingModal)
+  waitingModal.setText('กรุณารอสักครู่', 'กรุณารออีกฝั่ง')
+  waitingModal.setShowAcceptButton(false)
+  waitingModal.setClosable(false)
+
   return {
     scene: duelScene,
     children: {
@@ -52,6 +59,7 @@ const loadDuelScene = (resources: PIXI.IResourceDictionary) => {
       peopleBar,
       specialActionContainer,
       summaryModal,
+      waitingModal,
     },
   }
 }

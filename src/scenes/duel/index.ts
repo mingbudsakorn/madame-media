@@ -36,23 +36,45 @@ const DuelScene = (
     specialActionContainer,
     summaryModal,
     peopleBar,
+    waitingModal,
   } = duelScene.children
 
   // TIMER
   socket.on('countdown', (timeLeft) => {
-    if (timeLeft <= 0) {
-      showSummary()
-    } else {
-      specialActionContainer.setTime(timeLeft)
+    if (scene.visible) {
+      if (timeLeft === 0) {
+        specialActionContainer.setTime(timeLeft)
+        axios.post(`${url}/ready-end-round`, {
+          gameId: gameState.gameId,
+          playerId: gameState.playerId,
+        })
+      } else {
+        specialActionContainer.setTime(timeLeft)
+      }
     }
   })
 
-  const showSummary = () => {
+  socket.on('special-action-result', (res) => {
+    waitingModal.setVisible(false)
+    // TODO: show summary
     // myChannelContainer.setSummary(channelSlots, mockSummary())
     summaryModal.visible = true
+    specialActionContainer.visible = false
+  })
+
+  const skip = () => {
+    axios.post(`${url}/ready-end-round`, {
+      gameId: gameState.gameId,
+      playerId: gameState.playerId,
+    })
+    waitingModal.setVisible(true)
   }
 
   const nextTurn = () => {
+    axios.post(`${url}/ready-next-round`, {
+      gameId: gameState.gameId,
+      playerId: gameState.playerId,
+    })
     if (gameState.currentRound === gameState.rounds) {
       setCurrentScene(scenes.endGame, gameState, nextPossibleScenes[scenes.endGame])
     } else {
@@ -60,13 +82,38 @@ const DuelScene = (
     }
   }
 
+  const playAction = (actionType: 'spy' | 'expose' | 'factCheck') => {
+    // TODO: PLAY AN ACTION
+    axios.post(`${url}/ready-end-round`, {
+      gameId: gameState.gameId,
+      playerId: gameState.playerId,
+    })
+  }
+
   summaryModal.nextTurnButton.on('mousedown', nextTurn).on('touchstart', nextTurn)
 
-  specialActionContainer.skipButton.on('mousedown', showSummary).on('touchstart', showSummary)
+  specialActionContainer.skipButton.on('mousedown', skip).on('touchstart', skip)
+  specialActionContainer.spyButton
+    .on('mousedown', () => playAction('spy'))
+    .on('touchstart', () => playAction('spy'))
+  specialActionContainer.exposeButton
+    .on('mousedown', () => playAction('expose'))
+    .on('touchstart', () => playAction('expose'))
+  specialActionContainer.factCheckButton
+    .on('mousedown', () => playAction('factCheck'))
+    .on('touchstart', () => playAction('factCheck'))
 
   scene.onAppear = async () => {
+    // RESET
+    specialActionContainer.visible = false
+    summaryModal.visible = false
+    duelCompareBg.visible = true
+    myChannelContainer.visible = true
+
     // INIT CHANNEL NAMES
     const { allChannels, battleResult, playerId, gold } = gameState
+
+    console.log(gameState)
 
     opponentChannelContainer.initChannels(allChannels)
 
@@ -81,7 +128,7 @@ const DuelScene = (
     }
 
     const channelPadding = 25
-    const resultCount = battleResult.length
+    const resultCount = battleResult.peopleStates.length
     let currentDuel = 0
     const timer = setInterval(() => {
       if (currentDuel >= resultCount - 1) {
@@ -101,14 +148,14 @@ const DuelScene = (
       }
 
       let opponentId = ''
-      const sampleResult = battleResult[0]
+      const sampleResult = battleResult.peopleStates[0]
       Object.keys(sampleResult).forEach((id) => {
         if (id !== playerId) opponentId = id
       })
 
       peopleBar.setPeople(
-        battleResult[currentDuel][playerId],
-        battleResult[currentDuel][opponentId],
+        battleResult.peopleStates[currentDuel][playerId],
+        battleResult.peopleStates[currentDuel][opponentId],
       )
       duelCompareBg.x = duelCompareBg.x + duelCompareBg.width + channelPadding
       currentDuel += 1

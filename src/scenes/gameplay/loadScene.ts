@@ -6,17 +6,13 @@ import loadModal from '../../components/modal'
 import loadPeopleBar from '../../components/peopleBar'
 import loadAvatar from './components/avatar'
 import loadMoneyBar from '../../components/moneyBar'
-import loadCardModal from './components/cardModal'
 import loadCardContainer from './components/cardContainer'
 import loadSpecialEventModal from './components/specialEventModal'
 import loadShopModal from './components/shopModal'
 import { TEXT_STYLE } from '../../constants/style'
 import { PEOPLE_BAR_CONFIG, CARD_CONFIG } from '../../constants/gameConfig'
 import { AVATAR } from '../../constants/avatar'
-import loadCard from '../../components/card'
-import { CARD } from '../../constants/card'
 import loadCardExpanded from './components/cardExpanded'
-import { CHANNEL, initChannelSlot } from '../../constants/channels'
 
 interface GamePlaySceneType extends PIXI.Container {
   onCardSelect: (CardType) => void
@@ -155,8 +151,9 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
 
   const waitingModal = loadModal(resources)
   gamePlayScene.addChild(waitingModal)
-  waitingModal.setText('กรุณารอสักครู่', 'กรุณารออีกฝั่งกด')
-  // waitingModal.toggle()
+  waitingModal.setText('กรุณารอสักครู่', 'กรุณารออีกฝั่ง')
+  waitingModal.setShowAcceptButton(false)
+  waitingModal.setClosable(false)
 
   gamePlayScene.addChild(expandedContainer.scene)
 
