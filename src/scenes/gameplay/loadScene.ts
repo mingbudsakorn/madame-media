@@ -144,6 +144,7 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
   //buy channel
   const shopModal = loadShopModal(resources)
   gamePlayScene.addChild(shopModal.scene)
+  gamePlayScene.addChild(expandedContainer.scene)
 
   const notEnoughMoneyModal = loadModal(resources)
   gamePlayScene.addChild(notEnoughMoneyModal)
@@ -156,8 +157,6 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
   waitingModal.setText('กรุณารอสักครู่', 'กรุณารออีกฝั่ง')
   waitingModal.setShowAcceptButton(false)
   waitingModal.setClosable(false)
-
-  gamePlayScene.addChild(expandedContainer.scene)
 
   buyChannelButton
     .on('mousedown', () => shopModal.scene.toggle())

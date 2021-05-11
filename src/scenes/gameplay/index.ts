@@ -102,19 +102,23 @@ const GameplayScene = (
   // SELECT CARD FROM DECK
   const initExpandedContainer = (allowFake: boolean) => {
     expandedContainer.cardArray.forEach((e) => {
+      console.log(allowFake)
+      if (!allowFake) {
+        e.toggleButton.interactive = false
+        e.toggleButton.visible = false
+        e.useButton.y = 420
+      } else {
+        e.toggleButton.interactive = true
+        e.toggleButton.visible = true
+        e.useButton.y = 500
+      }
+
       const selectCard = () => {
         const isReal = e.card.getIsReal()
         const cardConfig = e.card.getCardConfig()
-        const price = isReal ? cardConfig.price : cardConfig.price / 2
-        if (!allowFake) {
-          e.toggleButton.interactive = false
-          e.toggleButton.visible = false
-        } else {
-          e.toggleButton.interactive = true
-          e.toggleButton.visible = true
-        }
+        const cost = isReal ? cardConfig.cost : cardConfig.cost / 2
 
-        if (gameState.gold < price) {
+        if (gameState.gold < cost) {
           notEnoughMoneyModal.toggle()
         } else {
           channelDeck.scene.setOnSelect(true)
@@ -257,9 +261,12 @@ const GameplayScene = (
         specialEventModal.toggle()
         specialEvent.visible = true
 
+        console.log(specialEventInfo.cardEffect.allowFake)
+
         if (specialEventInfo.cardEffect && specialEventInfo.cardEffect.allowFake === false) {
           allowFake = false
         }
+        console.log(allowFake)
       }
 
       shopModal.scene.updateChannels(availableChannels)

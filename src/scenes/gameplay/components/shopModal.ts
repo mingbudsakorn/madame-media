@@ -83,9 +83,8 @@ export const loadShopModal = (resources: PIXI.IResourceDictionary) => {
       const channelObject = channelArray[channelConfig.type]
 
       channelObject.setIsOwned(true)
-
-      setTotalCost(0)
     })
+    setTotalCost(0)
   }
 
   shopModalWithOverlay.getSelectedChannels = () => {
@@ -145,12 +144,13 @@ export const loadShopModal = (resources: PIXI.IResourceDictionary) => {
     moneyBar.setMoney(money)
   }
 
-  const setTotalCost = (totalCost: number) => {
-    totalCostText.text = 'ราคารวม: ' + totalCost.toString() + ' เหรียญ'
-    totalCost = totalCost
+  const setTotalCost = (newTotalCost: number) => {
+    totalCostText.text = 'ราคารวม: ' + newTotalCost.toString() + ' เหรียญ'
+    totalCost = newTotalCost
   }
 
   const toggleIsSelected = (channel: ChannelInShopType) => {
+    console.log(totalCost)
     if (channel.getIsSelected()) {
       totalCost += channel.getChannelConfig().price
     } else {

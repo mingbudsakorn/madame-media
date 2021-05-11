@@ -8,6 +8,7 @@ export interface ChannelInShopType extends PIXI.Container {
   setIsSelected: (isSelected: boolean) => void
   toggleIsSelected: () => void
   setIsOwned: (isOwned: boolean) => void
+  unselect: () => void
   tickBox: PIXI.Sprite
 }
 
@@ -105,6 +106,10 @@ const loadChannelInShop = (resources: PIXI.IResourceDictionary, channelConfig: C
 
   channelInShop.getIsSelected = () => {
     return isSelected
+  }
+
+  channelInShop.unselect = () => {
+    isSelected = false
   }
 
   channelInShop.getChannelConfig = () => {
