@@ -98,6 +98,7 @@ const DuelScene = (
     // specialActionContainer.setToSpy()
 
     //when click confirm special action
+    //just test
     // setInterval(() => {
     //   var card = opponentChannelContainer.getSelectedCard()
     //   console.log(card)
