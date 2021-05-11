@@ -46,6 +46,7 @@ const GameplayScene = (
     shopModal,
     notEnoughMoneyModal,
     waitingModal,
+    specialEventText,
   } = gameplayScene.children
 
   // Scene States
@@ -257,16 +258,14 @@ const GameplayScene = (
 
       // SPECIAL EVENT
       if (specialEventInfo) {
+        specialEventText.text = specialEventInfo.name
         specialEventModal.setSpecialEvent(specialEventInfo.name, specialEventInfo.description)
         specialEventModal.toggle()
         specialEvent.visible = true
 
-        console.log(specialEventInfo.cardEffect.allowFake)
-
         if (specialEventInfo.cardEffect && specialEventInfo.cardEffect.allowFake === false) {
           allowFake = false
         }
-        console.log(allowFake)
       }
 
       shopModal.scene.updateChannels(availableChannels)

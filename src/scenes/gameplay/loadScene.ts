@@ -182,6 +182,7 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
       expandedContainer,
       specialEventModal,
       specialEvent,
+      specialEventText,
       shopModal,
       notEnoughMoneyModal,
       waitingModal,

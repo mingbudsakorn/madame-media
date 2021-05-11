@@ -7,6 +7,12 @@ import { gameState as initGameState } from '../../constants/initialState'
 
 import socket from '../../socket'
 import axios from 'axios'
+import {
+  shake,
+  shakeHard,
+  shakeLightly,
+  shakeLikeYouHaveNoSleepCuzYouHaveBeenWorkingOnThisShitForSoLong,
+} from '../../effects'
 
 const url = process.env.BACKEND_URL
 
@@ -57,6 +63,7 @@ const DuelScene = (
     specialActionContainer.visible = false
     opponentChannelContainer.removeAllOverlay()
     // show summary
+    console.log(res)
 
     summaryModal.visible = true
   })
@@ -98,12 +105,16 @@ const DuelScene = (
       const startFactCheck = async () => {
         const cardObject = opponentChannelContainer.getSelectedCard()
 
-        axios.post(`${url}/play-special-action`, {
-          gameId: gameState.gameId,
-          playerId: gameState.playerId,
-          actionType: SPECIAL_ACTION_TYPE[actionType],
-          cardId: cardObject.getCardConfig().id,
-        })
+        axios
+          .post(`${url}/play-special-action`, {
+            gameId: gameState.gameId,
+            playerId: gameState.playerId,
+            actionType: SPECIAL_ACTION_TYPE[actionType],
+            cardId: cardObject.getCardConfig().id,
+          })
+          .then((res) => {
+            specialActionContainer.moneyBar.setMoney(res.data.gold)
+          })
 
         opponentChannelContainer.removeAllOverlay()
       }
@@ -117,13 +128,18 @@ const DuelScene = (
 
       const startExpose = async () => {
         const cardObject = opponentChannelContainer.getSelectedCard()
+        console.log(cardObject)
 
-        axios.post(`${url}/play-special-action`, {
-          gameId: gameState.gameId,
-          playerId: gameState.playerId,
-          actionType: SPECIAL_ACTION_TYPE[actionType],
-          cardId: cardObject.getCardConfig().id,
-        })
+        axios
+          .post(`${url}/play-special-action`, {
+            gameId: gameState.gameId,
+            playerId: gameState.playerId,
+            actionType: SPECIAL_ACTION_TYPE[actionType],
+            cardId: cardObject.getCardConfig().id,
+          })
+          .then((res) => {
+            specialActionContainer.moneyBar.setMoney(res.data.gold)
+          })
         opponentChannelContainer.removeAllOverlay()
       }
 
@@ -133,11 +149,15 @@ const DuelScene = (
     } else if (actionType === 'SPY') {
       specialActionContainer.setToSpy()
 
-      axios.post(`${url}/play-special-action`, {
-        gameId: gameState.gameId,
-        playerId: gameState.playerId,
-        actionType: SPECIAL_ACTION_TYPE[actionType],
-      })
+      axios
+        .post(`${url}/play-special-action`, {
+          gameId: gameState.gameId,
+          playerId: gameState.playerId,
+          actionType: SPECIAL_ACTION_TYPE[actionType],
+        })
+        .then((res) => {
+          specialActionContainer.moneyBar.setMoney(res.data.gold)
+        })
 
       skip()
     }
@@ -190,6 +210,10 @@ const DuelScene = (
     )
     currentDuel += 1
 
+    // For effects
+    let prevMyPeople = battleResult.peopleStates[currentDuel][playerId]
+    let prevOpponentPeople = battleResult.peopleStates[currentDuel][opponentId]
+
     const timer = setInterval(() => {
       if (currentDuel >= resultCount) {
         clearInterval(timer)
@@ -207,12 +231,37 @@ const DuelScene = (
         return
       }
 
-      peopleBar.setPeople(
-        battleResult.peopleStates[currentDuel][playerId],
-        battleResult.peopleStates[currentDuel][opponentId],
-      )
+      const myPeople = battleResult.peopleStates[currentDuel][playerId]
+      const opponentPeople = battleResult.peopleStates[currentDuel][opponentId]
+
+      peopleBar.setPeople(myPeople, opponentPeople)
       duelCompareBg.x = duelCompareBg.x + duelCompareBg.width + channelPadding
       currentDuel += 1
+
+      if (
+        Math.abs(myPeople - prevMyPeople) > 200 ||
+        Math.abs(opponentPeople - prevOpponentPeople) > 200
+      ) {
+        shakeLikeYouHaveNoSleepCuzYouHaveBeenWorkingOnThisShitForSoLong()
+      } else if (
+        Math.abs(myPeople - prevMyPeople) > 100 ||
+        Math.abs(opponentPeople - prevOpponentPeople) > 100
+      ) {
+        shakeHard()
+      } else if (
+        Math.abs(myPeople - prevMyPeople) > 50 ||
+        Math.abs(opponentPeople - prevOpponentPeople) > 50
+      ) {
+        shake()
+      } else if (
+        Math.abs(myPeople - prevMyPeople) > 25 ||
+        Math.abs(opponentPeople - prevOpponentPeople) > 25
+      ) {
+        shakeLightly()
+      }
+
+      prevMyPeople = myPeople
+      prevOpponentPeople = opponentPeople
     }, 2000)
   }
 
