@@ -38,27 +38,34 @@ const GameLobbyScene = (
   socket.on('new-player', (res) => {
     const player1 = res[0]
     const player2 = res[1]
-    gameState = {
-      ...gameState,
-      player1: {
-        name: player1.name,
-        avatar: player1.avatar,
-      },
-      player2: {
-        name: player2 ? player2.name : null,
-        avatar: player2 ? player2.avatar : null,
-      },
+
+    if (gameState.isSecond) {
+      gameState = {
+        ...gameState,
+        player2: {
+          name: player1 ? player1.name : null,
+          avatar: player1 ? player1.avatar : null,
+        },
+      }
+    } else {
+      gameState = {
+        ...gameState,
+        player2: {
+          name: player2 ? player2.name : null,
+          avatar: player2 ? player2.avatar : null,
+        },
+      }
     }
 
     if (player1.avatar) {
-      myAvatar.setAvatarImg(player1.avatar)
+      myAvatar.setAvatarImg(gameState.player1.avatar)
     }
-    myAvatar.setAvatarName(player1.name)
+    myAvatar.setAvatarName(gameState.player1.name)
     if (player2) {
       if (player2.avatar) {
-        opponentAvatar.setAvatarImg(player2.avatar)
+        opponentAvatar.setAvatarImg(gameState.player2.avatar)
       }
-      opponentAvatar.setAvatarName(player2.name)
+      opponentAvatar.setAvatarName(gameState.player2.name)
     }
   })
 

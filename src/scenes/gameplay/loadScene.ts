@@ -148,6 +148,8 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
   const notEnoughMoneyModal = loadModal(resources)
   gamePlayScene.addChild(notEnoughMoneyModal)
   notEnoughMoneyModal.setText('เกิดข้อผิดพลาด', 'คุณมีจำนวนเงินไม่เพียงพอ')
+  notEnoughMoneyModal.setShowAcceptButton(true)
+  notEnoughMoneyModal.setClosable(true)
 
   const waitingModal = loadModal(resources)
   gamePlayScene.addChild(waitingModal)

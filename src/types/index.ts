@@ -83,6 +83,7 @@ export interface GameState {
   people?: {
     [key: string]: number
   }
+  isSecond?: boolean
 }
 
 export interface Button extends PIXI.Sprite {

@@ -79,9 +79,14 @@ const JoinRoomScene = (
     if (res && res.data) {
       gameState = {
         ...gameState,
+        player1: {
+          name: avatarNameInput.text.trim(),
+          avatar: avatarList[avatarIndex],
+        },
         gameId: roomIdInput.text.trim(),
         playerId: res.data.playerId,
         rounds: res.data.setting.numberOfRound,
+        isSecond: true,
       }
       setCurrentScene(scenes.gameLobby, gameState, nextPossibleScenes[scenes.gameLobby])
     }

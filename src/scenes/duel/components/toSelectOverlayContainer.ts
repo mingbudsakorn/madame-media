@@ -1,6 +1,5 @@
 import * as PIXI from 'pixi.js'
 import { TEXT_STYLE } from '../../../constants/style'
-import { CHANNEL } from '../../../constants/channels'
 import { Card, CardSlots, SummarySlots } from '../../../types'
 import { CardType } from '../../../components/card'
 import { OVERLAY } from '../../../constants/specialAction'
@@ -17,6 +16,7 @@ export interface ToSelectOverlayContainerType extends PIXI.Container {
   setCardList: (cardList: CardType[]) => void
   toggle: () => void
   select: (card: ToSelectOverlayType) => void
+  removeOverlay: () => void
 }
 
 const loadToSelectOverlay = (resources: PIXI.IResourceDictionary, card: CardType) => {
@@ -25,7 +25,7 @@ const loadToSelectOverlay = (resources: PIXI.IResourceDictionary, card: CardType
 
   const toSelectOverlay = new PIXI.Container() as ToSelectOverlayType
 
-  const selectedOverlay = new PIXI.Sprite(resources[OVERLAY.toSlect].texture)
+  const selectedOverlay = new PIXI.Sprite(resources[OVERLAY.toSelect].texture)
   toSelectOverlay.addChild(selectedOverlay)
 
   toSelectOverlay.interactive = true
@@ -39,7 +39,7 @@ const loadToSelectOverlay = (resources: PIXI.IResourceDictionary, card: CardType
   const updateTexture = () => {
     selectedOverlay.texture = isSelected
       ? resources[OVERLAY.select].texture
-      : resources[OVERLAY.toSlect].texture
+      : resources[OVERLAY.toSelect].texture
   }
 
   toSelectOverlay.getCard = () => {
@@ -51,7 +51,7 @@ const loadToSelectOverlay = (resources: PIXI.IResourceDictionary, card: CardType
   toSelectOverlay.select = (select: boolean) => {
     selectedOverlay.texture = select
       ? resources[OVERLAY.select].texture
-      : resources[OVERLAY.toSlect].texture
+      : resources[OVERLAY.toSelect].texture
   }
 
   return toSelectOverlay
@@ -59,12 +59,12 @@ const loadToSelectOverlay = (resources: PIXI.IResourceDictionary, card: CardType
 
 export const loadToSelectOverlayContainer = (
   resources: PIXI.IResourceDictionary,
-  specialActionContainer: SpecialActionContainerType
+  specialActionContainer: SpecialActionContainerType,
 ) => {
   const toSelectOverlayContainer = new PIXI.Container() as ToSelectOverlayContainerType
 
   let toSelectOverlayList: ToSelectOverlayType[] = []
-  let selectedCard: CardType
+  let selectedCard: CardType = null
 
   const setCardList = (cardList: CardType[]) => {
     cardList.forEach((card, i) => {
@@ -83,7 +83,7 @@ export const loadToSelectOverlayContainer = (
       }
     })
   }
-  
+
   const select = (card: ToSelectOverlayType) => {
     specialActionContainer.setSelect(1)
     toSelectOverlayList.forEach((cardOverlay, i) => {
@@ -97,6 +97,13 @@ export const loadToSelectOverlayContainer = (
   toSelectOverlayContainer.setCardList = setCardList
   toSelectOverlayContainer.getSelectedCard = () => {
     return selectedCard
+  }
+
+  toSelectOverlayContainer.removeOverlay = () => {
+    toSelectOverlayList.forEach((cardOverlay, i) => {
+      cardOverlay.select(false)
+    })
+    selectedCard = null
   }
 
   return toSelectOverlayContainer

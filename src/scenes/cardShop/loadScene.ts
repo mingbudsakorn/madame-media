@@ -40,6 +40,7 @@ const loadCardShopScene = (resources: PIXI.IResourceDictionary) => {
     while (cardShopDeck.children[0]) {
       cardShopDeck.removeChildAt(0)
     }
+    cardsObject = []
     for (let i in cardConfigList) {
       let cardConfig = cardConfigList[i]
       const cardInShop = loadCardInShop(resources, cardConfig)

@@ -1,61 +1,13 @@
 import * as PIXI from 'pixi.js'
 import { TEXT_STYLE } from '../../../constants/style'
-import { Card, CardSlots, Channel, SummarySlots } from '../../../types'
-import { OVERLAY } from '../../../constants/specialAction'
-import loadCard from '../../../components/card'
-
-interface DuelChannelType extends PIXI.Container {
-  bg: PIXI.Sprite
-  setText: (newText: string) => void
-  setCard: (cardConfig: Card) => void
-  removeCard: () => void
-}
-
-const loadDuelChannel = (resources: PIXI.IResourceDictionary, isBottom) => {
-  const duelChannel = new PIXI.Container() as DuelChannelType
-
-  const duelChannelBg = new PIXI.Sprite(resources['art/duel-channel-bg'].texture)
-  const channelText = new PIXI.Text('', TEXT_STYLE.SUBHEADER_THAI)
-  const padding = 20
-  channelText.anchor.set(0.5, 0)
-  channelText.x = duelChannelBg.width / 2
-  if (isBottom) {
-    channelText.y = duelChannelBg.y + duelChannelBg.height + padding
-  } else {
-    duelChannelBg.y = channelText.y + channelText.height + padding
-  }
-  duelChannel.addChild(duelChannelBg)
-  duelChannel.addChild(channelText)
-
-  duelChannel.bg = duelChannelBg
-
-  duelChannel.setText = (newText: string) => {
-    channelText.text = newText
-  }
-
-  const cardContainer = new PIXI.Container()
-  cardContainer.y = duelChannelBg.y
-  duelChannel.setCard = (cardConfig: Card) => {
-    while (cardContainer.children[0]) {
-      cardContainer.removeChildAt(0)
-    }
-
-    const card = loadCard(resources, cardConfig)
-    card.width = duelChannelBg.width
-    card.height = duelChannelBg.height
-    cardContainer.addChild(card)
-  }
-
-  duelChannel.removeCard = () => {
-    while (cardContainer.children[0]) {
-      cardContainer.removeChildAt(0)
-    }
-  }
-
-  duelChannel.addChild(cardContainer)
-
-  return duelChannel
-}
+import { Channel, Card, CardSlots, SummarySlots } from '../../../types'
+import { SpecialActionContainerType } from './specialActionContainer'
+import {
+  loadToSelectOverlayContainer,
+  ToSelectOverlayContainerType,
+} from './toSelectOverlayContainer'
+import loadCard, { CardType } from '../../../components/card'
+import loadDuelChannel from './duelChannel'
 
 interface ChannelContainerType extends PIXI.Container {
   // setChannels: (cards: CardSlots) => void
@@ -63,10 +15,21 @@ interface ChannelContainerType extends PIXI.Container {
   initChannels: (channels: Channel[]) => void
   setCards: (cardList: CardSlots) => void
   select: (card: Card) => void
+  setToSelect: () => void
+  getSelectedCard: () => CardType
+  toSelectOverlayContainer: ToSelectOverlayContainerType
+  spyCards: (cardList: CardSlots) => void
+  removeAllOverlay: () => void
 }
 
-export const loadChannelContainer = (resources: PIXI.IResourceDictionary, isBottom: boolean) => {
+export const loadChannelContainer = (
+  resources: PIXI.IResourceDictionary,
+  isBottom: boolean,
+  specialActionContainer: SpecialActionContainerType,
+) => {
   // have to set position outside
+  let localCardList = [] as CardType[]
+
   const channelPadding = 25
   const channelContainer = new PIXI.Container() as ChannelContainerType
 
@@ -113,22 +76,67 @@ export const loadChannelContainer = (resources: PIXI.IResourceDictionary, isBott
     })
   }
 
+  const cardContainer = new PIXI.Container()
+
   channelContainer.setCards = (cardSlots: CardSlots) => {
     // clear old cards
-    channelList.forEach((channelObject) => {
-      channelObject.removeCard()
-    })
+    while (cardContainer.children[0]) {
+      cardContainer.removeChildAt(0)
+    }
 
     Object.keys(cardSlots).forEach((channelType) => {
-      channelList[channelType].setCard(cardSlots[channelType])
+      const card = loadCard(resources, cardSlots[channelType])
+      const channelObject = channelList[channelType]
+      card.x = channelObject.x
+      card.y = channelObject.bg.y
+      card.width = channelObject.bg.width
+      card.height = channelObject.bg.height
+      localCardList.push(card)
+      cardContainer.addChild(card)
     })
   }
 
+  channelContainer.spyCards = (cardSlots: CardSlots) => {
+    // clear old cards
+    while (cardContainer.children[0]) {
+      cardContainer.removeChildAt(0)
+    }
+
+    Object.keys(cardSlots).forEach((channelType) => {
+      const card = loadCard(resources, cardSlots[channelType])
+      card.setIsReal(cardSlots[channelType].isReal)
+      const channelObject = channelList[channelType]
+      card.x = channelObject.x
+      card.y = channelObject.bg.y
+      card.width = channelObject.bg.width
+      card.height = channelObject.bg.height
+      localCardList.push(card)
+      cardContainer.addChild(card)
+    })
+  }
+
+  channelContainer.addChild(cardContainer)
+
+  const toSelectOverlayContainer = loadToSelectOverlayContainer(resources, specialActionContainer)
+
+  channelContainer.setToSelect = () => {
+    toSelectOverlayContainer.setCardList(localCardList)
+    channelContainer.addChild(toSelectOverlayContainer)
+  }
+
+  channelContainer.removeAllOverlay = () => {
+    toSelectOverlayContainer.removeOverlay()
+  }
+
+  channelContainer.getSelectedCard = () => {
+    return toSelectOverlayContainer.getSelectedCard()
+  }
+
   channelContainer.setSummary = (cardList: CardSlots, summaryList: SummarySlots) => {
-    Object.keys(cardList).forEach((channelType, i) => {
-      let card = cardList[channelType]
+    Object.keys(cardList).forEach((channel, i) => {
+      let card = cardList[channel]
       if (card) {
-        let overlayType = summaryList[channelType]
+        let overlayType = summaryList[channel]
         let cardOverlay = new PIXI.Sprite(resources[overlayType].texture)
         cardOverlay.position.set(channelList[i].x - 4, channelList[i].bg.y)
         channelContainer.addChild(cardOverlay)

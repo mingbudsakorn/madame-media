@@ -3,7 +3,7 @@ import loadGameplayScene from './loadScene'
 import { scenes } from '../../constants/scenes'
 
 import { gameState as initGameState } from '../../constants/initialState'
-import { GameState, Scene, SceneWrapper } from '../../types'
+import { Channel, GameState, Scene, SceneWrapper } from '../../types'
 
 import socket from '../../socket'
 import axios from 'axios'
@@ -51,6 +51,8 @@ const GameplayScene = (
   // Scene States
   let currentCard = null
   let initialized = false
+  let localAvailableChannels = [] as Channel[]
+  let allowFake = true
 
   // ON GOLD CHANGE
   const changeGold = (newGold: number) => {
@@ -97,19 +99,20 @@ const GameplayScene = (
     .on('mousedown', () => (shopModal.scene.visible = true))
     .on('touchstart', () => (shopModal.scene.visible = true))
 
-  // example set special event modal
-  // specialEventModal.setSpecialEvent('พายุเข้า!! -> สัญญาณหาย \nส่งผลให้ตานี้ประสิทธิภาพช่องทางสื่อ โซเชี่ยลมีเดีย และ เว็บเพจ ลดลง 50% ในขณะที่ โทรทัศน์ และ วิทยุ ใช้การไม่ได้')
-  // specialEventModal.toggle()
-  // specialEvent.setSpecialEvent('พายุเข้า!!')
-  // specialEvent.visible = true
-
   // SELECT CARD FROM DECK
-  const initExpandedContainer = () => {
+  const initExpandedContainer = (allowFake: boolean) => {
     expandedContainer.cardArray.forEach((e) => {
       const selectCard = () => {
         const isReal = e.card.getIsReal()
         const cardConfig = e.card.getCardConfig()
         const price = isReal ? cardConfig.price : cardConfig.price / 2
+        if (!allowFake) {
+          e.toggleButton.interactive = false
+          e.toggleButton.visible = false
+        } else {
+          e.toggleButton.interactive = true
+          e.toggleButton.visible = true
+        }
 
         if (gameState.gold < price) {
           notEnoughMoneyModal.toggle()
@@ -131,6 +134,17 @@ const GameplayScene = (
     channelDeck.channelArray.forEach((channelObject) => {
       const insertCard = () => {
         if (currentCard) {
+          // check if the channel is owned
+          const avail = localAvailableChannels.filter(
+            (e) => e.type === channelObject.getChannelConfig().type,
+          )
+          if (avail.length === 0) return
+
+          if (gameState.gold < currentCard.cost) {
+            notEnoughMoneyModal.toggle()
+            return
+          }
+
           axios
             .post(`${url}/place-card`, {
               channelType: channelObject.getChannelConfig().type,
@@ -150,7 +164,7 @@ const GameplayScene = (
                 // change cards in deck
                 cardContainer.setCards(cards)
                 expandedContainer.scene.setCards(cards)
-                initExpandedContainer()
+                initExpandedContainer(allowFake)
 
                 changeGold(gold)
               }
@@ -163,6 +177,11 @@ const GameplayScene = (
 
   // BUY CHANNELS
   const buyChannels = () => {
+    if (shopModal.scene.getTotalCost() > gameState.gold) {
+      notEnoughMoneyModal.toggle()
+      return
+    }
+
     const selectedChannels = shopModal.scene.getSelectedChannels()
     const channelTypeNumbers = []
     selectedChannels.forEach((channel) => {
@@ -182,6 +201,8 @@ const GameplayScene = (
           shopModal.scene.updateChannels(newGameState.availableChannels)
           channelDeck.scene.updateChannels(newGameState.availableChannels)
           changeGold(newGameState.gold)
+
+          localAvailableChannels = newGameState.availableChannels
 
           shopModal.scene.visible = false
         }
@@ -210,15 +231,36 @@ const GameplayScene = (
 
     waitingModal.setVisible(false)
     channelDeck.scene.clearCards()
+    allowFake = true
+    specialEvent.visible = false
 
     // Get Game State
     const res = await axios.get(
       `${url}/state?gameId=${gameState.gameId}&playerId=${gameState.playerId}`,
     )
     if (res && res.data) {
-      const { people, opponent, gold, round, availableChannels, cards } = res.data
+      const {
+        people,
+        opponent,
+        gold,
+        round,
+        availableChannels,
+        cards,
+        specialEvent: specialEventInfo,
+      } = res.data
       peopleBar.setPeople(people, opponent)
       turnText.setTurnText(round)
+
+      // SPECIAL EVENT
+      if (specialEventInfo) {
+        specialEventModal.setSpecialEvent(specialEventInfo.name, specialEventInfo.description)
+        specialEventModal.toggle()
+        specialEvent.visible = true
+
+        if (specialEventInfo.cardEffect && specialEventInfo.cardEffect.allowFake === false) {
+          allowFake = false
+        }
+      }
 
       shopModal.scene.updateChannels(availableChannels)
       channelDeck.scene.updateChannels(availableChannels)
@@ -226,7 +268,9 @@ const GameplayScene = (
 
       cardContainer.setCards(cards)
       expandedContainer.scene.setCards(cards)
-      initExpandedContainer()
+      initExpandedContainer(allowFake)
+
+      localAvailableChannels = availableChannels
 
       // Store In Game State
       changeGold(gold)

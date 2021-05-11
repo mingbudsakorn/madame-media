@@ -131,7 +131,12 @@ const CreateRoomScene = (
         gameId: res.data.gameId,
         rounds: res.data.setting.numberOfRound,
         // rounds: 2,
+        player1: {
+          name: avatarNameInput.text.trim(),
+          avatar: avatarList[avatarIndex],
+        },
         playerId: res.data.playerId,
+        isSecond: false,
       }
       setCurrentScene(scenes.gameLobby, gameState, nextPossibleScenes[scenes.gameLobby])
     }

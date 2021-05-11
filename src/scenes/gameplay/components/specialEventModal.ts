@@ -3,7 +3,7 @@ import { TEXT_STYLE, COLOR } from '../../../constants/style'
 
 interface SpecialEventModalType extends PIXI.Container {
   toggle: () => void
-  setSpecialEvent: (description: string) => void
+  setSpecialEvent: (title: string, description: string) => void
 }
 
 export const loadSpecialEventModal = (resources: PIXI.IResourceDictionary) => {
@@ -17,10 +17,13 @@ export const loadSpecialEventModal = (resources: PIXI.IResourceDictionary) => {
 
   const specialEventModalBg = new PIXI.Sprite(resources['art/special-event-modal-bg'].texture)
   specialEventModalBg.anchor.set(0.5, 0)
-  specialEventModalBg.position.set(overlay.width/2, overlay.height/2 - specialEventModalBg.height/2)
+  specialEventModalBg.position.set(
+    overlay.width / 2,
+    overlay.height / 2 - specialEventModalBg.height / 2,
+  )
   specialEventModal.addChild(specialEventModalBg)
 
-  const textStyle =  new PIXI.TextStyle({
+  const textStyle = new PIXI.TextStyle({
     fontFamily: 'Chonburi',
     fontSize: 36,
     fill: COLOR.CHARCOAL,
@@ -28,20 +31,26 @@ export const loadSpecialEventModal = (resources: PIXI.IResourceDictionary) => {
     leading: 10,
     breakWords: true,
     wordWrap: true,
-    wordWrapWidth: specialEventModalBg.width - 120
+    wordWrapWidth: specialEventModalBg.width - 120,
   })
 
   const descriptionText = new PIXI.Text('สำหรับตานี้\nการ์ดปลอมทั้งหมดจะใช้การไม่ได้', textStyle)
   if (descriptionText.height > 200) {
     specialEventModalBg.height = specialEventModalBg.height + descriptionText.height - 200
-    specialEventModalBg.position.set(overlay.width/2, overlay.height/2 - specialEventModalBg.height/2)
+    specialEventModalBg.position.set(
+      overlay.width / 2,
+      overlay.height / 2 - specialEventModalBg.height / 2,
+    )
   }
   descriptionText.anchor.set(0.5)
-  descriptionText.position.set(specialEventModalBg.x, specialEventModalBg.y + specialEventModalBg.height/2 - 5)
+  descriptionText.position.set(
+    specialEventModalBg.x,
+    specialEventModalBg.y + specialEventModalBg.height / 2 - 5,
+  )
   specialEventModal.addChild(descriptionText)
 
   const specialEventText = new PIXI.Text('ข่าวด่วน!!', TEXT_STYLE.HEADER_THAI_RED_PURPLE)
-  specialEventText.anchor.set(0.5,0)
+  specialEventText.anchor.set(0.5, 0)
   specialEventText.position.set(specialEventModalBg.x, specialEventModalBg.y + 25)
   specialEventModal.addChild(specialEventText)
 
@@ -52,10 +61,15 @@ export const loadSpecialEventModal = (resources: PIXI.IResourceDictionary) => {
 
   const acceptButton = new PIXI.Sprite(resources['art/accept-btn'].texture)
   acceptButton.anchor.set(0.5, 0)
-  acceptButton.position.set(specialEventModalBg.x , specialEventModalBg.y + specialEventModalBg.height - acceptButton.height - 30)
+  acceptButton.position.set(
+    specialEventModalBg.x,
+    specialEventModalBg.y + specialEventModalBg.height - acceptButton.height - 30,
+  )
   acceptButton.interactive = true
   acceptButton.buttonMode = true
-  acceptButton.on('mousedown', () => specialEventModal.toggle()).on('touchstart', () => specialEventModal.toggle())
+  acceptButton
+    .on('mousedown', () => specialEventModal.toggle())
+    .on('touchstart', () => specialEventModal.toggle())
   specialEventModal.addChild(acceptButton)
 
   specialEventModal.visible = isShowing
@@ -70,15 +84,25 @@ export const loadSpecialEventModal = (resources: PIXI.IResourceDictionary) => {
     }
   }
 
-  specialEventModal.setSpecialEvent = (description: string) => {
+  specialEventModal.setSpecialEvent = (title: string, description: string) => {
+    specialEventText.text = title
     descriptionText.text = description
     if (descriptionText.height > 200) {
       specialEventModalBg.height = specialEventModalBg.height + descriptionText.height - 200
-      specialEventModalBg.position.set(overlay.width/2, overlay.height/2 - specialEventModalBg.height/2)
+      specialEventModalBg.position.set(
+        overlay.width / 2,
+        overlay.height / 2 - specialEventModalBg.height / 2,
+      )
       specialEventText.position.set(specialEventModalBg.x, specialEventModalBg.y + 25)
-      descriptionText.position.set(specialEventModalBg.x, specialEventModalBg.y + specialEventModalBg.height/2 - 5)
+      descriptionText.position.set(
+        specialEventModalBg.x,
+        specialEventModalBg.y + specialEventModalBg.height / 2 - 5,
+      )
       line.position.set(specialEventModalBg.x, specialEventModalBg.y + 97)
-      acceptButton.position.set(specialEventModalBg.x , specialEventModalBg.y + specialEventModalBg.height - acceptButton.height - 25)
+      acceptButton.position.set(
+        specialEventModalBg.x,
+        specialEventModalBg.y + specialEventModalBg.height - acceptButton.height - 25,
+      )
     }
   }
 

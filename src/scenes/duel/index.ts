@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js'
 import loadDuelScene from './loadScene'
 import { GameState, Scene, SceneWrapper } from '../../types'
 import { scenes } from '../../constants/scenes'
-import { OVERLAY } from '../../constants/specialAction'
+import { OVERLAY, SPECIAL_ACTION_TYPE } from '../../constants/specialAction'
 import { gameState as initGameState } from '../../constants/initialState'
 import loadCard from '../../components/card'
 import { CARD } from '../../constants/card'
@@ -54,12 +54,14 @@ const DuelScene = (
     }
   })
 
-  socket.on('special-action-result', () => {
+  socket.on('special-action-result', (res) => {
     waitingModal.setVisible(false)
-    // TODO: show summary
-    // myChannelContainer.setSummary(channelSlots, mockSummary())
-    summaryModal.visible = true
+    myChannelContainer.visible = true
     specialActionContainer.visible = false
+    opponentChannelContainer.removeAllOverlay()
+    // show summary
+
+    summaryModal.visible = true
   })
 
   socket.on('end-round', () => {
@@ -91,26 +93,71 @@ const DuelScene = (
     waitingModal.setVisible(true)
   }
 
-  const playAction = (actionType: 'spy' | 'expose' | 'factCheck') => {
-    // TODO: PLAY AN ACTION
-    axios.post(`${url}/ready-end-round`, {
-      gameId: gameState.gameId,
-      playerId: gameState.playerId,
-    })
+  const playAction = async (actionType: 'SPY' | 'EXPOSE' | 'FACT_CHECK') => {
+    if (actionType === 'FACT_CHECK') {
+      specialActionContainer.setToFactCheck()
+      opponentChannelContainer.setToSelect()
+
+      const startFactCheck = async () => {
+        const cardObject = opponentChannelContainer.getSelectedCard()
+
+        axios.post(`${url}/play-special-action`, {
+          gameId: gameState.gameId,
+          playerId: gameState.playerId,
+          actionType: SPECIAL_ACTION_TYPE[actionType],
+          cardId: cardObject.getCardConfig().id,
+        })
+
+        opponentChannelContainer.removeAllOverlay()
+      }
+
+      specialActionContainer.confirmButton
+        .on('mousedown', startFactCheck)
+        .on('touchstart', startFactCheck)
+    } else if (actionType === 'EXPOSE') {
+      specialActionContainer.setToExpose()
+      opponentChannelContainer.setToSelect()
+
+      const startExpose = async () => {
+        const cardObject = opponentChannelContainer.getSelectedCard()
+
+        axios.post(`${url}/play-special-action`, {
+          gameId: gameState.gameId,
+          playerId: gameState.playerId,
+          actionType: SPECIAL_ACTION_TYPE[actionType],
+          cardId: cardObject.getCardConfig().id,
+        })
+        opponentChannelContainer.removeAllOverlay()
+      }
+
+      specialActionContainer.confirmButton
+        .on('mousedown', startExpose)
+        .on('touchstart', startExpose)
+    } else if (actionType === 'SPY') {
+      specialActionContainer.setToSpy()
+
+      axios.post(`${url}/play-special-action`, {
+        gameId: gameState.gameId,
+        playerId: gameState.playerId,
+        actionType: SPECIAL_ACTION_TYPE[actionType],
+      })
+
+      skip()
+    }
   }
 
   summaryModal.nextTurnButton.on('mousedown', nextTurn).on('touchstart', nextTurn)
 
   specialActionContainer.skipButton.on('mousedown', skip).on('touchstart', skip)
   specialActionContainer.spyButton
-    .on('mousedown', () => playAction('spy'))
-    .on('touchstart', () => playAction('spy'))
+    .on('mousedown', () => playAction('SPY'))
+    .on('touchstart', () => playAction('SPY'))
   specialActionContainer.exposeButton
-    .on('mousedown', () => playAction('expose'))
-    .on('touchstart', () => playAction('expose'))
+    .on('mousedown', () => playAction('EXPOSE'))
+    .on('touchstart', () => playAction('EXPOSE'))
   specialActionContainer.factCheckButton
-    .on('mousedown', () => playAction('factCheck'))
-    .on('touchstart', () => playAction('factCheck'))
+    .on('mousedown', () => playAction('FACT_CHECK'))
+    .on('touchstart', () => playAction('FACT_CHECK'))
 
   scene.onAppear = async () => {
     // RESET
@@ -119,6 +166,7 @@ const DuelScene = (
     duelCompareBg.visible = true
     myChannelContainer.visible = true
     duelCompareBg.x = 66
+    specialActionContainer.reset()
 
     // INIT CHANNEL NAMES
     const { allChannels, battleResult, playerId, gold } = gameState

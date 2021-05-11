@@ -7,6 +7,12 @@ export const OVERLAY = {
   toSelect: 'art/to-select-overlay',
 }
 
+export const SPECIAL_ACTION_TYPE = {
+  FACT_CHECK: 0,
+  EXPOSE: 1,
+  SPY: 2,
+}
+
 export const RESULT = {
   success: 'สำเร็จ!!',
   fail: 'ล้มเหลว!!',

@@ -7,7 +7,6 @@ import loadChannelContainer from './components/channelContainer'
 import loadPeopleBar from '../../components/peopleBar'
 import loadSpecialActionContainer from './components/specialActionContainer'
 import loadSummaryModal from './components/summaryModal'
-import { Channel } from '../../types'
 import loadModal from '../../components/modal'
 
 const duelScene = new PIXI.Container()
@@ -18,26 +17,26 @@ const loadDuelScene = (resources: PIXI.IResourceDictionary) => {
   const duelBg = new PIXI.Sprite(resources['art/duel-bg'].texture)
   duelScene.addChild(duelBg)
 
+  const specialActionContainer = loadSpecialActionContainer(resources)
+  specialActionContainer.position.set(65, 635)
+  duelScene.addChild(specialActionContainer)
+  specialActionContainer.visible = false
+
   const duelCompareBg = new PIXI.Sprite(resources['art/duel-compare-bg'].texture)
   duelCompareBg.position.set(66, 296)
   duelScene.addChild(duelCompareBg)
 
-  const opponentChannelContainer = loadChannelContainer(resources, false)
+  const opponentChannelContainer = loadChannelContainer(resources, false, specialActionContainer)
   opponentChannelContainer.position.set(66, 50)
   duelScene.addChild(opponentChannelContainer)
 
-  const myChannelContainer = loadChannelContainer(resources, true)
+  const myChannelContainer = loadChannelContainer(resources, true, specialActionContainer)
   myChannelContainer.position.set(opponentChannelContainer.x, 645)
   duelScene.addChild(myChannelContainer)
 
   const peopleBar = loadPeopleBar(resources, 0, 0)
   peopleBar.position.set(435, 509)
   duelScene.addChild(peopleBar)
-
-  const specialActionContainer = loadSpecialActionContainer(resources)
-  specialActionContainer.position.set(65, 635)
-  duelScene.addChild(specialActionContainer)
-  specialActionContainer.visible = false
 
   const summaryModal = loadSummaryModal(resources)
   duelScene.addChild(summaryModal)
