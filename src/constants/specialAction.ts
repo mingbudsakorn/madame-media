@@ -4,4 +4,10 @@ export const OVERLAY = {
   select: 'art/selected-overlay',
   factCheck: 'art/have-been-catch-overlay',
   expose: 'art/have-been-expose-overlay',
+  toSelect: 'art/to-select-overlay',
+}
+
+export const RESULT = {
+  success: 'สำเร็จ!!',
+  fail: 'ล้มเหลว!!',
 }

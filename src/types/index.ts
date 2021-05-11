@@ -40,6 +40,16 @@ export interface SummarySlots {
   [key: number]: string | null
 }
 
+export interface SummarySlots {
+  SOCIAL_MEDIA: string | null
+  MOUTH: string | null
+  WEBPAGE: string | null
+  TV: string | null
+  RADIO: string | null
+  PUBLICATION: string | null
+  OUT_OF_HOME: string | null
+}
+
 export interface SceneWrapper {
   scene: PIXI.Container
   children: {
