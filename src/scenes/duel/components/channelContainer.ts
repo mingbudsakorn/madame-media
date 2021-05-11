@@ -33,6 +33,7 @@ const loadDuelChannel = (resources: PIXI.IResourceDictionary, isBottom) => {
   }
 
   const cardContainer = new PIXI.Container()
+  cardContainer.y = duelChannelBg.y
   duelChannel.setCard = (cardConfig: Card) => {
     while (cardContainer.children[0]) {
       cardContainer.removeChildAt(0)

@@ -54,12 +54,25 @@ const DuelScene = (
     }
   })
 
-  socket.on('special-action-result', (res) => {
+  socket.on('special-action-result', () => {
     waitingModal.setVisible(false)
     // TODO: show summary
     // myChannelContainer.setSummary(channelSlots, mockSummary())
     summaryModal.visible = true
     specialActionContainer.visible = false
+  })
+
+  socket.on('end-round', () => {
+    setCurrentScene(scenes.cardShop, gameState, nextPossibleScenes[scenes.cardShop])
+    waitingModal.setVisible(false)
+  })
+
+  socket.on('end-game', (res) => {
+    const { winner, ...people } = res
+    gameState.winner = winner
+    gameState.people = people
+    setCurrentScene(scenes.endGame, gameState, nextPossibleScenes[scenes.endGame])
+    waitingModal.setVisible(false)
   })
 
   const skip = () => {
@@ -75,11 +88,7 @@ const DuelScene = (
       gameId: gameState.gameId,
       playerId: gameState.playerId,
     })
-    if (gameState.currentRound === gameState.rounds) {
-      setCurrentScene(scenes.endGame, gameState, nextPossibleScenes[scenes.endGame])
-    } else {
-      setCurrentScene(scenes.cardShop, gameState, nextPossibleScenes[scenes.cardShop])
-    }
+    waitingModal.setVisible(true)
   }
 
   const playAction = (actionType: 'spy' | 'expose' | 'factCheck') => {
@@ -109,29 +118,45 @@ const DuelScene = (
     summaryModal.visible = false
     duelCompareBg.visible = true
     myChannelContainer.visible = true
+    duelCompareBg.x = 66
 
     // INIT CHANNEL NAMES
     const { allChannels, battleResult, playerId, gold } = gameState
-
     console.log(gameState)
 
     opponentChannelContainer.initChannels(allChannels)
 
-    const res = await axios.get(
-      `${url}/state?gameId=${gameState.gameId}&playerId=${gameState.playerId}`,
-    )
-    if (res && res.data) {
-      const { channelSlots, people, opponent } = res.data
-      myChannelContainer.setCards(channelSlots)
-      // INIT PEOPLE
-      peopleBar.setPeople(people, opponent)
-    }
+    // const res = await axios.get(
+    //   `${url}/state?gameId=${gameState.gameId}&playerId=${gameState.playerId}`,
+    // )
+    // if (res && res.data) {
+    //   const { channelSlots, people, opponent } = res.data
+    //   myChannelContainer.setCards(channelSlots)
+    //   // INIT PEOPLE
+    //   peopleBar.setPeople(people, opponent)
+    // }
 
     const channelPadding = 25
     const resultCount = battleResult.peopleStates.length
     let currentDuel = 0
+
+    let opponentId = ''
+    const sampleResult = battleResult.peopleStates[0]
+    Object.keys(sampleResult).forEach((id) => {
+      if (id !== playerId) opponentId = id
+    })
+
+    myChannelContainer.setCards(battleResult[playerId])
+    opponentChannelContainer.setCards(battleResult[opponentId])
+
+    peopleBar.setPeople(
+      battleResult.peopleStates[currentDuel][playerId],
+      battleResult.peopleStates[currentDuel][opponentId],
+    )
+    currentDuel += 1
+
     const timer = setInterval(() => {
-      if (currentDuel >= resultCount - 1) {
+      if (currentDuel >= resultCount) {
         clearInterval(timer)
         duelCompareBg.visible = false
         myChannelContainer.visible = false
@@ -146,12 +171,6 @@ const DuelScene = (
 
         return
       }
-
-      let opponentId = ''
-      const sampleResult = battleResult.peopleStates[0]
-      Object.keys(sampleResult).forEach((id) => {
-        if (id !== playerId) opponentId = id
-      })
 
       peopleBar.setPeople(
         battleResult.peopleStates[currentDuel][playerId],

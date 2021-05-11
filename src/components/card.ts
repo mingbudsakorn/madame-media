@@ -77,17 +77,26 @@ const loadCard = (resources: PIXI.IResourceDictionary, cardConfig: Card) => {
   unitText.position.set(405, 76)
   card.addChild(unitText)
 
-  let audioText = new PIXI.Text(cardConfig.audioFactor * 100 + '%', TEXT_STYLE.BODY_THAI_CHARCOAL)
+  let audioText = new PIXI.Text(
+    Math.floor(cardConfig.audioFactor * 100) + '%',
+    TEXT_STYLE.BODY_THAI_CHARCOAL,
+  )
   audioText.anchor.set(0.5)
   audioText.position.set(142, 683.5)
   card.addChild(audioText)
 
-  let visualText = new PIXI.Text(cardConfig.visualFactor * 100 + '%', TEXT_STYLE.BODY_THAI_CHARCOAL)
+  let visualText = new PIXI.Text(
+    Math.floor(cardConfig.visualFactor) * 100 + '%',
+    TEXT_STYLE.BODY_THAI_CHARCOAL,
+  )
   visualText.anchor.set(0.5)
   visualText.position.set(282, 683.5)
   card.addChild(visualText)
 
-  let textText = new PIXI.Text(cardConfig.textFactor * 100 + '%', TEXT_STYLE.BODY_THAI_CHARCOAL)
+  let textText = new PIXI.Text(
+    Math.floor(cardConfig.textFactor) * 100 + '%',
+    TEXT_STYLE.BODY_THAI_CHARCOAL,
+  )
   textText.anchor.set(0.5)
   textText.position.set(422, 683.5)
   card.addChild(textText)

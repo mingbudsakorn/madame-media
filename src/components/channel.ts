@@ -93,8 +93,7 @@ const loadChannel = (
 
   channel.removeCard = () => {
     while (cardContainer.children[0]) {
-      cardContainer.removeChildAt[0]
-      console.log('remove-card')
+      cardContainer.removeChildAt(0)
     }
   }
 

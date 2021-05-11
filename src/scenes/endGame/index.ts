@@ -4,7 +4,6 @@ import { GameState, Scene } from '../../types'
 import { scenes } from '../../constants/scenes'
 import { RESULT } from '../../constants/gameConfig'
 import { gameState as initialState } from '../../constants/initialState'
-import axios from 'axios'
 
 const url = process.env.BACKEND_URL
 
@@ -26,8 +25,6 @@ const EndGameScene = (
 
   const { result, goBackHomeButton, player1, player2, peopleBar } = endGameScene.children
 
-  const { player1: player1Info, player2: player2Info } = gameState
-
   const goHome = () => {
     setCurrentScene(scenes.startGame, initialState, nextPossibleScenes[scenes.startGame])
   }
@@ -35,30 +32,37 @@ const EndGameScene = (
   goBackHomeButton.on('mousedown', goHome).on('touchstart', goHome)
 
   scene.onAppear = async () => {
-    player1.setAvatarImg(player1Info.avatar)
-    player1.setAvatarName(player1Info.name)
-    player2.setAvatarImg(player2Info.avatar)
-    player2.setAvatarName(player2Info.name)
+    const { winner, playerId, people } = gameState
 
-    const res = await axios.get(
-      `${url}/state?gameId=${gameState.gameId}&playerId=${gameState.playerId}`,
-    )
-    if (res && res.data) {
-      console.log(res.data)
-      const { people, opponent } = res.data
-      peopleBar.setPeople(people, opponent)
+    player1.setAvatarImg(gameState.player1.avatar)
+    player1.setAvatarName(gameState.player1.name)
+    player2.setAvatarImg(gameState.player2.avatar)
+    player2.setAvatarName(gameState.player2.name)
 
-      if (people > opponent) {
-        // I win
+    if (winner) {
+      // eslint-disable-next-line
+      if (winner.id === playerId) {
         result.setResult(RESULT.WIN.title, RESULT.WIN.description)
-      } else if (people < opponent) {
-        // I lose
-        result.setResult(RESULT.LOSE.title, RESULT.LOSE.description)
       } else {
-        // draw
-        result.setResult(RESULT.DRAW.title, RESULT.DRAW.description)
+        result.setResult(RESULT.LOSE.title, RESULT.LOSE.description)
       }
+    } else {
+      result.setResult(RESULT.DRAW.title, RESULT.DRAW.description)
     }
+
+    let peopleNumber = 0
+    let neutralNumber = 0
+    let opponentNumber = 0
+    Object.keys(people).forEach((key) => {
+      if (key === playerId) {
+        peopleNumber = people[key]
+      } else if (key === 'neutral') {
+        neutralNumber = people[key]
+      } else {
+        opponentNumber = people[key]
+      }
+    })
+    peopleBar.setPeople(peopleNumber, opponentNumber)
   }
 
   return scene
