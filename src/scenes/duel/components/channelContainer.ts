@@ -8,6 +8,7 @@ interface DuelChannelType extends PIXI.Container {
   bg: PIXI.Sprite
   setText: (newText: string) => void
   setCard: (cardConfig: Card) => void
+  removeCard: () => void
 }
 
 const loadDuelChannel = (resources: PIXI.IResourceDictionary, isBottom) => {
@@ -44,6 +45,13 @@ const loadDuelChannel = (resources: PIXI.IResourceDictionary, isBottom) => {
     card.height = duelChannelBg.height
     cardContainer.addChild(card)
   }
+
+  duelChannel.removeCard = () => {
+    while (cardContainer.children[0]) {
+      cardContainer.removeChildAt(0)
+    }
+  }
+
   duelChannel.addChild(cardContainer)
 
   return duelChannel
@@ -106,6 +114,11 @@ export const loadChannelContainer = (resources: PIXI.IResourceDictionary, isBott
   }
 
   channelContainer.setCards = (cardSlots: CardSlots) => {
+    // clear old cards
+    channelList.forEach((channelObject) => {
+      channelObject.removeCard()
+    })
+
     Object.keys(cardSlots).forEach((channelType) => {
       channelList[channelType].setCard(cardSlots[channelType])
     })

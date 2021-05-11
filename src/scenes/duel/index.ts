@@ -126,16 +126,6 @@ const DuelScene = (
 
     opponentChannelContainer.initChannels(allChannels)
 
-    // const res = await axios.get(
-    //   `${url}/state?gameId=${gameState.gameId}&playerId=${gameState.playerId}`,
-    // )
-    // if (res && res.data) {
-    //   const { channelSlots, people, opponent } = res.data
-    //   myChannelContainer.setCards(channelSlots)
-    //   // INIT PEOPLE
-    //   peopleBar.setPeople(people, opponent)
-    // }
-
     const channelPadding = 25
     const resultCount = battleResult.peopleStates.length
     let currentDuel = 0

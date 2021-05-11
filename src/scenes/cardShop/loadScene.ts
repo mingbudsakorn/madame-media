@@ -11,6 +11,7 @@ cardShopScene.position.set(0, 0)
 interface CardShopDeckType extends PIXI.Container {
   setCard: (cardConfigList: Card[]) => void
   getSelectedCards: () => Card[]
+  resetCount: () => void
 }
 
 const loadCardShopScene = (resources: PIXI.IResourceDictionary) => {
@@ -35,6 +36,10 @@ const loadCardShopScene = (resources: PIXI.IResourceDictionary) => {
   cardShopDeck.setCard = (cardConfigList: Card[]) => {
     let prevX = 0
     const padding = 20
+    // clear old cards
+    while (cardShopDeck.children[0]) {
+      cardShopDeck.removeChildAt(0)
+    }
     for (let i in cardConfigList) {
       let cardConfig = cardConfigList[i]
       const cardInShop = loadCardInShop(resources, cardConfig)
@@ -67,6 +72,11 @@ const loadCardShopScene = (resources: PIXI.IResourceDictionary) => {
     } else {
       setActiveConfirmButton(false)
     }
+  }
+
+  cardShopDeck.resetCount = () => {
+    count = 0
+    setActiveConfirmButton(false)
   }
 
   cardShopDeck.getSelectedCards = () => {

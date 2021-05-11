@@ -28,10 +28,7 @@ const CardShopScene = (
   const { confirmButton, cardShopDeck, waitingModal } = cardShopScene.children
 
   socket.on('start-round', () => {
-    // if (scene.visible) {
-    console.log('start-round again')
     setCurrentScene(scenes.gameplay, null, nextPossibleScenes[scenes.gameplay])
-    // }
   })
 
   const selectCards = async () => {
@@ -55,6 +52,8 @@ const CardShopScene = (
 
   scene.onAppear = async () => {
     waitingModal.setVisible(false)
+
+    cardShopDeck.resetCount()
 
     const res = await axios.post(`${url}/deal-cards`, {
       gameId: gameState.gameId,
