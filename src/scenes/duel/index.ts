@@ -176,6 +176,18 @@ const DuelScene = (
     .on('mousedown', () => playAction('FACT_CHECK'))
     .on('touchstart', () => playAction('FACT_CHECK'))
 
+  const shakeEffect = (people, prevPeople, opponent, prevOpponent) => {
+    if (Math.abs(people - prevPeople) + Math.abs(opponent - prevOpponent) > 200) {
+      shakeLikeYouHaveNoSleepCuzYouHaveBeenWorkingOnThisShitForSoLong()
+    } else if (Math.abs(people - prevPeople) + Math.abs(opponent - prevOpponent) > 100) {
+      shakeHard()
+    } else if (Math.abs(people - prevPeople) + Math.abs(opponent - prevOpponent) > 50) {
+      shake()
+    } else if (Math.abs(people - prevPeople) + Math.abs(opponent - prevOpponent) > 25) {
+      shakeLightly()
+    }
+  }
+
   scene.onAppear = async () => {
     // RESET
     specialActionContainer.visible = false
@@ -187,7 +199,6 @@ const DuelScene = (
 
     // INIT CHANNEL NAMES
     const { allChannels, battleResult, playerId, gold } = gameState
-    console.log(gameState)
 
     opponentChannelContainer.initChannels(allChannels)
 
@@ -201,6 +212,17 @@ const DuelScene = (
       if (id !== playerId) opponentId = id
     })
 
+    // For effects
+    let prevMyPeople = 0
+    let prevOpponentPeople = 0
+    const res = await axios.get(
+      `${url}/state?gameId=${gameState.gameId}&playerId=${gameState.playerId}`,
+    )
+    if (res && res.data) {
+      prevMyPeople = res.data.people
+      prevOpponentPeople = res.data.opponent
+    }
+
     myChannelContainer.setCards(battleResult[playerId])
     opponentChannelContainer.setCards(battleResult[opponentId])
 
@@ -208,11 +230,11 @@ const DuelScene = (
       battleResult.peopleStates[currentDuel][playerId],
       battleResult.peopleStates[currentDuel][opponentId],
     )
-    currentDuel += 1
 
-    // For effects
-    let prevMyPeople = battleResult.peopleStates[currentDuel][playerId]
-    let prevOpponentPeople = battleResult.peopleStates[currentDuel][opponentId]
+    prevMyPeople = battleResult.peopleStates[currentDuel][playerId]
+    prevOpponentPeople = battleResult.peopleStates[currentDuel][opponentId]
+
+    currentDuel += 1
 
     const timer = setInterval(() => {
       if (currentDuel >= resultCount) {
@@ -238,27 +260,7 @@ const DuelScene = (
       duelCompareBg.x = duelCompareBg.x + duelCompareBg.width + channelPadding
       currentDuel += 1
 
-      if (
-        Math.abs(myPeople - prevMyPeople) > 200 ||
-        Math.abs(opponentPeople - prevOpponentPeople) > 200
-      ) {
-        shakeLikeYouHaveNoSleepCuzYouHaveBeenWorkingOnThisShitForSoLong()
-      } else if (
-        Math.abs(myPeople - prevMyPeople) > 100 ||
-        Math.abs(opponentPeople - prevOpponentPeople) > 100
-      ) {
-        shakeHard()
-      } else if (
-        Math.abs(myPeople - prevMyPeople) > 50 ||
-        Math.abs(opponentPeople - prevOpponentPeople) > 50
-      ) {
-        shake()
-      } else if (
-        Math.abs(myPeople - prevMyPeople) > 25 ||
-        Math.abs(opponentPeople - prevOpponentPeople) > 25
-      ) {
-        shakeLightly()
-      }
+      shakeEffect(myPeople, prevMyPeople, opponentPeople, prevOpponentPeople)
 
       prevMyPeople = myPeople
       prevOpponentPeople = opponentPeople

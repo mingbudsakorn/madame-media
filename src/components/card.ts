@@ -119,7 +119,7 @@ const loadCard = (resources: PIXI.IResourceDictionary, cardConfig: Card) => {
   }
 
   // Fake Text
-  let fakeText = new PIXI.Text('ปลอม', TEXT_STYLE.SUPER_HEADER_THAI_CHACOAL)
+  let fakeText = new PIXI.Text('ปลอม', TEXT_STYLE.SUPER_HEADER_THAI_RED_PURPLE)
   fakeText.anchor.set(0.5)
   fakeText.position.set(cardBg.width / 2, 339.5)
   fakeText.visible = false

@@ -145,11 +145,6 @@ const GameplayScene = (
           )
           if (avail.length === 0) return
 
-          if (gameState.gold < currentCard.cost) {
-            notEnoughMoneyModal.toggle()
-            return
-          }
-
           axios
             .post(`${url}/place-card`, {
               channelType: channelObject.getChannelConfig().type,
@@ -260,7 +255,6 @@ const GameplayScene = (
       if (specialEventInfo) {
         specialEventText.text = specialEventInfo.name
         specialEventModal.setSpecialEvent(specialEventInfo.name, specialEventInfo.description)
-        specialEventModal.toggle()
         specialEvent.visible = true
 
         if (specialEventInfo.cardEffect && specialEventInfo.cardEffect.allowFake === false) {
