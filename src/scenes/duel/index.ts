@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js'
 import loadDuelScene from './loadScene'
-import { GameState, Scene, SceneWrapper } from '../../types'
+import { Card, GameState, Scene, SceneWrapper } from '../../types'
 import { scenes } from '../../constants/scenes'
 import { SPECIAL_ACTION_TYPE } from '../../constants/specialAction'
 import { gameState as initGameState } from '../../constants/initialState'
@@ -10,11 +10,15 @@ import axios from 'axios'
 import {
   shake,
   shakeHard,
-  shakeLightly,
   shakeLikeYouHaveNoSleepCuzYouHaveBeenWorkingOnThisShitForSoLong,
 } from '../../effects'
 
 const url = process.env.BACKEND_URL
+let opponentId = ''
+let peopleBeforeSpecialAction = {
+  mine: 0,
+  opponent: 0,
+}
 
 const DuelScene = (
   resources: PIXI.IResourceDictionary,
@@ -31,6 +35,8 @@ const DuelScene = (
   scene.setGameState = (settingState: GameState) => {
     gameState = settingState
   }
+
+  let prevResult = {}
 
   const {
     duelCompareBg,
@@ -63,12 +69,17 @@ const DuelScene = (
     specialActionContainer.visible = false
     opponentChannelContainer.removeAllOverlay()
     // show summary
-    console.log(res)
+    opponentChannelContainer.setSummary(res[opponentId], true)
+    myChannelContainer.setSummary(res[gameState.playerId], true)
+
+    peopleBar.setPeople(res[gameState.playerId].people, res[opponentId].people)
 
     summaryModal.visible = true
   })
 
   socket.on('end-round', () => {
+    opponentChannelContainer.clearSummary()
+    myChannelContainer.clearSummary()
     setCurrentScene(scenes.cardShop, gameState, nextPossibleScenes[scenes.cardShop])
     waitingModal.setVisible(false)
   })
@@ -89,12 +100,53 @@ const DuelScene = (
     waitingModal.setVisible(true)
   }
 
+  const skipNoModal = () => {
+    axios.post(`${url}/ready-end-round`, {
+      gameId: gameState.gameId,
+      playerId: gameState.playerId,
+    })
+  }
+
   const nextTurn = () => {
     axios.post(`${url}/ready-next-round`, {
       gameId: gameState.gameId,
       playerId: gameState.playerId,
     })
     waitingModal.setVisible(true)
+  }
+
+  specialActionContainer.finishButton.on('mousedown', skip).on('touchstart', skip)
+
+  const displaySpecialActionResult = (res, type) => {
+    const result = res.data.result[opponentId].exposedCards
+    let newCard = {} as any
+    Object.keys(result).forEach((channel) => {
+      if (!prevResult[channel]) {
+        newCard = result[channel]
+      }
+    })
+    if (!newCard.isReal) {
+      if (type === SPECIAL_ACTION_TYPE.FACT_CHECK) {
+        specialActionContainer.displayFactCheckResult(
+          true,
+          res.data.result[opponentId].people,
+          peopleBeforeSpecialAction.opponent,
+        )
+      } else {
+        // EXPOSE
+        specialActionContainer.displayExposeResult(
+          true,
+          res.data.result[opponentId].people,
+          peopleBeforeSpecialAction.opponent,
+        )
+      }
+    } else {
+      if (type === SPECIAL_ACTION_TYPE.FACT_CHECK) {
+        specialActionContainer.displayFactCheckResult(false, 0, 0)
+      } else {
+        specialActionContainer.displayExposeResult(false, 0, 0)
+      }
+    }
   }
 
   const playAction = async (actionType: 'SPY' | 'EXPOSE' | 'FACT_CHECK') => {
@@ -104,19 +156,36 @@ const DuelScene = (
 
       const startFactCheck = async () => {
         const cardObject = opponentChannelContainer.getSelectedCard()
+        if (cardObject) {
+          axios
+            .post(`${url}/play-special-action`, {
+              gameId: gameState.gameId,
+              playerId: gameState.playerId,
+              actionType: SPECIAL_ACTION_TYPE[actionType],
+              cardId: cardObject.getCardConfig().id,
+            })
+            .then((res) => {
+              specialActionContainer.moneyBar.setMoney(res.data.state.gold)
+              cardObject.setAlreadySelectedForSpecialAction(true)
 
-        axios
-          .post(`${url}/play-special-action`, {
-            gameId: gameState.gameId,
-            playerId: gameState.playerId,
-            actionType: SPECIAL_ACTION_TYPE[actionType],
-            cardId: cardObject.getCardConfig().id,
-          })
-          .then((res) => {
-            specialActionContainer.moneyBar.setMoney(res.data.gold)
-          })
+              const result = res.data.result[opponentId].exposedCards
+              displaySpecialActionResult(res, SPECIAL_ACTION_TYPE.FACT_CHECK)
 
-        opponentChannelContainer.removeAllOverlay()
+              opponentChannelContainer.setSummary(res.data.result[opponentId], false)
+              peopleBar.setPeople(
+                res.data.result[gameState.playerId].people,
+                res.data.result[opponentId].people,
+              )
+
+              prevResult = result
+              peopleBeforeSpecialAction = {
+                mine: res.data.result[gameState.playerId].people,
+                opponent: res.data.result[opponentId].people,
+              }
+            })
+
+          opponentChannelContainer.removeAllOverlay()
+        }
       }
 
       specialActionContainer.confirmButton
@@ -128,19 +197,34 @@ const DuelScene = (
 
       const startExpose = async () => {
         const cardObject = opponentChannelContainer.getSelectedCard()
-        console.log(cardObject)
+        if (cardObject) {
+          axios
+            .post(`${url}/play-special-action`, {
+              gameId: gameState.gameId,
+              playerId: gameState.playerId,
+              actionType: SPECIAL_ACTION_TYPE[actionType],
+              cardId: cardObject.getCardConfig().id,
+            })
+            .then((res) => {
+              specialActionContainer.moneyBar.setMoney(res.data.state.gold)
 
-        axios
-          .post(`${url}/play-special-action`, {
-            gameId: gameState.gameId,
-            playerId: gameState.playerId,
-            actionType: SPECIAL_ACTION_TYPE[actionType],
-            cardId: cardObject.getCardConfig().id,
-          })
-          .then((res) => {
-            specialActionContainer.moneyBar.setMoney(res.data.gold)
-          })
-        opponentChannelContainer.removeAllOverlay()
+              const result = res.data.result[opponentId].exposedCards
+              displaySpecialActionResult(res, SPECIAL_ACTION_TYPE.EXPOSE)
+
+              opponentChannelContainer.setSummary(res.data.result[opponentId], false)
+              peopleBar.setPeople(
+                res.data.result[gameState.playerId].people,
+                res.data.result[opponentId].people,
+              )
+
+              prevResult = result
+              peopleBeforeSpecialAction = {
+                mine: res.data.result[gameState.playerId].people,
+                opponent: res.data.result[opponentId].people,
+              }
+            })
+          opponentChannelContainer.removeAllOverlay()
+        }
       }
 
       specialActionContainer.confirmButton
@@ -148,7 +232,6 @@ const DuelScene = (
         .on('touchstart', startExpose)
     } else if (actionType === 'SPY') {
       specialActionContainer.setToSpy()
-
       axios
         .post(`${url}/play-special-action`, {
           gameId: gameState.gameId,
@@ -156,10 +239,12 @@ const DuelScene = (
           actionType: SPECIAL_ACTION_TYPE[actionType],
         })
         .then((res) => {
-          specialActionContainer.moneyBar.setMoney(res.data.gold)
+          specialActionContainer.moneyBar.setMoney(res.data.state.gold)
+          const result = res.data.result[opponentId].exposedCards
+          opponentChannelContainer.spyCards(result)
         })
-
-      skip()
+      specialActionContainer.confirmButton.on('mousedown', skip).on('touchstart', skip)
+      skipNoModal()
     }
   }
 
@@ -177,14 +262,12 @@ const DuelScene = (
     .on('touchstart', () => playAction('FACT_CHECK'))
 
   const shakeEffect = (people, prevPeople, opponent, prevOpponent) => {
-    if (Math.abs(people - prevPeople) + Math.abs(opponent - prevOpponent) > 200) {
+    if (Math.abs(people - prevPeople) + Math.abs(opponent - prevOpponent) > 150) {
       shakeLikeYouHaveNoSleepCuzYouHaveBeenWorkingOnThisShitForSoLong()
     } else if (Math.abs(people - prevPeople) + Math.abs(opponent - prevOpponent) > 100) {
       shakeHard()
     } else if (Math.abs(people - prevPeople) + Math.abs(opponent - prevOpponent) > 50) {
       shake()
-    } else if (Math.abs(people - prevPeople) + Math.abs(opponent - prevOpponent) > 25) {
-      shakeLightly()
     }
   }
 
@@ -206,7 +289,6 @@ const DuelScene = (
     const resultCount = battleResult.peopleStates.length
     let currentDuel = 0
 
-    let opponentId = ''
     const sampleResult = battleResult.peopleStates[0]
     Object.keys(sampleResult).forEach((id) => {
       if (id !== playerId) opponentId = id
@@ -264,6 +346,11 @@ const DuelScene = (
 
       prevMyPeople = myPeople
       prevOpponentPeople = opponentPeople
+
+      peopleBeforeSpecialAction = {
+        mine: myPeople,
+        opponent: opponentPeople,
+      }
     }, 2000)
   }
 

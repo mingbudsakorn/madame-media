@@ -150,7 +150,6 @@ export const loadShopModal = (resources: PIXI.IResourceDictionary) => {
   }
 
   const toggleIsSelected = (channel: ChannelInShopType) => {
-    console.log(totalCost)
     if (channel.getIsSelected()) {
       totalCost += channel.getChannelConfig().price
     } else {

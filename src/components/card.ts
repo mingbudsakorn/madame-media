@@ -7,12 +7,15 @@ export interface CardType extends PIXI.Container {
   getCardConfig: () => Card
   setIsReal: (boolean) => void
   getIsReal: () => boolean
+  setAlreadySelectedForSpecialAction: (isSelected) => void
+  getAlreadySelectedForSpecialAction: () => boolean
 }
 
 const loadCard = (resources: PIXI.IResourceDictionary, cardConfig: Card) => {
   const card = new PIXI.Container() as CardType
 
   let isReal = true
+  let alreadySelectedForSpecialAction = false
 
   let cardBg = new PIXI.Sprite(resources['cards/real-card-bg'].texture)
   card.addChild(cardBg)
@@ -145,6 +148,14 @@ const loadCard = (resources: PIXI.IResourceDictionary, cardConfig: Card) => {
 
   card.getCardConfig = () => {
     return cardConfig
+  }
+
+  card.setAlreadySelectedForSpecialAction = (isSelected: boolean) => {
+    alreadySelectedForSpecialAction = isSelected
+  }
+
+  card.getAlreadySelectedForSpecialAction = () => {
+    return alreadySelectedForSpecialAction
   }
 
   return card

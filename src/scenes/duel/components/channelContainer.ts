@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js'
 import { TEXT_STYLE } from '../../../constants/style'
-import { Channel, Card, CardSlots, SummarySlots } from '../../../types'
+import { Channel, Card, CardSlots, SingleSummary } from '../../../types'
 import { SpecialActionContainerType } from './specialActionContainer'
 import {
   loadToSelectOverlayContainer,
@@ -8,10 +8,12 @@ import {
 } from './toSelectOverlayContainer'
 import loadCard, { CardType } from '../../../components/card'
 import loadDuelChannel from './duelChannel'
+import { OVERLAY, SPECIAL_ACTION_TYPE } from '../../../constants/specialAction'
+import { shake } from '../../../effects'
 
 interface ChannelContainerType extends PIXI.Container {
   // setChannels: (cards: CardSlots) => void
-  setSummary: (cardList: CardSlots, summaryList: SummarySlots) => void
+  setSummary: (summaryList: SingleSummary, atEnd: boolean) => void
   initChannels: (channels: Channel[]) => void
   setCards: (cardList: CardSlots) => void
   select: (card: Card) => void
@@ -20,6 +22,7 @@ interface ChannelContainerType extends PIXI.Container {
   toSelectOverlayContainer: ToSelectOverlayContainerType
   spyCards: (cardList: CardSlots) => void
   removeAllOverlay: () => void
+  clearSummary: () => void
 }
 
 export const loadChannelContainer = (
@@ -34,6 +37,7 @@ export const loadChannelContainer = (
   const channelContainer = new PIXI.Container() as ChannelContainerType
 
   const channelList = []
+  const channelOverlayList = []
 
   const channel0 = loadDuelChannel(resources, isBottom)
   channel0.position.set(0, 0)
@@ -104,6 +108,7 @@ export const loadChannelContainer = (
 
     Object.keys(cardSlots).forEach((channelType) => {
       const card = loadCard(resources, cardSlots[channelType])
+      // set is real
       card.setIsReal(cardSlots[channelType].isReal)
       const channelObject = channelList[channelType]
       card.x = channelObject.x
@@ -117,30 +122,82 @@ export const loadChannelContainer = (
 
   channelContainer.addChild(cardContainer)
 
-  const toSelectOverlayContainer = loadToSelectOverlayContainer(resources, specialActionContainer)
-
-  channelContainer.setToSelect = () => {
-    toSelectOverlayContainer.setCardList(localCardList)
+  let toSelectOverlayContainer = null as any
+  if (!isBottom) {
+    // OPPONENT
+    toSelectOverlayContainer = loadToSelectOverlayContainer(resources, specialActionContainer)
+    toSelectOverlayContainer.setInteractable(false)
     channelContainer.addChild(toSelectOverlayContainer)
+
+    const onRevert = () => {
+      toSelectOverlayContainer.setInteractable(true)
+    }
+    specialActionContainer.setOnRevert(onRevert)
+
+    channelContainer.setToSelect = () => {
+      toSelectOverlayContainer.setCardList(localCardList)
+      toSelectOverlayContainer.visible = true
+    }
+
+    channelContainer.removeAllOverlay = () => {
+      toSelectOverlayContainer.removeOverlay()
+    }
+
+    channelContainer.getSelectedCard = () => {
+      return toSelectOverlayContainer.getSelectedCard()
+    }
   }
 
-  channelContainer.removeAllOverlay = () => {
-    toSelectOverlayContainer.removeOverlay()
-  }
+  const prepareSummary = () => {
+    channelList.forEach((channelObject) => {
+      let cardOverlay = new PIXI.Sprite(resources[OVERLAY.real].texture)
+      cardOverlay.position.set(channelObject.x - 4, channelObject.bg.y)
+      cardOverlay.visible = false
 
-  channelContainer.getSelectedCard = () => {
-    return toSelectOverlayContainer.getSelectedCard()
+      channelContainer.addChild(cardOverlay)
+      channelOverlayList.push(cardOverlay)
+    })
   }
+  prepareSummary()
 
-  channelContainer.setSummary = (cardList: CardSlots, summaryList: SummarySlots) => {
-    Object.keys(cardList).forEach((channel, i) => {
-      let card = cardList[channel]
-      if (card) {
-        let overlayType = summaryList[channel]
-        let cardOverlay = new PIXI.Sprite(resources[overlayType].texture)
-        cardOverlay.position.set(channelList[i].x - 4, channelList[i].bg.y)
-        channelContainer.addChild(cardOverlay)
+  channelContainer.setSummary = (summary: SingleSummary, atEnd: boolean) => {
+    if (toSelectOverlayContainer) {
+      toSelectOverlayContainer.setInteractable(false)
+    }
+    const { exposedCards } = summary
+
+    Object.keys(exposedCards).forEach((channel) => {
+      let card = exposedCards[channel]
+      if (atEnd) {
+        // REAL SUMMARY
+        if (card.actionType !== SPECIAL_ACTION_TYPE.SPY) {
+          if (!card.isReal) {
+            channelOverlayList[channel].texture =
+              card.actionType === SPECIAL_ACTION_TYPE.FACT_CHECK
+                ? resources[OVERLAY.factCheck].texture
+                : resources[OVERLAY.expose].texture
+            channelOverlayList[channel].visible = true
+          } else {
+            channelOverlayList[channel].visible = false
+          }
+        }
+      } else {
+        // SINGLE SPECIAL ACTION RESULTS
+        if (card.isReal) {
+          channelOverlayList[channel].texture = resources[OVERLAY.real].texture
+          channelOverlayList[channel].visible = true
+        } else {
+          channelOverlayList[channel].texture = resources[OVERLAY.fake].texture
+          channelOverlayList[channel].visible = true
+          shake()
+        }
       }
+    })
+  }
+
+  channelContainer.clearSummary = () => {
+    channelOverlayList.forEach((cardOverlay) => {
+      cardOverlay.visible = false
     })
   }
 

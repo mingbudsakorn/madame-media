@@ -103,7 +103,6 @@ const GameplayScene = (
   // SELECT CARD FROM DECK
   const initExpandedContainer = (allowFake: boolean) => {
     expandedContainer.cardArray.forEach((e) => {
-      console.log(allowFake)
       if (!allowFake) {
         e.toggleButton.interactive = false
         e.toggleButton.visible = false

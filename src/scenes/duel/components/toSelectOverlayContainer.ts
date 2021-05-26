@@ -1,6 +1,4 @@
 import * as PIXI from 'pixi.js'
-import { TEXT_STYLE } from '../../../constants/style'
-import { Card, CardSlots, SummarySlots } from '../../../types'
 import { CardType } from '../../../components/card'
 import { OVERLAY } from '../../../constants/specialAction'
 import { SpecialActionContainerType } from './specialActionContainer'
@@ -17,6 +15,8 @@ export interface ToSelectOverlayContainerType extends PIXI.Container {
   toggle: () => void
   select: (card: ToSelectOverlayType) => void
   removeOverlay: () => void
+  setInteractable: (interatable: boolean) => void
+  getInteractable: () => boolean
 }
 
 const loadToSelectOverlay = (resources: PIXI.IResourceDictionary, card: CardType) => {
@@ -63,6 +63,15 @@ export const loadToSelectOverlayContainer = (
 ) => {
   const toSelectOverlayContainer = new PIXI.Container() as ToSelectOverlayContainerType
 
+  let interactable = false
+  toSelectOverlayContainer.setInteractable = (newInteractable: boolean) => {
+    interactable = newInteractable
+  }
+
+  toSelectOverlayContainer.getInteractable = () => {
+    return interactable
+  }
+
   let toSelectOverlayList: ToSelectOverlayType[] = []
   let selectedCard: CardType = null
 
@@ -85,12 +94,14 @@ export const loadToSelectOverlayContainer = (
   }
 
   const select = (card: ToSelectOverlayType) => {
-    specialActionContainer.setSelect(1)
-    toSelectOverlayList.forEach((cardOverlay, i) => {
-      cardOverlay.select(false)
-    })
-    card.select(true)
-    selectedCard = card.getCard()
+    if (interactable) {
+      specialActionContainer.setSelect(1)
+      toSelectOverlayList.forEach((cardOverlay, i) => {
+        cardOverlay.select(false)
+      })
+      card.select(true)
+      selectedCard = card.getCard()
+    }
   }
 
   toSelectOverlayContainer.select = select
@@ -100,6 +111,7 @@ export const loadToSelectOverlayContainer = (
   }
 
   toSelectOverlayContainer.removeOverlay = () => {
+    specialActionContainer.setSelect(0)
     toSelectOverlayList.forEach((cardOverlay, i) => {
       cardOverlay.select(false)
     })

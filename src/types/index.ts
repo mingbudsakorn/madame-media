@@ -36,18 +36,25 @@ export interface CardSlots {
   [key: number]: Card
 }
 
-export interface SummarySlots {
-  [key: number]: string | null
-}
-
-export interface SummarySlots {
-  SOCIAL_MEDIA: string | null
-  MOUTH: string | null
-  WEBPAGE: string | null
-  TV: string | null
-  RADIO: string | null
-  PUBLICATION: string | null
-  OUT_OF_HOME: string | null
+// Summary for one player
+export interface SingleSummary {
+  exposedCards: {
+    // CHANNEL
+    [key: number]: {
+      // CARD
+      name: string // Card name
+      audioFactor: number // Card audio factor
+      visualFactor: number // Card visual factor
+      textFactor: number // Card text factor
+      cost: number // Card cost to play
+      effectType: 'pr' | 'attack' // Card effect type
+      id?: string // Card ID
+      type?: number
+      // ACTION TYPE
+      actionType: number
+    }
+  }
+  people: number
 }
 
 export interface SceneWrapper {

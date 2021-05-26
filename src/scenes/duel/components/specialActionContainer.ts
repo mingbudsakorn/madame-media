@@ -2,10 +2,6 @@ import * as PIXI from 'pixi.js'
 import { COLOR, TEXT_STYLE } from '../../../constants/style'
 import { loadMoneyBar, MoneyBarType } from '../../../components/moneyBar'
 import { SPECIAL_ACTION } from '../../../constants/gameConfig'
-// import loadFactCheck from './factCheckModal'
-// import loadSpy from './spyModal'
-// import loadExpose from './exposeModal'
-import { CARD } from '../../../constants/card'
 
 export interface SpecialActionContainerType extends PIXI.Container {
   skipButton: PIXI.Sprite
@@ -16,14 +12,16 @@ export interface SpecialActionContainerType extends PIXI.Container {
   question: PIXI.Sprite
   moneyBar: MoneyBarType
   timeLeft: PIXI.Text
+  finishButton: PIXI.Sprite
   setTime: (time: number) => void
   setToFactCheck: () => void
   setToExpose: () => void
   setToSpy: () => void
   setSelect: (n: number) => void
-  displayFactCheckResult: (text: String) => void
-  displayExposeResult: (text: String) => void
+  displayFactCheckResult: (isSuccessful: boolean, newPeople: number, prevPeople: number) => void
+  displayExposeResult: (isSuccessful: boolean, newPeople: number, prevPeople: number) => void
   reset: () => void
+  setOnRevert: (onRevert: () => void) => void
 }
 
 const loadSpecialActionContainer = (resources: PIXI.IResourceDictionary) => {
@@ -32,6 +30,14 @@ const loadSpecialActionContainer = (resources: PIXI.IResourceDictionary) => {
   const timeLeftText = new PIXI.Text('เหลือเวลา', TEXT_STYLE.SUBHEADER_THAI)
   timeLeftText.position.set(0, -42)
   specialActionContainer.addChild(timeLeftText)
+
+  let onRevert = () => {
+    return
+  }
+
+  specialActionContainer.setOnRevert = (newOnRevert) => {
+    onRevert = newOnRevert
+  }
 
   const timeLeft = new PIXI.Text(
     SPECIAL_ACTION.INIT_TIME.toString(),
@@ -197,9 +203,15 @@ const loadSpecialActionContainer = (resources: PIXI.IResourceDictionary) => {
 
   const resultText = new PIXI.Text('', TEXT_STYLE.SUPER_HEADER_THAI_RED_PURPLE)
   resultText.anchor.set(0.5, 1)
-  resultText.position.set(subSpecialActionBg.width / 2, selectCardTextContainer.y + 90)
+  resultText.position.set(subSpecialActionBg.width / 2, selectCardTextContainer.y + 60)
   subSpecialActionContainer.addChild(resultText)
   resultText.visible = false
+
+  const peopleResultText = new PIXI.Text('', TEXT_STYLE.HEADER_THAI)
+  peopleResultText.anchor.set(0.5, 1)
+  peopleResultText.position.set(resultText.x, resultText.y + 70)
+  peopleResultText.visible = false
+  subSpecialActionContainer.addChild(peopleResultText)
 
   const confirmButton = new PIXI.Sprite(resources['art/long-confirm-btn'].texture)
   confirmButton.position.set(skipButton.x, skipButton.y)
@@ -242,19 +254,41 @@ const loadSpecialActionContainer = (resources: PIXI.IResourceDictionary) => {
     selectCardTextContainer.visible = false
     confirmButton.visible = false
     resultText.visible = true
+    peopleResultText.visible = true
     finishButton.visible = true
   }
 
-  const displayFactCheckResult = (text: string) => {
-    setResultText(text)
+  const revertDisplayResult = () => {
+    selectCardTextContainer.visible = true
+    confirmButton.visible = true
+    resultText.visible = false
+    peopleResultText.visible = false
+    finishButton.visible = false
+    factCheckAgainButton.visible = false
+    exposeAgainButton.visible = false
+    onRevert()
+  }
+
+  const displayFactCheckResult = (isSuccessful: boolean, newPeople: number, prevPeople: number) => {
+    if (isSuccessful) {
+      setResultText('สำเร็จ!!')
+    } else {
+      setResultText('ล้มเหลว!!')
+    }
     descriptionText.text = SPECIAL_ACTION.FACT_CHECK_AGAIN
+    peopleResultText.text = 'คู่ต่อสู้เสีย ' + (prevPeople - newPeople) + ' คน'
     factCheckAgainButton.visible = true
     displayResult()
   }
 
-  const displayExposeResult = (text: string) => {
-    setResultText(text)
+  const displayExposeResult = (isSuccessful: boolean, newPeople: number, prevPeople: number) => {
+    if (isSuccessful) {
+      setResultText('สำเร็จ!!')
+    } else {
+      setResultText('ล้มเหลว!!')
+    }
     descriptionText.text = SPECIAL_ACTION.EXPOSE_AGAIN
+    peopleResultText.text = 'คู่ต่อสู้เสีย ' + (prevPeople - newPeople) + ' คน'
     exposeAgainButton.visible = true
     displayResult()
   }
@@ -326,25 +360,33 @@ const loadSpecialActionContainer = (resources: PIXI.IResourceDictionary) => {
     specialActionButtonContainer.visible = true
   }
 
-  specialActionContainer.setToFactCheck = () => {
+  const setToFactCheck = () => {
     subSpecialActionContainer.visible = true
     specialActionButtonContainer.visible = false
     actionText.text = 'ตรวจสอบ'
     pleaseSelectCardText.text = 'เลือกการ์ดที่จะตรวจสอบ'
     descriptionText.text = SPECIAL_ACTION.FACK_CHECK_DES
+    factCheckAgainButton.visible = false
+    countSelectText.visible = true
+    revertDisplayResult()
     updateTextPosition()
   }
+  specialActionContainer.setToFactCheck = setToFactCheck
 
-  specialActionContainer.setToExpose = () => {
+  const setToExpose = () => {
     subSpecialActionContainer.visible = true
     specialActionButtonContainer.visible = false
     actionText.text = 'เปิดโปง'
     pleaseSelectCardText.text = 'เลือกการ์ดที่จะเปิดโปง'
     descriptionText.text = SPECIAL_ACTION.EXPOSE_DES
+    countSelectText.visible = true
+    exposeAgainButton.visible = false
+    revertDisplayResult()
     updateTextPosition()
   }
+  specialActionContainer.setToExpose = setToExpose
 
-  specialActionContainer.setToSpy = () => {
+  const setToSpy = () => {
     subSpecialActionContainer.visible = true
     specialActionButtonContainer.visible = false
     actionText.text = 'สอดส่อง'
@@ -354,11 +396,18 @@ const loadSpecialActionContainer = (resources: PIXI.IResourceDictionary) => {
     finishButton.texture = resources['art/long-finish-btn'].texture
     confirmButton.visible = false
     finishButton.visible = true
+    pleaseSelectCardText.visible = false
+    countSelectText.visible = false
+    revertDisplayResult()
   }
+  specialActionContainer.setToSpy = setToSpy
 
   specialActionContainer.setSelect = (n: number) => {
     countSelectText.text = '(' + n + '/1)'
   }
+
+  exposeAgainButton.on('mousedown', setToExpose).on('touchstart', setToExpose)
+  factCheckAgainButton.on('mousedown', setToFactCheck).on('touchstart', setToFactCheck)
 
   specialActionContainer.skipButton = skipButton
   specialActionContainer.factCheckButton = factCheckButton
@@ -366,6 +415,7 @@ const loadSpecialActionContainer = (resources: PIXI.IResourceDictionary) => {
   specialActionContainer.spyButton = spyButton
   specialActionContainer.moneyBar = moneyBar
   specialActionContainer.confirmButton = confirmButton
+  specialActionContainer.finishButton = finishButton
   specialActionContainer.displayFactCheckResult = displayFactCheckResult
   specialActionContainer.displayExposeResult = displayExposeResult
 

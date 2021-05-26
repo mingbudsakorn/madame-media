@@ -1,14 +1,5 @@
 const screen = document.getElementById('root')
 
-export const shakeLightly = () => {
-  screen.classList.add('shake-little')
-  screen.classList.add('shake-constant')
-  setTimeout(() => {
-    screen.classList.remove('shake-little')
-    screen.classList.remove('shake-constant')
-  }, 1000)
-}
-
 export const shake = () => {
   screen.classList.add('shake')
   screen.classList.add('shake-constant')
