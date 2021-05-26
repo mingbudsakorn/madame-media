@@ -358,6 +358,11 @@ const loadSpecialActionContainer = (resources: PIXI.IResourceDictionary) => {
   specialActionContainer.reset = () => {
     subSpecialActionContainer.visible = false
     specialActionButtonContainer.visible = true
+    factCheckAgainButton.visible = false
+    exposeAgainButton.visible = false
+    confirmButton.visible = false
+    finishButton.visible = false
+    skipButton.visible = true
   }
 
   const setToFactCheck = () => {

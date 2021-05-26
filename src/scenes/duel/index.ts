@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js'
 import loadDuelScene from './loadScene'
 import { Card, GameState, Scene, SceneWrapper } from '../../types'
 import { scenes } from '../../constants/scenes'
-import { SPECIAL_ACTION_TYPE } from '../../constants/specialAction'
+import { SPECIAL_ACTION_COST, SPECIAL_ACTION_TYPE } from '../../constants/specialAction'
 import { gameState as initGameState } from '../../constants/initialState'
 
 import socket from '../../socket'
@@ -37,6 +37,7 @@ const DuelScene = (
   }
 
   let prevResult = {}
+  let currentGold = 0
 
   const {
     duelCompareBg,
@@ -46,6 +47,7 @@ const DuelScene = (
     summaryModal,
     peopleBar,
     waitingModal,
+    notEnoughMoneyModal,
   } = duelScene.children
 
   // TIMER
@@ -100,13 +102,6 @@ const DuelScene = (
     waitingModal.setVisible(true)
   }
 
-  const skipNoModal = () => {
-    axios.post(`${url}/ready-end-round`, {
-      gameId: gameState.gameId,
-      playerId: gameState.playerId,
-    })
-  }
-
   const nextTurn = () => {
     axios.post(`${url}/ready-next-round`, {
       gameId: gameState.gameId,
@@ -150,11 +145,24 @@ const DuelScene = (
   }
 
   const playAction = async (actionType: 'SPY' | 'EXPOSE' | 'FACT_CHECK') => {
+    console.log(currentGold)
+
+    if (SPECIAL_ACTION_COST[actionType] > currentGold) {
+      notEnoughMoneyModal.visible = true
+      return
+    }
+
     if (actionType === 'FACT_CHECK') {
       specialActionContainer.setToFactCheck()
       opponentChannelContainer.setToSelect()
 
       const startFactCheck = async () => {
+        if (SPECIAL_ACTION_COST.FACT_CHECK > currentGold) {
+          notEnoughMoneyModal.visible = true
+          console.log('not enough money')
+          return
+        }
+
         const cardObject = opponentChannelContainer.getSelectedCard()
         if (cardObject) {
           axios
@@ -166,7 +174,7 @@ const DuelScene = (
             })
             .then((res) => {
               specialActionContainer.moneyBar.setMoney(res.data.state.gold)
-              cardObject.setAlreadySelectedForSpecialAction(true)
+              currentGold = res.data.state.gold
 
               const result = res.data.result[opponentId].exposedCards
               displaySpecialActionResult(res, SPECIAL_ACTION_TYPE.FACT_CHECK)
@@ -196,6 +204,11 @@ const DuelScene = (
       opponentChannelContainer.setToSelect()
 
       const startExpose = async () => {
+        if (SPECIAL_ACTION_COST.EXPOSE > currentGold) {
+          notEnoughMoneyModal.visible = true
+          return
+        }
+
         const cardObject = opponentChannelContainer.getSelectedCard()
         if (cardObject) {
           axios
@@ -207,6 +220,7 @@ const DuelScene = (
             })
             .then((res) => {
               specialActionContainer.moneyBar.setMoney(res.data.state.gold)
+              currentGold = res.data.state.gold
 
               const result = res.data.result[opponentId].exposedCards
               displaySpecialActionResult(res, SPECIAL_ACTION_TYPE.EXPOSE)
@@ -231,6 +245,11 @@ const DuelScene = (
         .on('mousedown', startExpose)
         .on('touchstart', startExpose)
     } else if (actionType === 'SPY') {
+      if (SPECIAL_ACTION_COST.SPY > currentGold) {
+        notEnoughMoneyModal.visible = true
+        return
+      }
+
       specialActionContainer.setToSpy()
       axios
         .post(`${url}/play-special-action`, {
@@ -240,11 +259,12 @@ const DuelScene = (
         })
         .then((res) => {
           specialActionContainer.moneyBar.setMoney(res.data.state.gold)
+          currentGold = res.data.state.gold
+
           const result = res.data.result[opponentId].exposedCards
           opponentChannelContainer.spyCards(result)
         })
       specialActionContainer.confirmButton.on('mousedown', skip).on('touchstart', skip)
-      skipNoModal()
     }
   }
 
@@ -279,9 +299,13 @@ const DuelScene = (
     myChannelContainer.visible = true
     duelCompareBg.x = 66
     specialActionContainer.reset()
+    myChannelContainer.setCards({})
+    opponentChannelContainer.setCards({})
 
     // INIT CHANNEL NAMES
     const { allChannels, battleResult, playerId, gold } = gameState
+
+    currentGold = gold
 
     opponentChannelContainer.initChannels(allChannels)
 
