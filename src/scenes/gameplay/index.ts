@@ -130,6 +130,7 @@ const GameplayScene = (
         }
       }
       e.useButton.on('mousedown', selectCard).on('touchstart', selectCard)
+      e.card.on('mousedown', selectCard).on('touchstart', selectCard)
     })
   }
 
