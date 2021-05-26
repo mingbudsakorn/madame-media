@@ -13,15 +13,14 @@ export interface CardSet {
 }
 
 export interface Card {
-  name: string
-  type: string
-  audio: number
-  visual: number
-  text: number
-  price: number
-  effect: string
-  description: string
-  isReal: boolean
+  name: string // Card name
+  audioFactor: number // Card audio factor
+  visualFactor: number // Card visual factor
+  textFactor: number // Card text factor
+  cost: number // Card cost to play
+  effectType: 'pr' | 'attack' // Card effect type
+  id?: string // Card ID
+  type?: number
 }
 
 export interface Channel {
@@ -31,56 +30,31 @@ export interface Channel {
   text: number
   price: number
   baseFactor: number
-}
-
-export interface ChannelSlots {
-  SOCIAL_MEDIA: {
-    channelConfig: Channel
-    isOwned: boolean
-  }
-  MOUTH: {
-    channelConfig: Channel
-    isOwned: boolean
-  }
-  WEBPAGE: {
-    channelConfig: Channel
-    isOwned: boolean
-  }
-  TV: {
-    channelConfig: Channel
-    isOwned: boolean
-  }
-  RADIO: {
-    channelConfig: Channel
-    isOwned: boolean
-  }
-  PUBLICATION: {
-    channelConfig: Channel
-    isOwned: boolean
-  }
-  OUT_OF_HOME: {
-    channelConfig: Channel
-    isOwned: boolean
-  }
+  type: number
 }
 export interface CardSlots {
-  SOCIAL_MEDIA: number | null
-  MOUTH: number | null
-  WEBPAGE: number | null
-  TV: number | null
-  RADIO: number | null
-  PUBLICATION: number | null
-  OUT_OF_HOME: number | null
+  [key: number]: Card
 }
 
-export interface SummarySlots {
-  SOCIAL_MEDIA: string | null
-  MOUTH: string | null
-  WEBPAGE: string | null
-  TV: string | null
-  RADIO: string | null
-  PUBLICATION: string | null
-  OUT_OF_HOME: string | null
+// Summary for one player
+export interface SingleSummary {
+  exposedCards: {
+    // CHANNEL
+    [key: number]: {
+      // CARD
+      name: string // Card name
+      audioFactor: number // Card audio factor
+      visualFactor: number // Card visual factor
+      textFactor: number // Card text factor
+      cost: number // Card cost to play
+      effectType: 'pr' | 'attack' // Card effect type
+      id?: string // Card ID
+      type?: number
+      // ACTION TYPE
+      actionType: number
+    }
+  }
+  people: number
 }
 
 export interface SceneWrapper {
@@ -96,32 +70,8 @@ export interface Scene extends PIXI.Container {
   setNextPossibleScenes: (scenes: { [key: number]: PIXI.Container }) => void
 }
 
-type ChannelName =
-  | 'SOCIAL_MEDIA'
-  | 'MOUTH'
-  | 'WEBPAGE'
-  | 'TV'
-  | 'RADIO'
-  | 'PUBLICATION'
-  | 'OUT_OF_HOME'
-
 export interface GameState {
-  money?: number
-  cards?: CardSlots
-  availableChannels?: {
-    SOCIAL_MEDIA: boolean
-    MOUTH: boolean
-    WEBPAGE: boolean
-    TV: boolean
-    RADIO: boolean
-    PUBLICATION: boolean
-    OUT_OF_HOME: boolean
-  }
-  people?: {
-    ours: number
-    neutral: number
-    theirs: number
-  }
+  gold?: number
   player1?: {
     name: string
     avatar: any
@@ -132,8 +82,15 @@ export interface GameState {
   }
   gameId?: string
   playerId?: string
-  turns?: number
-  currentTurn?: number
+  rounds?: number
+  currentRound?: number
+  allChannels?: Channel[]
+  battleResult?: any
+  winner?: null
+  people?: {
+    [key: string]: number
+  }
+  isSecond?: boolean
 }
 
 export interface Button extends PIXI.Sprite {
@@ -146,4 +103,3 @@ export interface ChannelInShopList {
   channelConfig: Channel
   isOwned: boolean
 }
-;[]

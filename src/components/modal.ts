@@ -4,6 +4,9 @@ import { TEXT_STYLE, COLOR } from '../constants/style'
 interface ModalType extends PIXI.Container {
   toggle: () => void
   setText: (title: string, description: string) => void
+  setShowAcceptButton: (showButton: boolean) => void
+  setClosable: (isClosable: boolean) => void
+  setVisible: (isVisible: boolean) => void
 }
 
 export const loadModal = (resources: PIXI.IResourceDictionary) => {
@@ -80,6 +83,21 @@ export const loadModal = (resources: PIXI.IResourceDictionary) => {
       line.position.set(modalBg.x, modalBg.y + 97)
       acceptButton.position.set(modalBg.x, modalBg.y + modalBg.height - acceptButton.height - 25)
     }
+  }
+
+  acceptButton.visible = false
+
+  modal.setShowAcceptButton = (showButton: boolean) => {
+    acceptButton.visible = showButton
+  }
+
+  modal.setClosable = (isClosable: boolean) => {
+    acceptButton.visible = isClosable
+    overlay.interactive = isClosable
+  }
+
+  modal.setVisible = (isVisible: boolean) => {
+    modal.visible = isVisible
   }
 
   overlay.interactive = true

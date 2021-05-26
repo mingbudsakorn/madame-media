@@ -4,8 +4,11 @@ import { GameState, Scene } from '../../types'
 import { scenes } from '../../constants/scenes'
 import { CARD } from '../../constants/card'
 import { gameState as initGameState } from '../../constants/initialState'
+import axios from 'axios'
+import socket from '../../socket'
 
-const mockCardShopList = [CARD[0], CARD[1], CARD[2], CARD[3], CARD[4]]
+const url = process.env.BACKEND_URL
+
 const CardShopScene = (
   resources: PIXI.IResourceDictionary,
   setCurrentScene: (scene: number, gameState: GameState, sceneObject: Scene) => void,
@@ -17,16 +20,49 @@ const CardShopScene = (
   scene.setNextPossibleScenes = (scenes) => {
     nextPossibleScenes = scenes
   }
-  let gameState = initGameState
+  let gameState = null
   scene.setGameState = (settingState: GameState) => {
     gameState = settingState
   }
 
-  const { bg, confirmButton, cardShopDeck } = cardShopScene.children
+  const { confirmButton, cardShopDeck, waitingModal } = cardShopScene.children
 
-  confirmButton.on('mousedown', cardShopDeck.getSelectedCards).on('touchstart', cardShopDeck.getSelectedCards)
+  socket.on('start-round', () => {
+    setCurrentScene(scenes.gameplay, null, nextPossibleScenes[scenes.gameplay])
+  })
 
-  cardShopDeck.setCard(mockCardShopList)
+  const selectCards = async () => {
+    const selectedCards = cardShopDeck.getSelectedCards()
+
+    const typeArray = []
+    selectedCards.forEach((cardConfig) => {
+      typeArray.push(cardConfig.type)
+    })
+
+    await axios.post(`${url}/select-cards`, {
+      gameId: gameState.gameId,
+      playerId: gameState.playerId,
+      cardTypes: typeArray,
+    })
+
+    waitingModal.setVisible(true)
+  }
+
+  confirmButton.on('mousedown', selectCards).on('touchstart', selectCards)
+
+  scene.onAppear = async () => {
+    waitingModal.setVisible(false)
+
+    cardShopDeck.resetCount()
+
+    const res = await axios.post(`${url}/deal-cards`, {
+      gameId: gameState.gameId,
+      playerId: gameState.playerId,
+    })
+    if (res && res.data) {
+      cardShopDeck.setCard(res.data)
+    }
+  }
 
   return scene
 }

@@ -3,6 +3,7 @@ import loadStartGameScene from './loadScene'
 import { GameState, Scene, SceneWrapper } from '../../types'
 import { scenes } from '../../constants/scenes'
 import { gameState as initialState } from '../../constants/initialState'
+import { shakeHard } from '../../effects'
 
 const StartGameScene = (
   resources: PIXI.IResourceDictionary,

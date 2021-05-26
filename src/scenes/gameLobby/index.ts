@@ -22,20 +22,12 @@ const GameLobbyScene = (
     gameState = settingState
   }
 
-  const {
-    roomId,
-    turn,
-    leftButton,
-    rightButton,
-    myAvatar,
-    opponentAvatar,
-    backButton,
-    startGameButton,
-  } = gameLobbyScene.children
+  const { roomId, turn, myAvatar, opponentAvatar, backButton, startGameButton } =
+    gameLobbyScene.children
   // Buttons
 
   scene.onAppear = () => {
-    turn.setTurn(gameState.turns)
+    turn.setTurn(gameState.rounds)
     roomId.setRoomId(gameState.gameId)
 
     // SOCKETS
@@ -46,45 +38,48 @@ const GameLobbyScene = (
   socket.on('new-player', (res) => {
     const player1 = res[0]
     const player2 = res[1]
-    gameState = {
-      ...gameState,
-      player1: {
-        name: player1.name,
-        avatar: player1.avatar,
-      },
-      player2: {
-        name: player2 ? player2.name : null,
-        avatar: player2 ? player2.avatar : null,
-      },
+
+    if (gameState.isSecond) {
+      gameState = {
+        ...gameState,
+        player2: {
+          name: player1 ? player1.name : null,
+          avatar: player1 ? player1.avatar : null,
+        },
+      }
+    } else {
+      gameState = {
+        ...gameState,
+        player2: {
+          name: player2 ? player2.name : null,
+          avatar: player2 ? player2.avatar : null,
+        },
+      }
     }
 
     if (player1.avatar) {
-      myAvatar.setAvatarImg(player1.avatar)
+      myAvatar.setAvatarImg(gameState.player1.avatar)
     }
-    myAvatar.setAvatarName(player1.name)
+    myAvatar.setAvatarName(gameState.player1.name)
     if (player2) {
       if (player2.avatar) {
-        opponentAvatar.setAvatarImg(player2.avatar)
+        opponentAvatar.setAvatarImg(gameState.player2.avatar)
       }
-      opponentAvatar.setAvatarName(player2.name)
+      opponentAvatar.setAvatarName(gameState.player2.name)
     }
   })
 
   const onStartGame = async () => {
     const url = process.env.BACKEND_URL
     if (gameState.player2) {
-      axios
-        .post(`${url}/start-game`, {
-          gameId: gameState.gameId,
-        })
-        .then(() => {
-          setCurrentScene(scenes.gameplay, gameState, nextPossibleScenes[scenes.gameplay])
-        })
+      axios.post(`${url}/start-game`, {
+        gameId: gameState.gameId,
+      })
     }
   }
   startGameButton.on('mousedown', onStartGame).on('touchstart', onStartGame)
 
-  socket.on('start-game', () => {
+  socket.on('start-round', () => {
     setCurrentScene(scenes.gameplay, gameState, nextPossibleScenes[scenes.gameplay])
   })
 

@@ -7,20 +7,7 @@ import loadChannelContainer from './components/channelContainer'
 import loadPeopleBar from '../../components/peopleBar'
 import loadSpecialActionContainer from './components/specialActionContainer'
 import loadSummaryModal from './components/summaryModal'
-// // // test
-// // import loadChannel from '../../components/Channel.js'
-// // import { CHANNEL } from '../../utils/channel.js'
-// import { CARD } from '../../constants/card'
-
-const emptySlot = {
-  SOCIAL_MEDIA: null,
-  MOUTH: null,
-  WEBPAGE: null,
-  TV: null,
-  RADIO: null,
-  PUBLICATION: null,
-  OUT_OF_HOME: null,
-}
+import loadModal from '../../components/modal'
 
 const duelScene = new PIXI.Container()
 duelScene.position.set(0, 0)
@@ -30,15 +17,20 @@ const loadDuelScene = (resources: PIXI.IResourceDictionary) => {
   const duelBg = new PIXI.Sprite(resources['art/duel-bg'].texture)
   duelScene.addChild(duelBg)
 
+  const specialActionContainer = loadSpecialActionContainer(resources)
+  specialActionContainer.position.set(65, 635)
+  duelScene.addChild(specialActionContainer)
+  specialActionContainer.visible = false
+
   const duelCompareBg = new PIXI.Sprite(resources['art/duel-compare-bg'].texture)
   duelCompareBg.position.set(66, 296)
   duelScene.addChild(duelCompareBg)
 
-  const opponentChannelContainer = loadChannelContainer(resources, emptySlot, false)
+  const opponentChannelContainer = loadChannelContainer(resources, false, specialActionContainer)
   opponentChannelContainer.position.set(66, 50)
   duelScene.addChild(opponentChannelContainer)
 
-  const myChannelContainer = loadChannelContainer(resources, emptySlot, true)
+  const myChannelContainer = loadChannelContainer(resources, true, specialActionContainer)
   myChannelContainer.position.set(opponentChannelContainer.x, 645)
   duelScene.addChild(myChannelContainer)
 
@@ -46,14 +38,15 @@ const loadDuelScene = (resources: PIXI.IResourceDictionary) => {
   peopleBar.position.set(435, 509)
   duelScene.addChild(peopleBar)
 
-  const specialActionContainer = loadSpecialActionContainer(resources)
-  specialActionContainer.position.set(65, 635)
-  duelScene.addChild(specialActionContainer)
-  specialActionContainer.visible = false
-
   const summaryModal = loadSummaryModal(resources)
   duelScene.addChild(summaryModal)
   summaryModal.visible = false
+
+  const waitingModal = loadModal(resources)
+  duelScene.addChild(waitingModal)
+  waitingModal.setText('กรุณารอสักครู่', 'กรุณารออีกฝั่ง')
+  waitingModal.setShowAcceptButton(false)
+  waitingModal.setClosable(false)
 
   return {
     scene: duelScene,
@@ -64,7 +57,8 @@ const loadDuelScene = (resources: PIXI.IResourceDictionary) => {
       myChannelContainer,
       peopleBar,
       specialActionContainer,
-      summaryModal
+      summaryModal,
+      waitingModal,
     },
   }
 }

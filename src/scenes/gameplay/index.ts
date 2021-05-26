@@ -3,18 +3,13 @@ import loadGameplayScene from './loadScene'
 import { scenes } from '../../constants/scenes'
 
 import { gameState as initGameState } from '../../constants/initialState'
-import { MONEY_CONFIG, PEOPLE_BAR_CONFIG, TIME_BAR_CONFIG } from '../../constants/gameConfig'
-import { Card, CardSet, GameState, Scene, SceneWrapper } from '../../types'
-import { AVATAR } from '../../constants/avatar'
-import { CardType } from '../../components/card'
-import { ChannelType } from '../../components/channel'
-import { CHANNEL, CHANNEL_THAI_NAME_MAP, INIT_CHANNEL_CARD_LIST } from '../../constants/channels'
-import { CARD } from '../../constants/card'
+import { Channel, GameState, Scene, SceneWrapper } from '../../types'
 
 import socket from '../../socket'
 import axios from 'axios'
 
-socket.emit('start-game')
+// socket.emit('start-game')
+const url = process.env.BACKEND_URL
 
 const GameplayScene = (
   resources: PIXI.IResourceDictionary,
@@ -29,7 +24,9 @@ const GameplayScene = (
   }
   let gameState = initGameState
   scene.setGameState = (settingState: GameState) => {
-    gameState = settingState
+    if (settingState) {
+      gameState = settingState
+    }
   }
 
   const {
@@ -49,59 +46,37 @@ const GameplayScene = (
     shopModal,
     notEnoughMoneyModal,
     waitingModal,
+    specialEventText,
   } = gameplayScene.children
 
-  const { cards } = gameState
-  // Game States
-  let currentlySelectingCards = false
+  // Scene States
   let currentCard = null
-  let currentCardIndex = null
-  let usedCards = []
+  let initialized = false
+  let localAvailableChannels = [] as Channel[]
+  let allowFake = true
 
-  scene.onAppear = async () => {
-    if (gameState.player1 && gameState.player2) {
-      player1.setAvatarImg(gameState.player1.avatar)
-      player1.setAvatarName(gameState.player1.name)
-      player2.setAvatarImg(gameState.player2.avatar)
-      player2.setAvatarName(gameState.player2.name)
-    }
-
-    const url = process.env.BACKEND_URL
-    const res = await axios.get(
-      `${url}/state?gameId=${gameState.gameId}&playerId=${gameState.playerId}`,
-    )
-    if (res && res.data) {
-      const { people, neutral, opponent, gold, round, availableChannels } = res.data
-      peopleBar.setPeople(people, opponent)
-      moneyBar.setMoney(gold)
-      turnText.setTurnText(round)
-
-      // Set in Game State
-      gameState.people.ours = people
-      gameState.people.theirs = opponent
-      gameState.people.neutral = neutral
-      gameState.money = gold
-      gameState.currentTurn = round
-      availableChannels.map((channel) => {
-        gameState.availableChannels[channel.name] = true
-      })
-
-      shopModal.setChannels(availableChannels)
-      channelDeck.setAvailableChannels()
-    }
+  // ON GOLD CHANGE
+  const changeGold = (newGold: number) => {
+    shopModal.scene.setMoneyText(newGold)
+    moneyBar.setMoney(newGold)
+    expandedContainer.moneyBar.setMoney(newGold)
+    gameState.gold = newGold
   }
 
   // TIMER
   socket.on('countdown', (timeLeft) => {
-    if (timeLeft <= 0) {
-      ready()
-    } else {
-      timeBar.setTime(timeLeft)
+    if (scene.visible) {
+      if (timeLeft <= 0) {
+        ready()
+      } else {
+        timeBar.setTime(timeLeft)
+      }
     }
   })
 
   // READY/FINISH/TIMEOUT
   const ready = async () => {
+    waitingModal.setVisible(true)
     const url = process.env.BACKEND_URL
     await axios.post(`${url}/ready-battle`, {
       gameId: gameState.gameId,
@@ -109,7 +84,8 @@ const GameplayScene = (
     })
   }
 
-  socket.on('battle-result', () => {
+  socket.on('battle-result', (res) => {
+    gameState.battleResult = res.result
     setCurrentScene(scenes.duel, gameState, nextPossibleScenes[scenes.duel])
   })
 
@@ -124,104 +100,185 @@ const GameplayScene = (
     .on('mousedown', () => (shopModal.scene.visible = true))
     .on('touchstart', () => (shopModal.scene.visible = true))
 
-  // SELECT CARD
-  const insertCard = (channel: ChannelType, card: CardSet, isReal: boolean) => {
-    channel.setCard(card, isReal)
-  }
-
-  // PUT CARD INTO CHANNEL
-  Object.keys(channelDeck.channels).forEach((channel) => {
-    const channelObject = channelDeck.channels[channel]
-    channelObject.on('mousedown', () => {
-      if (currentlySelectingCards && channelObject.getIsAvailable()) {
-        insertCard(channelObject, currentCard, currentCard.isReal)
-        cards[channel] = currentCard.isReal ? currentCard.real : currentCard.fake
-        currentlySelectingCards = false
-        expandedContainer.scene.useCard(currentCardIndex)
-
-        // DEDUCT MONEY
-        const cardPrice = currentCard.isReal ? currentCard.real.price : currentCard.fake.price
-        const deductedMoney = gameState.money - cardPrice
-        gameState.money = deductedMoney
-        moneyBar.setMoney(deductedMoney)
-
-        // DEDUCT CARD
-        usedCards.push(currentCard.index)
-
-        channelDeck.scene.setOnSelect(false)
-        currentCard = null
-        refreshExpandedContainer()
-      }
-    })
-  })
-
-  // example set special event modal
-  // specialEventModal.setSpecialEvent('พายุเข้า!! -> สัญญาณหาย \nส่งผลให้ตานี้ประสิทธิภาพช่องทางสื่อ โซเชี่ยลมีเดีย และ เว็บเพจ ลดลง 50% ในขณะที่ โทรทัศน์ และ วิทยุ ใช้การไม่ได้')
-  // specialEventModal.toggle()
-  // specialEvent.setSpecialEvent('พายุเข้า!!')
-  // specialEvent.visible = true
-
   // SELECT CARD FROM DECK
-  const refreshExpandedContainer = () => {
-    expandedContainer.cardArray.forEach((e, i) => {
-      expandedContainer.moneyBar.setMoney(gameState.money)
-      e.useButton.removeAllListeners()
-      e.card.removeAllListeners()
-      const used = usedCards.includes(i)
-      if (used) {
-        e.card.visible = false
+  const initExpandedContainer = (allowFake: boolean) => {
+    expandedContainer.cardArray.forEach((e) => {
+      if (!allowFake) {
+        e.toggleButton.interactive = false
+        e.toggleButton.visible = false
+        e.useButton.y = 420
       } else {
-        e.card.interactive = true
-        const selectCard = () => {
-          const isReal = e.card.getIsReal()
-          const cardConfig = e.card.getCardConfig()
-          const price = isReal ? cardConfig.real.price : cardConfig.fake.price
-          if (gameState.money < price) {
-            notEnoughMoneyModal.toggle()
-          } else {
-            channelDeck.scene.setOnSelect(true)
-            currentlySelectingCards = true
-            currentCard = {
-              ...cardConfig,
-              isReal,
-              index: i,
-            }
-            currentCardIndex = i
-            expandedContainer.scene.visible = false
-          }
-        }
-        e.useButton.on('mousedown', () => {
-          selectCard()
-        })
-        e.card.on('mousedown', () => {
-          selectCard()
-        })
+        e.toggleButton.interactive = true
+        e.toggleButton.visible = true
+        e.useButton.y = 500
       }
+
+      const selectCard = () => {
+        const isReal = e.card.getIsReal()
+        const cardConfig = e.card.getCardConfig()
+        const cost = isReal ? cardConfig.cost : cardConfig.cost / 2
+
+        if (gameState.gold < cost) {
+          notEnoughMoneyModal.toggle()
+        } else {
+          channelDeck.scene.setOnSelect(true)
+          currentCard = {
+            ...cardConfig,
+            isReal,
+          }
+          expandedContainer.scene.visible = false
+        }
+      }
+      e.useButton.on('mousedown', selectCard).on('touchstart', selectCard)
+      e.card.on('mousedown', selectCard).on('touchstart', selectCard)
     })
   }
-  refreshExpandedContainer()
+
+  // PLACE CARD
+  const initChannelDeck = () => {
+    channelDeck.channelArray.forEach((channelObject) => {
+      const insertCard = () => {
+        if (currentCard) {
+          // check if the channel is owned
+          const avail = localAvailableChannels.filter(
+            (e) => e.type === channelObject.getChannelConfig().type,
+          )
+          if (avail.length === 0) return
+
+          axios
+            .post(`${url}/place-card`, {
+              channelType: channelObject.getChannelConfig().type,
+              cardId: currentCard.id,
+              isReal: currentCard.isReal,
+              gameId: gameState.gameId,
+              playerId: gameState.playerId,
+            })
+            .then((res) => {
+              if (res && res.data) {
+                const newGameState = res.data
+                const { gold, cards } = newGameState
+                channelObject.setCard(currentCard, currentCard.isReal)
+                channelDeck.scene.setOnSelect(false)
+                currentCard = null
+
+                // change cards in deck
+                cardContainer.setCards(cards)
+                expandedContainer.scene.setCards(cards)
+                initExpandedContainer(allowFake)
+
+                changeGold(gold)
+              }
+            })
+        }
+      }
+      channelObject.on('mousedown', insertCard).on('touchstart', insertCard)
+    })
+  }
 
   // BUY CHANNELS
   const buyChannels = () => {
-    const selectedChannels = shopModal.scene.getSelectedChannels()
-    selectedChannels.forEach((e) => {
-      gameState.availableChannels[CHANNEL_THAI_NAME_MAP[e.channelConfig.name]] = true
-    })
-    gameState.money = gameState.money - shopModal.scene.getTotalCost()
-    moneyBar.setMoney(gameState.money)
-    shopModal.scene.setMoneyText(gameState.money)
-    expandedContainer.moneyBar.setMoney(gameState.money)
-    shopModal.scene.visible = false
+    if (shopModal.scene.getTotalCost() > gameState.gold) {
+      notEnoughMoneyModal.toggle()
+      return
+    }
 
-    // SET OWNED CHANNELS
-    const newChannels = shopModal.scene.getChannels()
-    selectedChannels.forEach((e) => {
-      newChannels[CHANNEL_THAI_NAME_MAP[e.channelConfig.name]].isOwned = true
+    const selectedChannels = shopModal.scene.getSelectedChannels()
+    const channelTypeNumbers = []
+    selectedChannels.forEach((channel) => {
+      channelTypeNumbers.push(channel.getChannelConfig().type)
     })
-    shopModal.scene.setChannels(newChannels)
-    channelDeck.scene.setAvailableChannels(newChannels)
+
+    axios
+      .post(`${url}/buy-channels`, {
+        gameId: gameState.gameId,
+        playerId: gameState.playerId,
+        channelTypes: channelTypeNumbers,
+      })
+      .then((res) => {
+        if (res && res.data) {
+          const newGameState = res.data
+          // Update state
+          shopModal.scene.updateChannels(newGameState.availableChannels)
+          channelDeck.scene.updateChannels(newGameState.availableChannels)
+          changeGold(newGameState.gold)
+
+          localAvailableChannels = newGameState.availableChannels
+
+          shopModal.scene.visible = false
+        }
+      })
   }
   shopModal.buyButton.on('mousedown', buyChannels).on('touchstart', buyChannels)
+
+  // ON APPEAR
+  scene.onAppear = async () => {
+    if (!initialized) {
+      if (gameState.player1 && gameState.player2) {
+        player1.setAvatarImg(gameState.player1.avatar)
+        player1.setAvatarName(gameState.player1.name)
+        player2.setAvatarImg(gameState.player2.avatar)
+        player2.setAvatarName(gameState.player2.name)
+      }
+
+      // Get all channels
+      const channelsRes = await axios.get(`${url}/channels`)
+      if (channelsRes && channelsRes.data) {
+        gameState.allChannels = channelsRes.data.channelData
+        channelDeck.scene.initChannels(channelsRes.data.channelData)
+        shopModal.scene.initChannels(channelsRes.data.channelData)
+      }
+    }
+
+    waitingModal.setVisible(false)
+    channelDeck.scene.clearCards()
+    allowFake = true
+    specialEvent.visible = false
+
+    // Get Game State
+    const res = await axios.get(
+      `${url}/state?gameId=${gameState.gameId}&playerId=${gameState.playerId}`,
+    )
+    if (res && res.data) {
+      const {
+        people,
+        opponent,
+        gold,
+        round,
+        availableChannels,
+        cards,
+        specialEvent: specialEventInfo,
+      } = res.data
+      peopleBar.setPeople(people, opponent)
+      turnText.setTurnText(round)
+
+      // SPECIAL EVENT
+      if (specialEventInfo) {
+        specialEventText.text = specialEventInfo.name
+        specialEventModal.setSpecialEvent(specialEventInfo.name, specialEventInfo.description)
+        specialEvent.visible = true
+
+        if (specialEventInfo.cardEffect && specialEventInfo.cardEffect.allowFake === false) {
+          allowFake = false
+        }
+      }
+
+      shopModal.scene.updateChannels(availableChannels)
+      channelDeck.scene.updateChannels(availableChannels)
+      initChannelDeck()
+
+      cardContainer.setCards(cards)
+      expandedContainer.scene.setCards(cards)
+      initExpandedContainer(allowFake)
+
+      localAvailableChannels = availableChannels
+
+      // Store In Game State
+      changeGold(gold)
+      gameState.currentRound = round
+    }
+
+    initialized = true
+  }
 
   return scene
 }

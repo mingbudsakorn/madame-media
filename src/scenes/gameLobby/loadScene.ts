@@ -74,21 +74,21 @@ const loadGameLobbyScene = (resources: PIXI.IResourceDictionary) => {
   lobbyTurnBg.position.set(startGameButton.x, startGameButton.y - 80)
   selectTurn.addChild(lobbyTurnBg)
 
-  const leftButton = new PIXI.Sprite(resources['art/button-polygon-left'].texture)
-  leftButton.scale.set(0.7)
-  leftButton.anchor.set(0.5)
-  leftButton.position.set(lobbyTurnBg.x - lobbyTurnBg.width / 2 - 50, lobbyTurnBg.y)
-  leftButton.interactive = true
-  leftButton.buttonMode = true
-  selectTurn.addChild(leftButton)
+  // const leftButton = new PIXI.Sprite(resources['art/button-polygon-left'].texture)
+  // leftButton.scale.set(0.7)
+  // leftButton.anchor.set(0.5)
+  // leftButton.position.set(lobbyTurnBg.x - lobbyTurnBg.width / 2 - 50, lobbyTurnBg.y)
+  // leftButton.interactive = true
+  // leftButton.buttonMode = true
+  // selectTurn.addChild(leftButton)
 
-  const rightButton = new PIXI.Sprite(resources['art/button-polygon-right'].texture)
-  rightButton.scale.set(0.7)
-  rightButton.anchor.set(0.5)
-  rightButton.position.set(lobbyTurnBg.x + lobbyTurnBg.width / 2 + 50, leftButton.y)
-  rightButton.interactive = true
-  rightButton.buttonMode = true
-  selectTurn.addChild(rightButton)
+  // const rightButton = new PIXI.Sprite(resources['art/button-polygon-right'].texture)
+  // rightButton.scale.set(0.7)
+  // rightButton.anchor.set(0.5)
+  // rightButton.position.set(lobbyTurnBg.x + lobbyTurnBg.width / 2 + 50, leftButton.y)
+  // rightButton.interactive = true
+  // rightButton.buttonMode = true
+  // selectTurn.addChild(rightButton)
 
   const backButton = new PIXI.Sprite(resources['art/back-button'].texture)
   backButton.interactive = true
@@ -140,8 +140,8 @@ const loadGameLobbyScene = (resources: PIXI.IResourceDictionary) => {
       turn,
       myAvatar,
       opponentAvatar,
-      leftButton,
-      rightButton,
+      // leftButton,
+      // rightButton,
       waitingText,
       selectTurn,
       vsText,

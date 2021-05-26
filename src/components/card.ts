@@ -1,17 +1,21 @@
 import * as PIXI from 'pixi.js'
+import { TYPE } from '../constants/card'
 import { TEXT_STYLE } from '../constants/style'
 import { Card, CardSet } from '../types'
 
 export interface CardType extends PIXI.Container {
-  getCardConfig: () => CardSet
+  getCardConfig: () => Card
   setIsReal: (boolean) => void
   getIsReal: () => boolean
+  setAlreadySelectedForSpecialAction: (isSelected) => void
+  getAlreadySelectedForSpecialAction: () => boolean
 }
 
-const loadCard = (resources: PIXI.IResourceDictionary, cardConfig: CardSet) => {
+const loadCard = (resources: PIXI.IResourceDictionary, cardConfig: Card) => {
   const card = new PIXI.Container() as CardType
 
   let isReal = true
+  let alreadySelectedForSpecialAction = false
 
   let cardBg = new PIXI.Sprite(resources['cards/real-card-bg'].texture)
   card.addChild(cardBg)
@@ -20,19 +24,19 @@ const loadCard = (resources: PIXI.IResourceDictionary, cardConfig: CardSet) => {
   cardLine.position.set(30, 122)
   card.addChild(cardLine)
 
-  let audioIconBig = cardConfig.real.audio
+  let audioIconBig = cardConfig.audioFactor
     ? new PIXI.Sprite(resources['cards/avail-volume-big'].texture)
     : new PIXI.Sprite(resources['cards/not-avail-volume-big'].texture)
   audioIconBig.position.set(42, 654)
   card.addChild(audioIconBig)
 
-  let visualIconBig = cardConfig.real.visual
+  let visualIconBig = cardConfig.visualFactor
     ? new PIXI.Sprite(resources['cards/avail-img-big'].texture)
     : new PIXI.Sprite(resources['cards/not-avail-img-big'].texture)
   visualIconBig.position.set(182, 654)
   card.addChild(visualIconBig)
 
-  let textIconBig = cardConfig.real.text
+  let textIconBig = cardConfig.textFactor
     ? new PIXI.Sprite(resources['cards/avail-text-big'].texture)
     : new PIXI.Sprite(resources['cards/not-avail-volume-big'].texture)
   textIconBig.position.set(322, 654)
@@ -56,16 +60,17 @@ const loadCard = (resources: PIXI.IResourceDictionary, cardConfig: CardSet) => {
   textIconSmall.position.set(146, 31)
   card.addChild(textIconSmall)
 
-  let cardName = new PIXI.Text(cardConfig.real.name, TEXT_STYLE.BODY_THAI_CHARCOAL)
+  let cardName = new PIXI.Text(cardConfig.name, TEXT_STYLE.BODY_THAI_CHARCOAL)
   cardName.position.set(34, 86)
   card.addChild(cardName)
 
-  let cardType = new PIXI.Text(cardConfig.real.type, TEXT_STYLE.HEADER_THAI_CHACOAL)
+  const cardTypeText = cardConfig.effectType === 'pr' ? TYPE.PR.text : TYPE.ATTACK.text
+  let cardType = new PIXI.Text(cardTypeText, TEXT_STYLE.HEADER_THAI_CHACOAL)
   cardType.anchor.set(0.5)
   cardType.position.set(cardBg.width / 2, 571.5)
   card.addChild(cardType)
 
-  let cardPrice = new PIXI.Text(cardConfig.real.price.toString(), TEXT_STYLE.HEADER_THAI_CHACOAL)
+  let cardPrice = new PIXI.Text(cardConfig.cost.toString(), TEXT_STYLE.HEADER_THAI_CHACOAL)
   cardPrice.anchor.set(1, 1)
   cardPrice.position.set(396, 83)
   card.addChild(cardPrice)
@@ -75,22 +80,32 @@ const loadCard = (resources: PIXI.IResourceDictionary, cardConfig: CardSet) => {
   unitText.position.set(405, 76)
   card.addChild(unitText)
 
-  let audioText = new PIXI.Text(cardConfig.real.audio + '%', TEXT_STYLE.BODY_THAI_CHARCOAL)
+  let audioText = new PIXI.Text(
+    Math.floor(cardConfig.audioFactor * 100) + '%',
+    TEXT_STYLE.BODY_THAI_CHARCOAL,
+  )
   audioText.anchor.set(0.5)
   audioText.position.set(142, 683.5)
   card.addChild(audioText)
 
-  let visualText = new PIXI.Text(cardConfig.real.visual + '%', TEXT_STYLE.BODY_THAI_CHARCOAL)
+  let visualText = new PIXI.Text(
+    Math.floor(cardConfig.visualFactor * 100) + '%',
+    TEXT_STYLE.BODY_THAI_CHARCOAL,
+  )
   visualText.anchor.set(0.5)
   visualText.position.set(282, 683.5)
   card.addChild(visualText)
 
-  let textText = new PIXI.Text(cardConfig.real.text + '%', TEXT_STYLE.BODY_THAI_CHARCOAL)
+  let textText = new PIXI.Text(
+    Math.floor(cardConfig.textFactor * 100) + '%',
+    TEXT_STYLE.BODY_THAI_CHARCOAL,
+  )
   textText.anchor.set(0.5)
   textText.position.set(422, 683.5)
   card.addChild(textText)
 
-  let effectText = new PIXI.Text(cardConfig.real.effect, TEXT_STYLE.BODY_THAI_CHARCOAL)
+  const cardEffectText = cardConfig.effectType === 'pr' ? TYPE.PR.effect : TYPE.ATTACK.effect
+  let effectText = new PIXI.Text(cardEffectText, TEXT_STYLE.BODY_THAI_CHARCOAL)
   effectText.anchor.set(0.5)
   effectText.position.set(cardBg.width / 2, 619)
   card.addChild(effectText)
@@ -99,8 +114,15 @@ const loadCard = (resources: PIXI.IResourceDictionary, cardConfig: CardSet) => {
   cardImageBg.position.set(45, 147)
   card.addChild(cardImageBg)
 
+  let cardImagePath = resources['cards/' + cardConfig.name]
+  if (cardImagePath) {
+    cardImageBg.texture = cardImagePath.texture
+    cardImageBg.width = 400
+    cardImageBg.height = 385
+  }
+
   // Fake Text
-  let fakeText = new PIXI.Text('ปลอม', TEXT_STYLE.SUPER_HEADER_THAI_CHACOAL)
+  let fakeText = new PIXI.Text('ปลอม', TEXT_STYLE.SUPER_HEADER_THAI_RED_PURPLE)
   fakeText.anchor.set(0.5)
   fakeText.position.set(cardBg.width / 2, 339.5)
   fakeText.visible = false
@@ -111,12 +133,12 @@ const loadCard = (resources: PIXI.IResourceDictionary, cardConfig: CardSet) => {
       isReal = false
       fakeText.visible = true
       cardBg.texture = resources['cards/fake-card-bg'].texture
-      cardPrice.text = cardConfig.fake.price.toString()
+      cardPrice.text = (cardConfig.cost / 2).toString()
     } else {
       isReal = true
       fakeText.visible = false
       cardBg.texture = resources['cards/real-card-bg'].texture
-      cardPrice.text = cardConfig.real.price.toString()
+      cardPrice.text = cardConfig.cost.toString()
     }
   }
 
@@ -126,6 +148,14 @@ const loadCard = (resources: PIXI.IResourceDictionary, cardConfig: CardSet) => {
 
   card.getCardConfig = () => {
     return cardConfig
+  }
+
+  card.setAlreadySelectedForSpecialAction = (isSelected: boolean) => {
+    alreadySelectedForSpecialAction = isSelected
+  }
+
+  card.getAlreadySelectedForSpecialAction = () => {
+    return alreadySelectedForSpecialAction
   }
 
   return card

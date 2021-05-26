@@ -1,8 +1,8 @@
 import * as PIXI from 'pixi.js'
 import loadMoneyBar from '../../../components/moneyBar'
-import { CHANNEL, CHANNEL_THAI_NAME_MAP, initChannelSlot } from '../../../constants/channels'
+import { CHANNEL_COUNT } from '../../../constants/channels'
 import { TEXT_STYLE, COLOR } from '../../../constants/style'
-import { ChannelInShopList, Channel, ChannelSlots } from '../../../types/index'
+import { Channel } from '../../../types/index'
 import loadChannelInShop, { ChannelInShopType } from '../../../components/channelInShop'
 
 interface ShopModalType extends PIXI.Container {
@@ -10,8 +10,8 @@ interface ShopModalType extends PIXI.Container {
   toggle: () => void
   setTotalCost: (totalCost: number) => void
   getTotalCost: () => number
-  setChannels: (channels: ChannelSlots) => void
-  getChannels: () => ChannelSlots
+  initChannels: (allChannels: Channel[]) => void
+  updateChannels: (availableChannels: Channel[]) => void
   getSelectedChannels: () => Channel[]
   setAvailableChannels: (availableChannels: Channel[]) => void
   setMoneyText: (number) => void
@@ -19,8 +19,6 @@ interface ShopModalType extends PIXI.Container {
 
 export const loadShopModal = (resources: PIXI.IResourceDictionary) => {
   let isShowing = false
-  let channelSlot = initChannelSlot()
-  let channelArray = []
   let totalCost = 0
 
   const shopModalWithOverlay = new PIXI.Container() as ShopModalType
@@ -45,63 +43,52 @@ export const loadShopModal = (resources: PIXI.IResourceDictionary) => {
   moneyBar.position.set(panelBg.x - panelBg.width / 2, 595)
   shopModal.addChild(moneyBar)
 
-  const channelContainer = new PIXI.Container()
+  const channelContainerArray = []
+  const channelArray = [null, null, null, null, null, null, null]
 
-  // channels
-  shopModalWithOverlay.setChannels = (channels: ChannelSlots) => {
+  shopModalWithOverlay.initChannels = (allChannels: Channel[]) => {
     let prevX = 88
     let padding = 20
     let channelY = panelBg.y + 20
 
-    // Clear old children
-    while (channelContainer.children[0]) {
-      channelContainer.removeChild(channelContainer.children[0])
+    for (let i = 0; i < CHANNEL_COUNT; i++) {
+      const channelContainer = new PIXI.Container()
+      channelContainer.x = prevX
+      channelContainer.y = channelY
+      shopModal.addChild(channelContainer)
+      channelContainerArray.push(channelContainer)
+      prevX += 220 + padding
     }
+    allChannels.forEach((channelConfig) => {
+      const channelObject = loadChannelInShop(resources, channelConfig)
+      const channelContainer = channelContainerArray[channelConfig.type]
 
-    Object.keys(channels).forEach((channelKey, i) => {
-      const channelInSlot = channels[channelKey]
-      const channelInShop = loadChannelInShop(
-        resources,
-        channelInSlot.channelConfig,
-        channelInSlot.isOwned,
-      )
-      channelInShop.x = i == 0 ? prevX : prevX + channelInShop.width + padding
-      prevX = channelInShop.x
-      channelInShop.y = channelY
-      channelContainer.addChild(channelInShop)
-
-      channelInShop.tickBox
+      channelObject.tickBox
         .on('mousedown', async () => {
-          channelInShop.toggleIsSelected()
-          toggleIsSelected(channelInShop)
+          channelObject.toggleIsSelected()
+          toggleIsSelected(channelObject)
         })
         .on('touchstart', () => {
-          channelInShop.toggleIsSelected()
-          toggleIsSelected(channelInShop)
+          channelObject.toggleIsSelected()
+          toggleIsSelected(channelObject)
         })
 
-      channelContainer.addChild(channelInShop)
-
-      channelSlot[
-        CHANNEL_THAI_NAME_MAP[channelInSlot.channelConfig.name]
-      ].channelObject = channelInShop
-      channelSlot[CHANNEL_THAI_NAME_MAP[channelInSlot.channelConfig.name]].isOwned =
-        channelInSlot.isOwned
-
-      channelArray.push({
-        channelConfig: channelInSlot.channelConfig,
-        channelObject: channelInShop,
-      })
+      channelContainer.addChild(channelObject)
+      channelArray[channelConfig.type] = channelObject
     })
-    shopModal.addChild(channelContainer)
   }
 
-  shopModalWithOverlay.getChannels = () => {
-    return channelSlot
+  shopModalWithOverlay.updateChannels = (availableChannels: Channel[]) => {
+    availableChannels.forEach((channelConfig) => {
+      const channelObject = channelArray[channelConfig.type]
+
+      channelObject.setIsOwned(true)
+    })
+    setTotalCost(0)
   }
 
   shopModalWithOverlay.getSelectedChannels = () => {
-    let selectedChannels = channelArray.filter((channel) => channel.channelObject.getIsSelected())
+    let selectedChannels = channelArray.filter((channel) => channel.getIsSelected())
     return selectedChannels
   }
 
@@ -157,9 +144,9 @@ export const loadShopModal = (resources: PIXI.IResourceDictionary) => {
     moneyBar.setMoney(money)
   }
 
-  const setTotalCost = (totalCost: number) => {
-    totalCostText.text = 'ราคารวม: ' + totalCost.toString() + ' เหรียญ'
-    totalCost = totalCost
+  const setTotalCost = (newTotalCost: number) => {
+    totalCostText.text = 'ราคารวม: ' + newTotalCost.toString() + ' เหรียญ'
+    totalCost = newTotalCost
   }
 
   const toggleIsSelected = (channel: ChannelInShopType) => {

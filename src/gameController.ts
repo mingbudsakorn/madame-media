@@ -58,8 +58,15 @@ const gameController = (app: PIXI.Application) => {
   gameplayScene.setNextPossibleScenes({
     [scenes.duel]: duelScene,
   })
-  duelScene.setNextPossibleScenes({
+  cardShopScene.setNextPossibleScenes({
     [scenes.gameplay]: gameplayScene,
+  })
+  duelScene.setNextPossibleScenes({
+    [scenes.cardShop]: cardShopScene,
+    [scenes.endGame]: endGameScene,
+  })
+  endGameScene.setNextPossibleScenes({
+    [scenes.startGame]: startGameScene,
   })
 
   // RENDER
@@ -70,6 +77,8 @@ const gameController = (app: PIXI.Application) => {
     gameLobbyScene.visible = false
     gameplayScene.visible = false
     duelScene.visible = false
+    cardShopScene.visible = false
+    endGameScene.visible = false
 
     switch (currentScene) {
       case scenes.gameplay:
@@ -95,9 +104,11 @@ const gameController = (app: PIXI.Application) => {
         break
       case scenes.cardShop:
         cardShopScene.visible = true
+        cardShopScene.onAppear()
         break
       case scenes.endGame:
         endGameScene.visible = true
+        endGameScene.onAppear()
     }
   }
 

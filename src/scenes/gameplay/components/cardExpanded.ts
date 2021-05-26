@@ -2,9 +2,10 @@ import * as PIXI from 'pixi.js'
 import loadCard, { CardType } from '../../../components/card'
 import loadMoneyBar from '../../../components/moneyBar'
 import { CARD } from '../../../constants/card'
+import { Card } from '../../../types'
 
 interface Type extends PIXI.Container {
-  setCards: (cards: number[]) => void
+  setCards: (cards: Card[]) => void
   useCard: (index: number) => void
 }
 
@@ -24,11 +25,11 @@ const loadCardExpanded = (resources: PIXI.IResourceDictionary, onClose: () => vo
 
   let cardArray = []
 
-  const displayCards = async (cards: number[]) => {
+  const displayCards = async (cards: Card[]) => {
     cardArray.length = 0
-    cards.forEach((cardNumber, i) => {
+    cards.forEach((cardConfig, i) => {
       const singleCardContainer = new PIXI.Container()
-      const card = loadCard(resources, CARD[cardNumber])
+      const card = loadCard(resources, cardConfig)
       card.width = 275
       card.height = 404
       card.x = 300 * i
@@ -90,7 +91,7 @@ const loadCardExpanded = (resources: PIXI.IResourceDictionary, onClose: () => vo
   moneyBar.position.set(1170, 100)
   cardExpanded.addChild(moneyBar)
 
-  cardExpanded.setCards = (cards: number[]) => {
+  cardExpanded.setCards = (cards: Card[]) => {
     // clear old cards
     while (cardContainer.children[0]) {
       cardContainer.removeChild(cardContainer.children[0])

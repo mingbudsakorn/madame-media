@@ -5,8 +5,9 @@ import { Card, CardSet, Channel } from '../types'
 import loadCard, { CardType } from './card'
 
 export interface ChannelType extends PIXI.Container {
-  setCard: (card: CardSet, isReal: boolean) => void
+  setCard: (card: Card, isReal: boolean) => void
   getCard: () => CardType
+  removeCard: () => void
   setIsAvailable: (boolean) => void
   getIsAvailable: () => boolean
   getChannelConfig: () => Channel
@@ -63,7 +64,7 @@ const loadChannel = (
   channel.addChild(textIcon)
 
   let percentageText = new PIXI.Text(
-    channelConfig.baseFactor + '%',
+    channelConfig.baseFactor * 100 + '%',
     isAvailable ? TEXT_STYLE.BODY_THAI : TEXT_STYLE.BODY_THAI_CHARCOAL,
   )
   percentageText.anchor.set(0.5, 0)
@@ -72,7 +73,7 @@ const loadChannel = (
 
   // Card in the channel
   const cardContainer = new PIXI.Container()
-  channel.setCard = (cardConfig: CardSet, isReal: boolean) => {
+  channel.setCard = (cardConfig: Card, isReal: boolean) => {
     // clear former card
     if (cardContainer.children[0]) cardContainer.removeChild(cardContainer.children[0])
     if (cardConfig) {
@@ -89,6 +90,12 @@ const loadChannel = (
   cardContainer.y = 0
 
   channel.addChild(cardContainer)
+
+  channel.removeCard = () => {
+    while (cardContainer.children[0]) {
+      cardContainer.removeChildAt(0)
+    }
+  }
 
   channel.getCard = () => {
     return cardContainer.children.length > 0 ? (cardContainer.children[0] as CardType) : undefined

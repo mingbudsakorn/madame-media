@@ -3,13 +3,15 @@ import { TEXT_STYLE, COLOR } from '../../constants/style'
 import loadCardInShop, { CardInShopType } from './components/cardInShop'
 import { Card, CardSet } from '../../types/index'
 import { Button } from '../../types/index'
+import loadModal from '../../components/modal'
 
 const cardShopScene = new PIXI.Container()
 cardShopScene.position.set(0, 0)
 
 interface CardShopDeckType extends PIXI.Container {
-  setCard: (cardConfigList: CardSet[]) => void
-  getSelectedCards: () => CardSet[]
+  setCard: (cardConfigList: Card[]) => void
+  getSelectedCards: () => Card[]
+  resetCount: () => void
 }
 
 const loadCardShopScene = (resources: PIXI.IResourceDictionary) => {
@@ -31,9 +33,14 @@ const loadCardShopScene = (resources: PIXI.IResourceDictionary) => {
   cardShopScene.addChild(cardShopDeck)
   let count = 0
 
-  cardShopDeck.setCard = (cardConfigList: CardSet[]) => {
+  cardShopDeck.setCard = (cardConfigList: Card[]) => {
     let prevX = 0
     const padding = 20
+    // clear old cards
+    while (cardShopDeck.children[0]) {
+      cardShopDeck.removeChildAt(0)
+    }
+    cardsObject = []
     for (let i in cardConfigList) {
       let cardConfig = cardConfigList[i]
       const cardInShop = loadCardInShop(resources, cardConfig)
@@ -68,9 +75,18 @@ const loadCardShopScene = (resources: PIXI.IResourceDictionary) => {
     }
   }
 
+  cardShopDeck.resetCount = () => {
+    count = 0
+    setActiveConfirmButton(false)
+  }
+
   cardShopDeck.getSelectedCards = () => {
     let selectedCards = cardsObject.filter((card) => card.getIsSelected())
-    return selectedCards
+    let selectedConfig = []
+    selectedCards.forEach((card) => {
+      selectedConfig.push(card.getCardConfig())
+    })
+    return selectedConfig
   }
 
   //button
@@ -88,12 +104,19 @@ const loadCardShopScene = (resources: PIXI.IResourceDictionary) => {
   }
   cardShopScene.addChild(confirmButton)
 
+  const waitingModal = loadModal(resources)
+  cardShopScene.addChild(waitingModal)
+  waitingModal.setText('กรุณารอสักครู่', 'กรุณารออีกฝั่ง')
+  waitingModal.setShowAcceptButton(false)
+  waitingModal.setClosable(false)
+
   return {
     scene: cardShopScene,
     children: {
       bg,
       confirmButton,
       cardShopDeck,
+      waitingModal,
     },
   }
 }

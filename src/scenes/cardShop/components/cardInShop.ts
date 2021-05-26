@@ -6,10 +6,10 @@ export interface CardInShopType extends PIXI.Container {
   getIsSelected: () => boolean
   toggle: () => void
   tickBox: PIXI.Sprite
-  getCardConfig: () => CardSet
+  getCardConfig: () => Card
 }
 
-export const loadCardInShop = (resources: PIXI.IResourceDictionary, cardConfig: CardSet) => {
+export const loadCardInShop = (resources: PIXI.IResourceDictionary, cardConfig: Card) => {
   let isSelected = false
   const cardInShopContainer = new PIXI.Container() as CardInShopType
   const tickBox = new PIXI.Sprite(resources['art/card-not-selected'].texture)
