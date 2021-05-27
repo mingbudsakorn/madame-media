@@ -82,8 +82,15 @@ const loadSpecialActionContainer = (resources: PIXI.IResourceDictionary) => {
 
   let btnPadding = 72
 
+  const spyButton = new PIXI.Sprite(resources['art/spy-btn'].texture)
+  spyButton.position.set(98, 121)
+  spyButton.interactive = true
+  spyButton.buttonMode = true
+  spyButton.on('mouseover', () => onHoverSpecialActionButton(3)).on('mouseout', () => onMouseOut(3))
+  specialActionButtonContainer.addChild(spyButton)
+
   const factCheckButton = new PIXI.Sprite(resources['art/fack-check-btn'].texture)
-  factCheckButton.position.set(98, 121)
+  factCheckButton.position.set(spyButton.x + spyButton.width + btnPadding, spyButton.y)
   factCheckButton.interactive = true
   factCheckButton.buttonMode = true
   factCheckButton
@@ -102,13 +109,6 @@ const loadSpecialActionContainer = (resources: PIXI.IResourceDictionary) => {
     .on('mouseover', () => onHoverSpecialActionButton(2))
     .on('mouseout', () => onMouseOut(2))
   specialActionButtonContainer.addChild(exposeButton)
-
-  const spyButton = new PIXI.Sprite(resources['art/spy-btn'].texture)
-  spyButton.position.set(exposeButton.x + exposeButton.width + btnPadding, exposeButton.y)
-  spyButton.interactive = true
-  spyButton.buttonMode = true
-  spyButton.on('mouseover', () => onHoverSpecialActionButton(3)).on('mouseout', () => onMouseOut(3))
-  specialActionButtonContainer.addChild(spyButton)
 
   const descriptionBg = new PIXI.Sprite(resources['art/special-action-description-bg'].texture)
   descriptionBg.position.set(moneyBar.x, moneyBar.y + moneyBar.height + 20)
