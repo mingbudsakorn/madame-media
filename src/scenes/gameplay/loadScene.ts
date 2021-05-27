@@ -105,8 +105,8 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
   })
   expandedContainer.scene.visible = false
 
-  cardContainer.hitArea = new PIXI.Rectangle(0, 0, 1000, 1000)
   cardContainer.interactive = true
+  cardContainer.buttonMode = true
   cardContainer.on('mousedown', () => {
     expandedContainer.scene.visible = true
   })

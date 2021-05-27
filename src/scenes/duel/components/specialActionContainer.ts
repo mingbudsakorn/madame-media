@@ -53,6 +53,7 @@ const loadSpecialActionContainer = (resources: PIXI.IResourceDictionary) => {
 
   const specialActionButtonContainer = new PIXI.Container()
   specialActionContainer.addChild(specialActionButtonContainer)
+  specialActionButtonContainer.interactive = true
 
   const specialActionBg = new PIXI.Sprite(resources['art/special-action-bg'].texture)
   specialActionBg.position.set(0, 0)
@@ -162,6 +163,7 @@ const loadSpecialActionContainer = (resources: PIXI.IResourceDictionary) => {
   const subSpecialActionContainer = new PIXI.Container()
   specialActionContainer.addChild(subSpecialActionContainer)
   subSpecialActionContainer.visible = false
+  subSpecialActionContainer.interactive = true
 
   const subSpecialActionBg = new PIXI.Sprite(resources['art/sub-special-action-bg'].texture)
   subSpecialActionBg.position.set(specialActionBg.x, specialActionBg.y)
@@ -358,6 +360,11 @@ const loadSpecialActionContainer = (resources: PIXI.IResourceDictionary) => {
   specialActionContainer.reset = () => {
     subSpecialActionContainer.visible = false
     specialActionButtonContainer.visible = true
+    displaySpyText.visible = false
+    exposeAgainButton.visible = false
+    factCheckAgainButton.visible = false
+    finishButton.visible = false
+    finishButton.texture = resources['art/small-finish-special-action-btn'].texture
   }
 
   const setToFactCheck = () => {
@@ -365,6 +372,7 @@ const loadSpecialActionContainer = (resources: PIXI.IResourceDictionary) => {
     specialActionButtonContainer.visible = false
     actionText.text = 'ตรวจสอบ'
     pleaseSelectCardText.text = 'เลือกการ์ดที่จะตรวจสอบ'
+    pleaseSelectCardText.visible = true
     descriptionText.text = SPECIAL_ACTION.FACK_CHECK_DES
     factCheckAgainButton.visible = false
     countSelectText.visible = true
@@ -378,9 +386,10 @@ const loadSpecialActionContainer = (resources: PIXI.IResourceDictionary) => {
     specialActionButtonContainer.visible = false
     actionText.text = 'เปิดโปง'
     pleaseSelectCardText.text = 'เลือกการ์ดที่จะเปิดโปง'
+    pleaseSelectCardText.visible = true
     descriptionText.text = SPECIAL_ACTION.EXPOSE_DES
-    countSelectText.visible = true
     exposeAgainButton.visible = false
+    countSelectText.visible = true
     revertDisplayResult()
     updateTextPosition()
   }
