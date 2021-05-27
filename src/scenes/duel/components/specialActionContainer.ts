@@ -53,6 +53,7 @@ const loadSpecialActionContainer = (resources: PIXI.IResourceDictionary) => {
 
   const specialActionButtonContainer = new PIXI.Container()
   specialActionContainer.addChild(specialActionButtonContainer)
+  specialActionButtonContainer.interactive = true
 
   const specialActionBg = new PIXI.Sprite(resources['art/special-action-bg'].texture)
   specialActionBg.position.set(0, 0)
@@ -82,8 +83,15 @@ const loadSpecialActionContainer = (resources: PIXI.IResourceDictionary) => {
 
   let btnPadding = 72
 
+  const spyButton = new PIXI.Sprite(resources['art/spy-btn'].texture)
+  spyButton.position.set(98, 121)
+  spyButton.interactive = true
+  spyButton.buttonMode = true
+  spyButton.on('mouseover', () => onHoverSpecialActionButton(3)).on('mouseout', () => onMouseOut(3))
+  specialActionButtonContainer.addChild(spyButton)
+
   const factCheckButton = new PIXI.Sprite(resources['art/fack-check-btn'].texture)
-  factCheckButton.position.set(98, 121)
+  factCheckButton.position.set(spyButton.x + spyButton.width + btnPadding, spyButton.y)
   factCheckButton.interactive = true
   factCheckButton.buttonMode = true
   factCheckButton
@@ -102,13 +110,6 @@ const loadSpecialActionContainer = (resources: PIXI.IResourceDictionary) => {
     .on('mouseover', () => onHoverSpecialActionButton(2))
     .on('mouseout', () => onMouseOut(2))
   specialActionButtonContainer.addChild(exposeButton)
-
-  const spyButton = new PIXI.Sprite(resources['art/spy-btn'].texture)
-  spyButton.position.set(exposeButton.x + exposeButton.width + btnPadding, exposeButton.y)
-  spyButton.interactive = true
-  spyButton.buttonMode = true
-  spyButton.on('mouseover', () => onHoverSpecialActionButton(3)).on('mouseout', () => onMouseOut(3))
-  specialActionButtonContainer.addChild(spyButton)
 
   const descriptionBg = new PIXI.Sprite(resources['art/special-action-description-bg'].texture)
   descriptionBg.position.set(moneyBar.x, moneyBar.y + moneyBar.height + 20)
@@ -162,6 +163,7 @@ const loadSpecialActionContainer = (resources: PIXI.IResourceDictionary) => {
   const subSpecialActionContainer = new PIXI.Container()
   specialActionContainer.addChild(subSpecialActionContainer)
   subSpecialActionContainer.visible = false
+  subSpecialActionContainer.interactive = true
 
   const subSpecialActionBg = new PIXI.Sprite(resources['art/sub-special-action-bg'].texture)
   subSpecialActionBg.position.set(specialActionBg.x, specialActionBg.y)
@@ -358,11 +360,11 @@ const loadSpecialActionContainer = (resources: PIXI.IResourceDictionary) => {
   specialActionContainer.reset = () => {
     subSpecialActionContainer.visible = false
     specialActionButtonContainer.visible = true
-    factCheckAgainButton.visible = false
+    displaySpyText.visible = false
     exposeAgainButton.visible = false
-    confirmButton.visible = false
+    factCheckAgainButton.visible = false
     finishButton.visible = false
-    skipButton.visible = true
+    finishButton.texture = resources['art/small-finish-special-action-btn'].texture
   }
 
   const setToFactCheck = () => {
@@ -370,6 +372,7 @@ const loadSpecialActionContainer = (resources: PIXI.IResourceDictionary) => {
     specialActionButtonContainer.visible = false
     actionText.text = 'ตรวจสอบ'
     pleaseSelectCardText.text = 'เลือกการ์ดที่จะตรวจสอบ'
+    pleaseSelectCardText.visible = true
     descriptionText.text = SPECIAL_ACTION.FACK_CHECK_DES
     factCheckAgainButton.visible = false
     countSelectText.visible = true
@@ -383,9 +386,10 @@ const loadSpecialActionContainer = (resources: PIXI.IResourceDictionary) => {
     specialActionButtonContainer.visible = false
     actionText.text = 'เปิดโปง'
     pleaseSelectCardText.text = 'เลือกการ์ดที่จะเปิดโปง'
+    pleaseSelectCardText.visible = true
     descriptionText.text = SPECIAL_ACTION.EXPOSE_DES
-    countSelectText.visible = true
     exposeAgainButton.visible = false
+    countSelectText.visible = true
     revertDisplayResult()
     updateTextPosition()
   }

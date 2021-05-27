@@ -195,7 +195,8 @@ const DuelScene = (
           opponentChannelContainer.removeAllOverlay()
         }
       }
-
+      
+      specialActionContainer.confirmButton.removeAllListeners()
       specialActionContainer.confirmButton
         .on('mousedown', startFactCheck)
         .on('touchstart', startFactCheck)
@@ -241,6 +242,7 @@ const DuelScene = (
         }
       }
 
+      specialActionContainer.confirmButton.removeAllListeners()
       specialActionContainer.confirmButton
         .on('mousedown', startExpose)
         .on('touchstart', startExpose)
@@ -264,6 +266,7 @@ const DuelScene = (
           const result = res.data.result[opponentId].exposedCards
           opponentChannelContainer.spyCards(result)
         })
+      specialActionContainer.confirmButton.removeAllListeners()
       specialActionContainer.confirmButton.on('mousedown', skip).on('touchstart', skip)
     }
   }
@@ -293,6 +296,7 @@ const DuelScene = (
 
   scene.onAppear = async () => {
     // RESET
+    summaryModal.visible = false
     specialActionContainer.visible = false
     summaryModal.visible = false
     duelCompareBg.visible = true
