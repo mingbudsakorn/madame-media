@@ -48,6 +48,12 @@ const loadDuelScene = (resources: PIXI.IResourceDictionary) => {
   waitingModal.setShowAcceptButton(false)
   waitingModal.setClosable(false)
 
+  const notEnoughMoneyModal = loadModal(resources)
+  duelScene.addChild(notEnoughMoneyModal)
+  notEnoughMoneyModal.setText('เกิดข้อผิดพลาด', 'คุณมีจำนวนเงินไม่เพียงพอ')
+  notEnoughMoneyModal.setShowAcceptButton(true)
+  notEnoughMoneyModal.setClosable(true)
+
   return {
     scene: duelScene,
     children: {
@@ -59,6 +65,7 @@ const loadDuelScene = (resources: PIXI.IResourceDictionary) => {
       specialActionContainer,
       summaryModal,
       waitingModal,
+      notEnoughMoneyModal,
     },
   }
 }

@@ -13,6 +13,12 @@ export const SPECIAL_ACTION_TYPE = {
   SPY: 2,
 }
 
+export const SPECIAL_ACTION_COST = {
+  FACT_CHECK: 75,
+  EXPOSE: 125,
+  SPY: 50,
+}
+
 export const RESULT = {
   success: 'สำเร็จ!!',
   fail: 'ล้มเหลว!!',
