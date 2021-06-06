@@ -30,7 +30,7 @@ export interface Channel {
   text: number
   price: number
   baseFactor: number
-  type: number
+  type?: number
 }
 export interface CardSlots {
   [key: number]: Card

@@ -16,6 +16,16 @@ export interface ChannelType extends PIXI.Container {
   getBg: () => PIXI.Sprite
 }
 
+const channelBgName = {
+  โซเชียลมีเดีย: 'channels/avail-channel-social-media',
+  ปากต่อปาก: 'channels/avail-channel-mouth',
+  เว็บเพจ: 'channels/avail-channel-web',
+  โทรทัศน์: 'channels/avail-channel-tv',
+  วิทยุ: 'channels/avail-channel-radio',
+  สิ่งพิมพ์: 'channels/avail-channel-print',
+  สื่อนอกบ้าน: 'channels/avail-channel-out-of-home',
+}
+
 const loadChannel = (
   resources: PIXI.IResourceDictionary,
   channelConfig: Channel,
@@ -27,7 +37,9 @@ const loadChannel = (
     channelConfig.name,
     isAvailable ? TEXT_STYLE.BODY_THAI : TEXT_STYLE.BODY_THAI_CHARCOAL,
   )
-  let channelBg = new PIXI.Sprite(resources['channels/avail-channel-bg'].texture)
+  let channelBg = new PIXI.Sprite(
+    resources[channelBgName[channelConfig.name] || 'channels/avail-channel-empty'].texture,
+  )
 
   let channelUnavailCover = new PIXI.Sprite(resources['channels/unavail-channel-bg'].texture)
   channelUnavailCover.position.set(0, channelName.height + 8)
@@ -42,25 +54,25 @@ const loadChannel = (
   let audioIcon = channelConfig.audio
     ? new PIXI.Sprite(resources['cards/avail-volume-big'].texture)
     : new PIXI.Sprite(resources['cards/not-avail-volume-big'].texture)
-  audioIcon.width = 30
-  audioIcon.height = 30
+  audioIcon.width = 32
+  audioIcon.height = 32
   audioIcon.position.set(17, channelBg.y + channelBg.height + 10)
   channel.addChild(audioIcon)
 
   let visualIcon = channelConfig.visual
     ? new PIXI.Sprite(resources['cards/avail-img-big'].texture)
     : new PIXI.Sprite(resources['cards/not-avail-img-big'].texture)
-  visualIcon.width = 30
-  visualIcon.height = 30
-  visualIcon.position.set(audioIcon.x + audioIcon.width + 23, audioIcon.y)
+  visualIcon.width = 32
+  visualIcon.height = 32
+  visualIcon.position.set(audioIcon.x + audioIcon.width + 26, audioIcon.y)
   channel.addChild(visualIcon)
 
   let textIcon = channelConfig.text
     ? new PIXI.Sprite(resources['cards/avail-text-big'].texture)
     : new PIXI.Sprite(resources['cards/not-avail-volume-big'].texture)
-  textIcon.width = 30
-  textIcon.height = 30
-  textIcon.position.set(visualIcon.x + visualIcon.width + 23, audioIcon.y)
+  textIcon.width = 32
+  textIcon.height = 32
+  textIcon.position.set(visualIcon.x + visualIcon.width + 26, audioIcon.y)
   channel.addChild(textIcon)
 
   let percentageText = new PIXI.Text(
@@ -79,10 +91,10 @@ const loadChannel = (
     if (cardConfig) {
       const card = loadCard(resources, cardConfig)
       card.setIsReal(isReal)
-      card.width = 170
-      card.height = 250
+      card.width = 179
+      card.height = 264
       card.x = 0
-      card.y = channel.height - 285
+      card.y = channel.height - 300
       cardContainer.addChild(card)
     }
   }

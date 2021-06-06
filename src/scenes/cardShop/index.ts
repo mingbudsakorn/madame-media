@@ -28,7 +28,9 @@ const CardShopScene = (
   const { confirmButton, cardShopDeck, waitingModal } = cardShopScene.children
 
   socket.on('start-round', () => {
-    setCurrentScene(scenes.gameplay, null, nextPossibleScenes[scenes.gameplay])
+    if (scene.visible) {
+      setCurrentScene(scenes.gameplay, null, nextPossibleScenes[scenes.gameplay])
+    }
   })
 
   const selectCards = async () => {

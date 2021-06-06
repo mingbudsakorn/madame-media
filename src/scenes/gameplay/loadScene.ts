@@ -8,11 +8,11 @@ import loadAvatar from './components/avatar'
 import loadMoneyBar from '../../components/moneyBar'
 import loadCardContainer from './components/cardContainer'
 import loadSpecialEventModal from './components/specialEventModal'
-import loadShopModal from './components/shopModal'
 import { TEXT_STYLE } from '../../constants/style'
 import { PEOPLE_BAR_CONFIG, CARD_CONFIG } from '../../constants/gameConfig'
 import { AVATAR } from '../../constants/avatar'
 import loadCardExpanded from './components/cardExpanded'
+import { loadBuyChannelModal } from './components/buyChannelModal'
 
 interface GamePlaySceneType extends PIXI.Container {
   onCardSelect: (CardType) => void
@@ -44,16 +44,16 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
 
   // ----------------------button---------------------- //
   const finishButton = new PIXI.Sprite(resources['art/finish-button'].texture)
-  finishButton.position.set(1606, 738)
+  finishButton.position.set(1641, 635)
   finishButton.interactive = true
   finishButton.buttonMode = true
   gamePlayScene.addChild(finishButton)
 
-  const buyChannelButton = new PIXI.Sprite(resources['art/buy-channel-button'].texture)
-  buyChannelButton.position.set(1517, 628)
-  buyChannelButton.interactive = true
-  buyChannelButton.buttonMode = true
-  gamePlayScene.addChild(buyChannelButton)
+  // const buyChannelButton = new PIXI.Sprite(resources['art/buy-channel-button'].texture)
+  // buyChannelButton.position.set(1517, 628)
+  // buyChannelButton.interactive = true
+  // buyChannelButton.buttonMode = true
+  // gamePlayScene.addChild(buyChannelButton)
   // -------------------------------------------------- //
 
   // ----------------------text---------------------- //
@@ -63,7 +63,7 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
   gamePlayScene.addChild(peopleText)
 
   const turnText = new PIXI.Text('รอบที่ : 1', TEXT_STYLE.BODY_THAI) as TurnTextType
-  turnText.position.set(47, 362)
+  turnText.position.set(47, 322)
   gamePlayScene.addChild(turnText)
   // ------------------------------------------------ //
 
@@ -83,14 +83,14 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
   gamePlayScene.addChild(peopleBar)
 
   const moneyBar = loadMoneyBar(resources)
-  moneyBar.position.set(1170, 440)
+  moneyBar.position.set(1170, 404)
   gamePlayScene.addChild(moneyBar)
 
-  const player1 = loadAvatar(resources, AVATAR.man1, 'โจนาทาน')
+  const player1 = loadAvatar(resources, AVATAR.avatar1, '')
   player1.position.set(224.5, 82)
   gamePlayScene.addChild(player1)
 
-  const player2 = loadAvatar(resources, AVATAR.woman4, 'มิเชล')
+  const player2 = loadAvatar(resources, AVATAR.avatar2, '')
   player2.position.set(1694.5, 82)
   gamePlayScene.addChild(player2)
 
@@ -136,15 +136,15 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
   specialEvent
     .on('mousedown', () => specialEventModal.toggle())
     .on('touchstart', () => specialEventModal.toggle())
-  specialEvent.visible = false
 
   specialEvent.setSpecialEvent = (title: string) => {
     specialEventText.text = title
   }
-  //buy channel
-  const shopModal = loadShopModal(resources)
-  gamePlayScene.addChild(shopModal.scene)
+
   gamePlayScene.addChild(expandedContainer.scene)
+
+  const buyChannelModal = loadBuyChannelModal(resources)
+  gamePlayScene.addChild(buyChannelModal)
 
   const notEnoughMoneyModal = loadModal(resources)
   gamePlayScene.addChild(notEnoughMoneyModal)
@@ -158,10 +158,6 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
   waitingModal.setShowAcceptButton(false)
   waitingModal.setClosable(false)
 
-  buyChannelButton
-    .on('mousedown', () => shopModal.scene.toggle())
-    .on('touchstart', () => shopModal.scene.toggle())
-
   return {
     scene: gamePlayScene,
     children: {
@@ -169,7 +165,7 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
       smallBlueCircle,
       smallPinkCircle,
       finishButton,
-      buyChannelButton,
+      // buyChannelButton,
       peopleText,
       turnText,
       channelDeck,
@@ -183,7 +179,8 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
       specialEventModal,
       specialEvent,
       specialEventText,
-      shopModal,
+      // shopModal,
+      buyChannelModal,
       notEnoughMoneyModal,
       waitingModal,
     },

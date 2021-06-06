@@ -15,13 +15,13 @@ interface ChannelDeckType extends PIXI.Container {
 
 export const loadChannelDeck = (resources: PIXI.IResourceDictionary) => {
   const channelDeck = new PIXI.Container() as ChannelDeckType
-  channelDeck.position.set(97, 532)
+  channelDeck.position.set(97, 488)
 
   const channelText = new PIXI.Text('ช่องทางสื่อ', TEXT_STYLE.SUBHEADER_THAI)
   channelDeck.addChild(channelText)
 
   const overlay = new PIXI.Sprite(resources['art/overlay'].texture)
-  overlay.position.set(-97, -532)
+  overlay.position.set(-97, -488)
   overlay.visible = false
   channelDeck.addChild(overlay)
 
@@ -29,7 +29,7 @@ export const loadChannelDeck = (resources: PIXI.IResourceDictionary) => {
   channelDeckBg.position.set(0, channelText.y + channelText.height + 10)
   channelDeck.addChild(channelDeckBg)
 
-  const channelPadding = 19
+  const channelPadding = 29
   const channelY = channelDeckBg.y + 10
   let prevChannelX = 37
 
