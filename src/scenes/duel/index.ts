@@ -141,8 +141,6 @@ const DuelScene = (
   }
 
   const playAction = async (actionType: 'SPY' | 'EXPOSE' | 'FACT_CHECK') => {
-    console.log(currentGold)
-
     if (SPECIAL_ACTION_COST[actionType] > currentGold) {
       notEnoughMoneyModal.visible = true
       return
@@ -155,7 +153,6 @@ const DuelScene = (
       const startFactCheck = async () => {
         if (SPECIAL_ACTION_COST.FACT_CHECK > currentGold) {
           notEnoughMoneyModal.visible = true
-          console.log('not enough money')
           return
         }
 

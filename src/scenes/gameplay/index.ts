@@ -296,8 +296,6 @@ const GameplayScene = (
         }
       }
 
-      console.log(availableChannels)
-
       channelDeck.scene.updateChannels(availableChannels)
       initChannelDeck()
 

@@ -17,7 +17,6 @@ const gameController = (app: PIXI.Application) => {
   const setCurrentScene = (scene: number, gameState: GameState, sceneObject: Scene) => {
     currentScene = scene
     sceneObject.setGameState(gameState)
-    console.log('setcurrentscene ' + scene)
     renderScene()
   }
 
