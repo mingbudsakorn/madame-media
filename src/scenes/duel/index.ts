@@ -7,11 +7,7 @@ import { gameState as initGameState } from '../../constants/initialState'
 
 import socket from '../../socket'
 import axios from 'axios'
-import {
-  shake,
-  shakeHard,
-  shakeLikeYouHaveNoSleepCuzYouHaveBeenWorkingOnThisShitForSoLong,
-} from '../../effects'
+import { shake, shakeHard } from '../../effects'
 
 const url = process.env.BACKEND_URL
 let opponentId = ''
@@ -120,7 +116,7 @@ const DuelScene = (
         newCard = result[channel]
       }
     })
-    if (!newCard.isReal) {
+    if (newCard.isReal === false) {
       if (type === SPECIAL_ACTION_TYPE.FACT_CHECK) {
         specialActionContainer.displayFactCheckResult(
           true,
@@ -195,7 +191,7 @@ const DuelScene = (
           opponentChannelContainer.removeAllOverlay()
         }
       }
-      
+
       specialActionContainer.confirmButton.removeAllListeners()
       specialActionContainer.confirmButton
         .on('mousedown', startFactCheck)
@@ -286,10 +282,8 @@ const DuelScene = (
 
   const shakeEffect = (people, prevPeople, opponent, prevOpponent) => {
     if (Math.abs(people - prevPeople) + Math.abs(opponent - prevOpponent) > 150) {
-      shakeLikeYouHaveNoSleepCuzYouHaveBeenWorkingOnThisShitForSoLong()
-    } else if (Math.abs(people - prevPeople) + Math.abs(opponent - prevOpponent) > 100) {
       shakeHard()
-    } else if (Math.abs(people - prevPeople) + Math.abs(opponent - prevOpponent) > 50) {
+    } else if (Math.abs(people - prevPeople) + Math.abs(opponent - prevOpponent) > 100) {
       shake()
     }
   }

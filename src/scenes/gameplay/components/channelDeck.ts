@@ -57,16 +57,14 @@ export const loadChannelDeck = (resources: PIXI.IResourceDictionary) => {
 
   // Call this method at initialization
   channelDeck.updateChannels = (availableChannels: Channel[]) => {
+    channelArray.forEach((channel) => {
+      channel.setIsAvailable(false)
+    })
     availableChannels.forEach((channelConfig) => {
       const channel = channelArray[channelConfig.type]
 
       channel.setIsAvailable(true)
     })
-  }
-
-  channelDeck.insertCard = (channelType: string, card: CardType) => {
-    const selectedChannel = channelArray[channelType]
-    selectedChannel.setCard(card)
   }
 
   channelDeck.clearCards = () => {

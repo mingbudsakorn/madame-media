@@ -99,6 +99,7 @@ const gameController = (app: PIXI.Application) => {
         break
       case scenes.joinRoom:
         joinRoomScene.visible = true
+        joinRoomScene.onAppear()
         break
       case scenes.createRoom:
         createRoomScene.visible = true

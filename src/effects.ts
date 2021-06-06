@@ -17,12 +17,3 @@ export const shakeHard = () => {
     screen.classList.remove('shake-constant')
   }, 1000)
 }
-
-export const shakeLikeYouHaveNoSleepCuzYouHaveBeenWorkingOnThisShitForSoLong = () => {
-  screen.classList.add('shake-crazy')
-  screen.classList.add('shake-constant')
-  setTimeout(() => {
-    screen.classList.remove('shake-crazy')
-    screen.classList.remove('shake-constant')
-  }, 1000)
-}

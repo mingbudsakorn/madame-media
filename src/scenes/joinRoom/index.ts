@@ -25,7 +25,6 @@ const JoinRoomScene = (
   }
 
   const {
-    bg,
     avatarNameInput,
     roomIdInput,
     confirmbutton,
@@ -97,6 +96,11 @@ const JoinRoomScene = (
     setCurrentScene(scenes.startGame, gameState, nextPossibleScenes[scenes.startGame])
   }
   backButton.on('mousedown', onBack).on('touchstart', onBack)
+
+  scene.onAppear = () => {
+    // clear room number
+    roomIdInput.text = ''
+  }
 
   return scene
 }

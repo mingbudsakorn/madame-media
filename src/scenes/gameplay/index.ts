@@ -140,7 +140,6 @@ const GameplayScene = (
   const initChannelDeck = () => {
     channelDeck.channelArray.forEach((channelObject) => {
       const channelInteract = () => {
-        // console.log('hello')
         // Insert card, if card is chosen
         if (currentCard) {
           // check if the channel is owned
@@ -148,6 +147,7 @@ const GameplayScene = (
             (e) => e.type === channelObject.getChannelConfig().type,
           )
           if (avail.length === 0) return
+          if (channelObject.getCard()) return
 
           axios
             .post(`${url}/place-card`, {
@@ -182,7 +182,36 @@ const GameplayScene = (
           }
         }
       }
-      channelObject.on('mousedown', channelInteract).on('touchstart', channelInteract)
+
+      const removeCardFromChannel = () => {
+        if (channelObject.getCard) {
+          axios
+            .post(`${url}/unplace-card`, {
+              channelType: channelObject.getChannelConfig().type,
+            })
+            .then((res) => {
+              if (res && res.data) {
+                const newGameState = res.data
+                const { gold, cards } = newGameState
+                channelObject.removeCard()
+
+                // change cards in deck
+                cardContainer.setCards(cards)
+                expandedContainer.scene.setCards(cards)
+                initExpandedContainer(allowFake)
+
+                changeGold(gold)
+              }
+            })
+        }
+      }
+
+      channelObject.getBg().removeAllListeners()
+      channelObject.getBg().on('mousedown', channelInteract).on('touchstart', channelInteract)
+      channelObject.removeButton.removeAllListeners()
+      channelObject.removeButton
+        .on('mousedown', removeCardFromChannel)
+        .on('touchstart', removeCardFromChannel)
     })
   }
 
@@ -257,12 +286,17 @@ const GameplayScene = (
       if (specialEventInfo) {
         specialEventText.text = specialEventInfo.name
         specialEventModal.setSpecialEvent(specialEventInfo.name, specialEventInfo.description)
-        specialEventModal.visible = true
+        specialEvent.visible = true
+        specialEventModal.toggle()
 
         if (specialEventInfo.cardEffect && specialEventInfo.cardEffect.allowFake === false) {
           allowFake = false
+        } else {
+          allowFake = true
         }
       }
+
+      console.log(availableChannels)
 
       channelDeck.scene.updateChannels(availableChannels)
       initChannelDeck()

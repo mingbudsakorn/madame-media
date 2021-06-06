@@ -14,6 +14,7 @@ export interface ChannelType extends PIXI.Container {
   getHeight: () => number
   getWidth: () => number
   getBg: () => PIXI.Sprite
+  removeButton: PIXI.Sprite
 }
 
 const channelBgName = {
@@ -40,6 +41,7 @@ const loadChannel = (
   let channelBg = new PIXI.Sprite(
     resources[channelBgName[channelConfig.name] || 'channels/avail-channel-empty'].texture,
   )
+  channelBg.interactive = true
 
   let channelUnavailCover = new PIXI.Sprite(resources['channels/unavail-channel-bg'].texture)
   channelUnavailCover.position.set(0, channelName.height + 8)
@@ -83,6 +85,12 @@ const loadChannel = (
   percentageText.position.set(channelBg.width / 2, channelBg.y + 20)
   channel.addChild(percentageText)
 
+  const removeButton = new PIXI.Sprite(resources['art/remove-card'].texture)
+  removeButton.anchor.set(0.5, 0.5)
+  removeButton.position.set(channelBg.x + channelBg.width - 5, channelBg.y + 5)
+  removeButton.visible = false
+  removeButton.interactive = true
+
   // Card in the channel
   const cardContainer = new PIXI.Container()
   channel.setCard = (cardConfig: Card, isReal: boolean) => {
@@ -96,17 +104,20 @@ const loadChannel = (
       card.x = 0
       card.y = channel.height - 300
       cardContainer.addChild(card)
+      removeButton.visible = true
     }
   }
   cardContainer.x = 0
   cardContainer.y = 0
 
   channel.addChild(cardContainer)
+  channel.addChild(removeButton)
 
   channel.removeCard = () => {
     while (cardContainer.children[0]) {
       cardContainer.removeChildAt(0)
     }
+    removeButton.visible = false
   }
 
   channel.getCard = () => {
@@ -137,6 +148,8 @@ const loadChannel = (
   channel.getBg = () => {
     return channelBg
   }
+
+  channel.removeButton = removeButton
 
   channel.addChild(channelUnavailCover)
 
