@@ -80,7 +80,9 @@ const GameLobbyScene = (
   startGameButton.on('mousedown', onStartGame).on('touchstart', onStartGame)
 
   socket.on('start-round', () => {
-    setCurrentScene(scenes.gameplay, gameState, nextPossibleScenes[scenes.gameplay])
+    if (scene.visible) {
+      setCurrentScene(scenes.gameplay, gameState, nextPossibleScenes[scenes.gameplay])
+    }
   })
 
   const onBack = () => {

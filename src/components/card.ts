@@ -38,7 +38,7 @@ const loadCard = (resources: PIXI.IResourceDictionary, cardConfig: Card) => {
 
   let textIconBig = cardConfig.textFactor
     ? new PIXI.Sprite(resources['cards/avail-text-big'].texture)
-    : new PIXI.Sprite(resources['cards/not-avail-volume-big'].texture)
+    : new PIXI.Sprite(resources['cards/not-avail-text-big'].texture)
   textIconBig.position.set(322, 654)
   card.addChild(textIconBig)
 

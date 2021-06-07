@@ -40,7 +40,7 @@ const loadGameLobbyScene = (resources: PIXI.IResourceDictionary) => {
   turnText.position.set(turnNumberText.x + turnNumberText.width + 10, codeText.y)
   gameLobbyScene.addChild(turnText)
 
-  const myAvatar = loadAvatar(resources, AVATAR_BG.myAvatarBg, AVATAR.man1, 'ซงจุงกิ')
+  const myAvatar = loadAvatar(resources, AVATAR_BG.myAvatarBg, AVATAR.avatar1, '')
   myAvatar.position.set(230, 275)
   gameLobbyScene.addChild(myAvatar)
 

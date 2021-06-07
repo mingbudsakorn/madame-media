@@ -32,7 +32,7 @@ const loadCreateRoomScene = (resources: PIXI.IResourceDictionary) => {
 
   // ------------------------------------------------ //
 
-  const avatar = loadAvatar(resources, AVATAR_BG.myAvatarBg, AVATAR.man1, '', false)
+  const avatar = loadAvatar(resources, AVATAR_BG.myAvatarBg, AVATAR.avatar1, '', false)
   avatar.position.set(bg.width / 4 - avatar.width / 2, 275)
   createRoomScene.addChild(avatar)
 

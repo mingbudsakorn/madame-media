@@ -8,7 +8,7 @@ interface TimeBarType extends PIXI.Container {
 
 export const loadTimeBar = (resources: PIXI.IResourceDictionary) => {
   const timeBar = new PIXI.Container() as TimeBarType
-  timeBar.position.set(27, 441)
+  timeBar.position.set(27, 404)
 
   const hourglass = new PIXI.Sprite(resources['art/hourglass'].texture)
   timeBar.addChild(hourglass)
@@ -38,7 +38,10 @@ export const loadTimeBar = (resources: PIXI.IResourceDictionary) => {
   timeBarBoarder.position.set(183, 35)
   timeBar.addChild(timeBarBoarder)
 
-  const timeLeftText = new PIXI.Text(TIME_BAR_CONFIG.TIME_PER_TURN.toString(), TEXT_STYLE.SUBHEADER_THAI)
+  const timeLeftText = new PIXI.Text(
+    TIME_BAR_CONFIG.TIME_PER_TURN.toString(),
+    TEXT_STYLE.SUBHEADER_THAI,
+  )
   timeLeftText.anchor.set(0.5, 0.5)
   timeLeftText.position.set(920, 35)
   timeBar.addChild(timeLeftText)

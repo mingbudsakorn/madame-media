@@ -33,11 +33,11 @@ const loadEndGameScene = (resources: PIXI.IResourceDictionary) => {
   peopleBar.position.set(435, 74)
   endGameScene.addChild(peopleBar)
 
-  const player1 = loadAvatar(resources, AVATAR.man1, 'โจนาทาน')
+  const player1 = loadAvatar(resources, AVATAR.avatar1, '')
   player1.position.set(224.5, 82)
   endGameScene.addChild(player1)
 
-  const player2 = loadAvatar(resources, AVATAR.woman4, 'มิเชล')
+  const player2 = loadAvatar(resources, AVATAR.avatar2, '')
   player2.position.set(1694.5, 82)
   endGameScene.addChild(player2)
 
@@ -71,7 +71,10 @@ const loadEndGameScene = (resources: PIXI.IResourceDictionary) => {
 
   const descriptionText = new PIXI.Text('คำอธิบาย', textStyle)
   descriptionText.anchor.set(0.5)
-  descriptionText.position.set(bg.width / 2, modalBg.y + (modalBg.height + titleBg.height / 2) / 2 - 25)
+  descriptionText.position.set(
+    bg.width / 2,
+    modalBg.y + (modalBg.height + titleBg.height / 2) / 2 - 25,
+  )
   result.addChild(descriptionText)
 
   // ----------------------button---------------------- //
@@ -96,7 +99,7 @@ const loadEndGameScene = (resources: PIXI.IResourceDictionary) => {
       result,
       player1,
       player2,
-      peopleBar
+      peopleBar,
     },
   }
 }

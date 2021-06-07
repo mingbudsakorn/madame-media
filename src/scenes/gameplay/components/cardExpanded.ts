@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js'
 import loadCard, { CardType } from '../../../components/card'
 import loadMoneyBar from '../../../components/moneyBar'
-import { CARD } from '../../../constants/card'
+// import { CARD } from '../../../constants/card'
 import { Card } from '../../../types'
 
 interface Type extends PIXI.Container {
@@ -19,8 +19,14 @@ const loadCardExpanded = (resources: PIXI.IResourceDictionary, onClose: () => vo
 
   const cardContainer = new PIXI.Container()
 
-  const toggleCard = (card: CardType) => {
-    card.setIsReal(!card.getIsReal())
+  const toggleCard = (card: CardType, toggleButton: PIXI.Sprite) => {
+    const currentRealValue = card.getIsReal()
+    if (currentRealValue) {
+      toggleButton.texture = resources['art/toggle-to-real'].texture
+    } else {
+      toggleButton.texture = resources['art/toggle-to-fake'].texture
+    }
+    card.setIsReal(!currentRealValue)
   }
 
   let cardArray = []
@@ -37,12 +43,12 @@ const loadCardExpanded = (resources: PIXI.IResourceDictionary, onClose: () => vo
       card.interactive = true
       singleCardContainer.addChild(card)
 
-      const toggleButton = new PIXI.Sprite(resources['art/toggle-button'].texture)
+      const toggleButton = new PIXI.Sprite(resources['art/toggle-to-fake'].texture)
       toggleButton.position.set(card.x, 420)
       toggleButton.width = 275
       toggleButton.height = 68
       toggleButton.interactive = true
-      toggleButton.on('mousedown', () => toggleCard(card))
+      toggleButton.on('mousedown', () => toggleCard(card, toggleButton))
       toggleButton.alpha = 0
       singleCardContainer.addChild(toggleButton)
 

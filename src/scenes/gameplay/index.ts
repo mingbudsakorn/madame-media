@@ -31,7 +31,7 @@ const GameplayScene = (
 
   const {
     finishButton,
-    buyChannelButton,
+    // buyChannelButton,
     moneyBar,
     peopleBar,
     timeBar,
@@ -43,7 +43,8 @@ const GameplayScene = (
     channelDeck,
     specialEventModal,
     specialEvent,
-    shopModal,
+    // shopModal,
+    buyChannelModal,
     notEnoughMoneyModal,
     waitingModal,
     specialEventText,
@@ -51,13 +52,14 @@ const GameplayScene = (
 
   // Scene States
   let currentCard = null
+  let currentBuyingChannel = null
   let initialized = false
   let localAvailableChannels = [] as Channel[]
   let allowFake = true
 
   // ON GOLD CHANGE
   const changeGold = (newGold: number) => {
-    shopModal.scene.setMoneyText(newGold)
+    // shopModal.scene.setMoneyText(newGold)
     moneyBar.setMoney(newGold)
     expandedContainer.moneyBar.setMoney(newGold)
     gameState.gold = newGold
@@ -96,9 +98,9 @@ const GameplayScene = (
     ready()
   }
 
-  buyChannelButton
-    .on('mousedown', () => (shopModal.scene.visible = true))
-    .on('touchstart', () => (shopModal.scene.visible = true))
+  // buyChannelButton
+  //   .on('mousedown', () => (shopModal.scene.visible = true))
+  //   .on('touchstart', () => (shopModal.scene.visible = true))
 
   // SELECT CARD FROM DECK
   const initExpandedContainer = (allowFake: boolean) => {
@@ -137,13 +139,15 @@ const GameplayScene = (
   // PLACE CARD
   const initChannelDeck = () => {
     channelDeck.channelArray.forEach((channelObject) => {
-      const insertCard = () => {
+      const channelInteract = () => {
+        // Insert card, if card is chosen
         if (currentCard) {
           // check if the channel is owned
           const avail = localAvailableChannels.filter(
             (e) => e.type === channelObject.getChannelConfig().type,
           )
           if (avail.length === 0) return
+          if (channelObject.getCard()) return
 
           axios
             .post(`${url}/place-card`, {
@@ -169,46 +173,74 @@ const GameplayScene = (
                 changeGold(gold)
               }
             })
+        } else {
+          // open buy channel modal
+          if (!channelObject.getIsAvailable()) {
+            buyChannelModal.setChannelConfig(channelObject.getChannelConfig())
+            currentBuyingChannel = channelObject.getChannelConfig()
+            buyChannelModal.setVisible(true)
+          }
         }
       }
-      channelObject.on('mousedown', insertCard).on('touchstart', insertCard)
+
+      const removeCardFromChannel = () => {
+        if (channelObject.getCard) {
+          axios
+            .post(`${url}/unplace-card`, {
+              channelType: channelObject.getChannelConfig().type,
+            })
+            .then((res) => {
+              if (res && res.data) {
+                const newGameState = res.data
+                const { gold, cards } = newGameState
+                channelObject.removeCard()
+
+                // change cards in deck
+                cardContainer.setCards(cards)
+                expandedContainer.scene.setCards(cards)
+                initExpandedContainer(allowFake)
+
+                changeGold(gold)
+              }
+            })
+        }
+      }
+
+      channelObject.getBg().removeAllListeners()
+      channelObject.getBg().on('mousedown', channelInteract).on('touchstart', channelInteract)
+      channelObject.removeButton.removeAllListeners()
+      channelObject.removeButton
+        .on('mousedown', removeCardFromChannel)
+        .on('touchstart', removeCardFromChannel)
     })
   }
 
   // BUY CHANNELS
   const buyChannels = () => {
-    if (shopModal.scene.getTotalCost() > gameState.gold) {
+    if (currentBuyingChannel.price > gameState.gold) {
       notEnoughMoneyModal.toggle()
       return
     }
-
-    const selectedChannels = shopModal.scene.getSelectedChannels()
-    const channelTypeNumbers = []
-    selectedChannels.forEach((channel) => {
-      channelTypeNumbers.push(channel.getChannelConfig().type)
-    })
-
     axios
       .post(`${url}/buy-channels`, {
         gameId: gameState.gameId,
         playerId: gameState.playerId,
-        channelTypes: channelTypeNumbers,
+        channelTypes: [currentBuyingChannel.type],
       })
       .then((res) => {
         if (res && res.data) {
           const newGameState = res.data
           // Update state
-          shopModal.scene.updateChannels(newGameState.availableChannels)
           channelDeck.scene.updateChannels(newGameState.availableChannels)
           changeGold(newGameState.gold)
 
           localAvailableChannels = newGameState.availableChannels
 
-          shopModal.scene.visible = false
+          buyChannelModal.toggle()
         }
       })
   }
-  shopModal.buyButton.on('mousedown', buyChannels).on('touchstart', buyChannels)
+  buyChannelModal.buyButton.on('mousedown', buyChannels).on('touchstart', buyChannels)
 
   // ON APPEAR
   scene.onAppear = async () => {
@@ -225,7 +257,6 @@ const GameplayScene = (
       if (channelsRes && channelsRes.data) {
         gameState.allChannels = channelsRes.data.channelData
         channelDeck.scene.initChannels(channelsRes.data.channelData)
-        shopModal.scene.initChannels(channelsRes.data.channelData)
       }
     }
 
@@ -256,13 +287,15 @@ const GameplayScene = (
         specialEventText.text = specialEventInfo.name
         specialEventModal.setSpecialEvent(specialEventInfo.name, specialEventInfo.description)
         specialEvent.visible = true
+        specialEventModal.toggle()
 
         if (specialEventInfo.cardEffect && specialEventInfo.cardEffect.allowFake === false) {
           allowFake = false
+        } else {
+          allowFake = true
         }
       }
 
-      shopModal.scene.updateChannels(availableChannels)
       channelDeck.scene.updateChannels(availableChannels)
       initChannelDeck()
 
