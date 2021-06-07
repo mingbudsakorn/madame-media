@@ -107,9 +107,13 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
 
   cardContainer.hitArea = new PIXI.Rectangle(0, 0, 1000, 1000)
   cardContainer.interactive = true
-  cardContainer.on('mousedown', () => {
-    expandedContainer.scene.visible = true
-  })
+  cardContainer
+    .on('mousedown', () => {
+      expandedContainer.scene.visible = true
+    })
+    .on('touchstart', () => {
+      expandedContainer.scene.visible = true
+    })
   gamePlayScene.addChild(cardContainer)
 
   const channelDeck = loadChannelDeck(resources)
