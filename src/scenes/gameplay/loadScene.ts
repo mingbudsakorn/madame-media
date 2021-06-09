@@ -105,7 +105,7 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
   })
   expandedContainer.scene.visible = false
 
-  cardContainer.hitArea = new PIXI.Rectangle(0, 0, 1000, 1000)
+  cardContainer.buttonMode = true
   cardContainer.interactive = true
   cardContainer
     .on('mousedown', () => {
@@ -124,7 +124,7 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
 
   const specialEventBg = new PIXI.Sprite(resources['art/special-event-bg'].texture)
   specialEventBg.anchor.set(0.5, 0)
-  specialEventBg.position.set(bg.width / 2, 321)
+  specialEventBg.position.set(bg.width / 2, 280)
   specialEvent.addChild(specialEventBg)
 
   const specialEventText = new PIXI.Text('พายุเข้า', TEXT_STYLE.HEADER_THAI)
