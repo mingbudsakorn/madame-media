@@ -12,6 +12,9 @@ interface Type extends PIXI.Container {
 const loadCardExpanded = (resources: PIXI.IResourceDictionary, onClose: () => void) => {
   const cardExpanded = new PIXI.Container() as Type
 
+  let displayCardStartIndex = 0
+  let NUMBER_OF_CARD = 5
+
   const overlay = new PIXI.Sprite(resources['art/overlay'].texture)
   overlay.interactive = true
   overlay.on('mousedown', onClose)
@@ -38,7 +41,7 @@ const loadCardExpanded = (resources: PIXI.IResourceDictionary, onClose: () => vo
       const card = loadCard(resources, cardConfig)
       card.width = 275
       card.height = 404
-      card.x = 300 * i
+      card.x = 300 * (i % NUMBER_OF_CARD)
       card.y = 0
       card.interactive = true
       singleCardContainer.addChild(card)
@@ -75,6 +78,10 @@ const loadCardExpanded = (resources: PIXI.IResourceDictionary, onClose: () => vo
       })
       cardContainer.addChild(singleCardContainer)
 
+      if (i >= NUMBER_OF_CARD) {
+        card.visible = false
+      }
+
       cardArray.push({
         useButton: useCardButton,
         toggleButton: toggleButton,
@@ -96,6 +103,67 @@ const loadCardExpanded = (resources: PIXI.IResourceDictionary, onClose: () => vo
   const moneyBar = loadMoneyBar(resources, 'light')
   moneyBar.position.set(1170, 100)
   cardExpanded.addChild(moneyBar)
+
+  const updateDisplayCard = () => {
+    cardArray.forEach((cards, i) => {
+      if (i >= displayCardStartIndex && i < displayCardStartIndex + NUMBER_OF_CARD) {
+        cards.card.visible = true
+      } else {
+        cards.card.visible = false
+      }
+    })
+  }
+
+  const goRight = () => {
+    if (cardArray.length != 0) {
+      let newStartIndex = displayCardStartIndex + NUMBER_OF_CARD
+      if (newStartIndex >= cardArray.length) {
+        newStartIndex = 0
+      }
+      displayCardStartIndex = newStartIndex
+      updateDisplayCard()
+    }
+  }
+
+  const goLeft = () => {
+    if (cardArray.length != 0) {
+      let newStartIndex = displayCardStartIndex - NUMBER_OF_CARD
+      if (newStartIndex < 0) {
+        newStartIndex =
+          NUMBER_OF_CARD *
+          (Math.floor(cardArray.length / NUMBER_OF_CARD) -
+            (cardArray.length % NUMBER_OF_CARD == 0 ? 1 : 0))
+      }
+      displayCardStartIndex = newStartIndex
+      updateDisplayCard()
+    }
+  }
+
+  const leftButton = new PIXI.Sprite(resources['art/button-polygon-left'].texture)
+  leftButton.position.set(20, cardExpanded.height / 2 - leftButton.height / 2 - 80)
+  cardExpanded.addChild(leftButton)
+  leftButton.interactive = true
+  leftButton.buttonMode = true
+  leftButton
+    .on('mousedown', () => {
+      goLeft()
+    })
+    .on('touchstart', () => {
+      goLeft()
+    })
+
+  const rightButton = new PIXI.Sprite(resources['art/button-polygon-right'].texture)
+  rightButton.position.set(overlay.width - rightButton.width - 20, leftButton.y)
+  cardExpanded.addChild(rightButton)
+  rightButton.interactive = true
+  rightButton.buttonMode = true
+  rightButton
+    .on('mousedown', () => {
+      goRight()
+    })
+    .on('touchstart', () => {
+      goRight()
+    })
 
   cardExpanded.setCards = (cards: Card[]) => {
     // clear old cards
