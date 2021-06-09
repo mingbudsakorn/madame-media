@@ -48,9 +48,9 @@ export const loadPeopleBar = (
   // ------------------------------------------------ //
 
   const calculatePeople = (myPeople: number, opponentPeople: number) => {
-    player1PeopleBar.width = myPeople * (innerPeopleBar.width / PEOPLE_BAR_CONFIG.TOTAL_PEOPLE)
+    player1PeopleBar.width = (myPeople <= 0? 0: myPeople) * (innerPeopleBar.width / PEOPLE_BAR_CONFIG.TOTAL_PEOPLE)
     player2PeopleBar.width =
-      opponentPeople * (innerPeopleBar.width / PEOPLE_BAR_CONFIG.TOTAL_PEOPLE)
+      (opponentPeople <= 0? 0: opponentPeople) * (innerPeopleBar.width / PEOPLE_BAR_CONFIG.TOTAL_PEOPLE)
     player1PeopleText.text = myPeople.toString()
     player2PeopleText.text = opponentPeople.toString()
     neutralPeopleText.text = (PEOPLE_BAR_CONFIG.TOTAL_PEOPLE - myPeople - opponentPeople).toString()
