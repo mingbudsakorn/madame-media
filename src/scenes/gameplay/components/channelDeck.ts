@@ -13,7 +13,7 @@ interface ChannelDeckType extends PIXI.Container {
   clearCards: () => void
 }
 
-export const loadChannelDeck = (resources: PIXI.IResourceDictionary) => {
+export const loadChannelDeck = (resources: PIXI.IResourceDictionary, onDismiss: () => void) => {
   const channelDeck = new PIXI.Container() as ChannelDeckType
   channelDeck.position.set(97, 488)
 
@@ -49,7 +49,10 @@ export const loadChannelDeck = (resources: PIXI.IResourceDictionary) => {
     allChannels.forEach((channel) => {
       const channelContainer = channelContainerArray[channel.type]
       const channelObject = loadChannel(resources, channel, false)
+
       channelContainer.addChild(channelObject)
+
+      channelObject.buttonMode = true
       channelObject.interactive = true
       channelArray[channel.type] = channelObject
     })
@@ -62,7 +65,7 @@ export const loadChannelDeck = (resources: PIXI.IResourceDictionary) => {
     })
     availableChannels.forEach((channelConfig) => {
       const channel = channelArray[channelConfig.type]
-
+      channel.buttonMode = false
       channel.setIsAvailable(true)
     })
   }
@@ -76,19 +79,24 @@ export const loadChannelDeck = (resources: PIXI.IResourceDictionary) => {
   channelDeck.setOnSelect = (select: boolean) => {
     if (select) {
       overlay.visible = true
+      channelArray.forEach((channel) => {
+        channel.buttonMode = channel.getIsAvailable()
+      })
     } else {
       overlay.visible = false
+      channelArray.forEach((channel) => {
+        channel.buttonMode = !channel.getIsAvailable()
+      })
     }
   }
 
+  const onOverlayClick = () => {
+    onDismiss()
+    overlay.visible = false
+  }
+
   overlay.interactive = true
-  overlay
-    .on('mousedown', () => {
-      overlay.visible = false
-    })
-    .on('touchstart', () => {
-      overlay.visible = false
-    })
+  overlay.on('mousedown', onOverlayClick).on('touchstart', onOverlayClick)
 
   return {
     scene: channelDeck,

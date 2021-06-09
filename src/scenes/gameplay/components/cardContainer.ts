@@ -12,6 +12,7 @@ export const loadCardContainer = (resources: PIXI.IResourceDictionary) =>
   {
     const cardContainer = new PIXI.Container() as CardContainerType
     cardContainer.position.set(134, 960)
+    cardContainer.buttonMode = true
 
     const displayCards = (cards: Card[]) => {
       cards.forEach((cardConfig, i) => {

@@ -58,6 +58,16 @@ const loadCardShopScene = (resources: PIXI.IResourceDictionary) => {
           updateCount(cardInShop)
         })
 
+      cardInShop.card
+        .on('mousedown', () => {
+          cardInShop.toggle()
+          updateCount(cardInShop)
+        })
+        .on('touchstart', () => {
+          cardInShop.toggle()
+          updateCount(cardInShop)
+        })
+
       cardsObject.push(cardInShop)
     }
   }

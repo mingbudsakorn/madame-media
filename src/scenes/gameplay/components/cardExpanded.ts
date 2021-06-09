@@ -44,6 +44,7 @@ const loadCardExpanded = (resources: PIXI.IResourceDictionary, onClose: () => vo
       card.x = 300 * (i % NUMBER_OF_CARD)
       card.y = 0
       card.interactive = true
+      card.buttonMode = true
       singleCardContainer.addChild(card)
 
       const toggleButton = new PIXI.Sprite(resources['art/toggle-to-fake'].texture)
@@ -53,6 +54,7 @@ const loadCardExpanded = (resources: PIXI.IResourceDictionary, onClose: () => vo
       toggleButton.interactive = true
       toggleButton.on('mousedown', () => toggleCard(card, toggleButton))
       toggleButton.alpha = 0
+      toggleButton.buttonMode = true
       singleCardContainer.addChild(toggleButton)
 
       const useCardButton = new PIXI.Sprite(resources['art/use-card-button'].texture)
@@ -61,6 +63,7 @@ const loadCardExpanded = (resources: PIXI.IResourceDictionary, onClose: () => vo
       useCardButton.height = 68
       useCardButton.interactive = true
       useCardButton.alpha = 0
+      useCardButton.buttonMode = true
       // useCardButton.on('mousedown', () => {
       //   onUseCard(card)
       // })

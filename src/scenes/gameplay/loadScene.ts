@@ -29,7 +29,10 @@ interface SpecialEventType extends PIXI.Container {
   setSpecialEvent: (title: string) => void
 }
 
-const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
+const loadGameplayScene = (
+  resources: PIXI.IResourceDictionary,
+  onChannelDeckDismiss: () => void,
+) => {
   const bg = new PIXI.Sprite(resources['background/gameplay-bg'].texture)
   bg.position.set(0, 0)
   gamePlayScene.addChild(bg)
@@ -116,7 +119,7 @@ const loadGameplayScene = (resources: PIXI.IResourceDictionary) => {
     })
   gamePlayScene.addChild(cardContainer)
 
-  const channelDeck = loadChannelDeck(resources)
+  const channelDeck = loadChannelDeck(resources, onChannelDeckDismiss)
   gamePlayScene.addChild(channelDeck.scene)
 
   const specialEvent = new PIXI.Container() as SpecialEventType

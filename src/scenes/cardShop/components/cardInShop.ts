@@ -1,11 +1,12 @@
 import * as PIXI from 'pixi.js'
-import loadCard from '../../../components/card'
+import loadCard, { CardType } from '../../../components/card'
 import { Card, CardSet } from '../../../types/index'
 
 export interface CardInShopType extends PIXI.Container {
   getIsSelected: () => boolean
   toggle: () => void
   tickBox: PIXI.Sprite
+  card: CardType
   getCardConfig: () => Card
 }
 
@@ -25,6 +26,10 @@ export const loadCardInShop = (resources: PIXI.IResourceDictionary, cardConfig: 
   cardInShopContainer.tickBox = tickBox
 
   card.position.set(0, tickBox.y + tickBox.height + 20)
+  card.interactive = true
+  card.buttonMode = true
+
+  cardInShopContainer.card = card
 
   cardInShopContainer.addChild(tickBox)
   cardInShopContainer.addChild(card)

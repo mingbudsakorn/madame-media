@@ -15,7 +15,16 @@ const GameplayScene = (
   resources: PIXI.IResourceDictionary,
   setCurrentScene: (scene: number, gameState: GameState, sceneObject: Scene) => void,
 ) => {
-  const gameplayScene = loadGameplayScene(resources) as SceneWrapper
+  // Scene States
+  let currentCard = null
+  let currentBuyingChannel = null
+  let initialized = false
+  let localAvailableChannels = [] as Channel[]
+  let allowFake = true
+
+  const gameplayScene = loadGameplayScene(resources, () => {
+    currentCard = null
+  }) as SceneWrapper
   const scene = gameplayScene.scene as Scene
   // Init
   let nextPossibleScenes
@@ -49,13 +58,6 @@ const GameplayScene = (
     waitingModal,
     specialEventText,
   } = gameplayScene.children
-
-  // Scene States
-  let currentCard = null
-  let currentBuyingChannel = null
-  let initialized = false
-  let localAvailableChannels = [] as Channel[]
-  let allowFake = true
 
   // ON GOLD CHANGE
   const changeGold = (newGold: number) => {
