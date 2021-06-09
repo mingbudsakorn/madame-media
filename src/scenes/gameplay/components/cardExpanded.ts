@@ -79,13 +79,14 @@ const loadCardExpanded = (resources: PIXI.IResourceDictionary, onClose: () => vo
       cardContainer.addChild(singleCardContainer)
 
       if (i >= NUMBER_OF_CARD) {
-        card.visible = false
+        singleCardContainer.visible = false
       }
 
       cardArray.push({
         useButton: useCardButton,
         toggleButton: toggleButton,
         card: card,
+        singleCardContainer: singleCardContainer
       })
     })
 
@@ -107,9 +108,9 @@ const loadCardExpanded = (resources: PIXI.IResourceDictionary, onClose: () => vo
   const updateDisplayCard = () => {
     cardArray.forEach((cards, i) => {
       if (i >= displayCardStartIndex && i < displayCardStartIndex + NUMBER_OF_CARD) {
-        cards.card.visible = true
+        cards.singleCardContainer.visible = true
       } else {
-        cards.card.visible = false
+        cards.singleCardContainer.visible = false
       }
     })
   }
