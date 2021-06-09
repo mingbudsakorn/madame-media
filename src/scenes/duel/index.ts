@@ -87,6 +87,8 @@ const DuelScene = (
     gameState.winner = winner
     gameState.people = people
     setCurrentScene(scenes.endGame, gameState, nextPossibleScenes[scenes.endGame])
+    opponentChannelContainer.clearSummary()
+    myChannelContainer.clearSummary()
     waitingModal.setVisible(false)
   })
 
@@ -109,14 +111,8 @@ const DuelScene = (
   specialActionContainer.finishButton.on('mousedown', skip).on('touchstart', skip)
 
   const displaySpecialActionResult = (res, type) => {
-    const result = res.data.result[opponentId].exposedCards
-    let newCard = {} as any
-    Object.keys(result).forEach((channel) => {
-      if (!prevResult[channel]) {
-        newCard = result[channel]
-      }
-    })
-    if (newCard.isReal === false) {
+    const { success } = res.data
+    if (success) {
       if (type === SPECIAL_ACTION_TYPE.FACT_CHECK) {
         specialActionContainer.displayFactCheckResult(
           true,

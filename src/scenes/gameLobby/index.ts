@@ -6,6 +6,8 @@ import { scenes } from '../../constants/scenes'
 import { gameState as initialState } from '../../constants/initialState'
 import socket from '../../socket'
 
+const url = process.env.BACKEND_URL
+
 const GameLobbyScene = (
   resources: PIXI.IResourceDictionary,
   setCurrentScene: (scene: number, gameState: GameState, sceneObject: Scene) => void,
@@ -29,6 +31,9 @@ const GameLobbyScene = (
   scene.onAppear = () => {
     turn.setTurn(gameState.rounds)
     roomId.setRoomId(gameState.gameId)
+
+    opponentAvatar.setAvatarImg('art/question-icon')
+    opponentAvatar.setAvatarName('???')
 
     // SOCKETS
     socket.emit('join-game', gameState.gameId)
@@ -70,7 +75,6 @@ const GameLobbyScene = (
   })
 
   const onStartGame = async () => {
-    const url = process.env.BACKEND_URL
     if (gameState.player2) {
       axios.post(`${url}/start-game`, {
         gameId: gameState.gameId,
@@ -86,9 +90,23 @@ const GameLobbyScene = (
   })
 
   const onBack = () => {
+    axios
+      .post(`${url}/leave-room`, {
+        gameId: gameState.gameId,
+        playerId: gameState.playerId,
+      })
+      .then(() => {
+        opponentAvatar.setAvatarImg('art/question-icon')
+        opponentAvatar.setAvatarName('???')
+      })
     setCurrentScene(scenes.startGame, gameState, nextPossibleScenes[scenes.startGame])
   }
   backButton.on('mousedown', onBack).on('touchstart', onBack)
+
+  socket.on('leave-room', () => {
+    opponentAvatar.setAvatarImg('art/question-icon')
+    opponentAvatar.setAvatarName('???')
+  })
 
   return scene
 }

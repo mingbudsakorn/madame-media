@@ -5,7 +5,7 @@ import { scenes } from '../../constants/scenes'
 import { RESULT } from '../../constants/gameConfig'
 import { gameState as initialState } from '../../constants/initialState'
 
-const url = process.env.BACKEND_URL
+// const url = process.env.BACKEND_URL
 
 const EndGameScene = (
   resources: PIXI.IResourceDictionary,
@@ -26,8 +26,8 @@ const EndGameScene = (
   const { result, goBackHomeButton, player1, player2, peopleBar } = endGameScene.children
 
   const goHome = () => {
-    window.location.reload()
-    // setCurrentScene(scenes.startGame, initialState, nextPossibleScenes[scenes.startGame])
+    // window.location.reload()
+    setCurrentScene(scenes.startGame, initialState, nextPossibleScenes[scenes.startGame])
   }
 
   goBackHomeButton.on('mousedown', goHome).on('touchstart', goHome)
@@ -41,7 +41,7 @@ const EndGameScene = (
     player2.setAvatarName(gameState.player2.name)
 
     if (winner) {
-      // eslint-disable-next-line
+      // tslint:disable-next-line
       if (winner.id === playerId) {
         result.setResult(RESULT.WIN.title, RESULT.WIN.description)
       } else {

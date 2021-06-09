@@ -188,6 +188,8 @@ const GameplayScene = (
           axios
             .post(`${url}/unplace-card`, {
               channelType: channelObject.getChannelConfig().type,
+              gameId: gameState.gameId,
+              playerId: gameState.playerId,
             })
             .then((res) => {
               if (res && res.data) {
