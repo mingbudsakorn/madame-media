@@ -65,7 +65,7 @@ const loadGameplayScene = (
   peopleText.position.set(960, 30)
   gamePlayScene.addChild(peopleText)
 
-  const turnText = new PIXI.Text('รอบที่ : 1', TEXT_STYLE.BODY_THAI) as TurnTextType
+  const turnText = new PIXI.Text('รอบที่ : 1', TEXT_STYLE.BODY_THAI_RED_PURPLE) as TurnTextType
   turnText.position.set(47, 322)
   gamePlayScene.addChild(turnText)
   // ------------------------------------------------ //

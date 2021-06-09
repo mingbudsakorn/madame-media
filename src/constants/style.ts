@@ -75,6 +75,11 @@ export const TEXT_STYLE = {
     fontSize: 25,
     fill: COLOR.CHARCOAL,
   }),
+  BODY_THAI_RED_PURPLE: new PIXI.TextStyle({
+    fontFamily: 'Chonburi',
+    fontSize: 25,
+    fill: COLOR.RED_PURPLE,
+  }),
   OVERLINE_THAI: new PIXI.TextStyle({
     fontFamily: 'Chonburi',
     fontSize: 18,
