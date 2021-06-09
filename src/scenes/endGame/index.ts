@@ -27,6 +27,7 @@ const EndGameScene = (
 
   const goHome = () => {
     window.location.reload()
+    // setCurrentScene(scenes.startGame, initialState, nextPossibleScenes[scenes.startGame])
   }
 
   goBackHomeButton.on('mousedown', goHome).on('touchstart', goHome)
